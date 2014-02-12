@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context
+						   http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<context:annotation-config />
+
+	<!-- A property resource configurer that resolves placeholders in bean property 
+		values of context definitions. It pulls values from a properties file into 
+		bean definitions. It will allow the use of system properties -->
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+	</bean>
+	<bean class="com.abc.controller.AccountController"
+		id="accountController">
+	</bean>
+	<bean class="com.abc.controller.BankController"
+		id="bankController">
+	</bean>
+	<bean class="com.abc.controller.CustomerController"
+		id="customerController">
+	</bean>
+	<bean class="com.abc.controller.TransactionController"
+		id="transactionController">
+	</bean>
+	<bean class="com.abc.builder.AccountBuilder"
+		id="accountBuilder">
+	</bean>
+	<bean class="com.abc.builder.BankBuilder"
+		id="bankBuilder">
+	</bean>
+	<bean class="com.abc.builder.CustomerBuilder"
+		id="customerBuilder">
+	</bean>
+	<bean class="com.abc.builder.StatementBuilder"
+		id="statementBuilder">
+	</bean>
+	<bean class="com.abc.builder.TransactionBuilder"
+		id="transactionBuilder">
+	</bean>
+	<bean class="com.abc.builder.ReportBuilder"
+		id="reportBuilder">
+	</bean>
+	
+	<bean class="com.abc.service.CustomerService"
+		id="customerService">
+	</bean>
+	<bean class="com.abc.service.ManagerService"
+		id="managerService">
+	</bean>
+	<bean class="com.abc.service.BankService"
+		id="bankService">
+	</bean>
+	<bean class="com.abc.util.DateProvider"
+		id="dateProvider">
+	</bean>
+	
+	<bean class="com.abc.util.InterestCalculator"
+		id="interestCalculator">
+	</bean>
+</beans>
