@@ -1,73 +1,70 @@
 package com.abc;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Account {
+    private AccountType accountType;
+    private double balance;
+    private List<Transaction> transactions = new LinkedList<Transaction>();
 
-    public static final int CHECKING = 0;
-    public static final int SAVINGS = 1;
-    public static final int MAXI_SAVINGS = 2;
+    Account(AccountType accType, Double balance) {
+        this.accountType = accType;
+        this.balance = balance;
 
-    private final int accountType;
-    public List<Transaction> transactions;
-
-    public Account(int accountType) {
-        this.accountType = accountType;
-        this.transactions = new ArrayList<Transaction>();
     }
 
-    public void deposit(double amount) {
-        if (amount <= 0) {
-            throw new IllegalArgumentException("amount must be greater than zero");
-        } else {
-            transactions.add(new Transaction(amount));
+    void deposit(double amount) {
+        if (amount <= 0) throw new IllegalArgumentException("Deposit Amount should be positive non zero");
+        balance += amount;
+        transactions.add(new Transaction(TransactionType.DEPOSIT, amount));
+    }
+
+    void withdraw(double amount) {
+        if (amount <= 0) throw new IllegalArgumentException("Withdraw Amount should be positive non zero");
+        balance -= amount;
+        transactions.add(new Transaction(TransactionType.WITHDRAW, amount));
+    }
+
+    void transfer(double amount, Account toAccount) {
+        if (amount <= 0) throw new IllegalArgumentException("Transfer Amount should be positive non zero");
+        this.withdraw(amount);
+        toAccount.deposit(amount);
+        transactions.add(new Transaction(TransactionType.WITHDRAW, amount));
+    }
+
+    protected double getInterestEarned() {
+        return accountType.calculateInterest(balance);
+
+    }
+
+    private void printTransactions() {
+
+        for (Transaction transaction : transactions) {
+            System.out.println(transaction);
+
         }
+
     }
 
-public void withdraw(double amount) {
-    if (amount <= 0) {
-        throw new IllegalArgumentException("amount must be greater than zero");
-    } else {
-        transactions.add(new Transaction(-amount));
-    }
-}
+    private void printBalanceAmount() {
 
-    public double interestEarned() {
-        double amount = sumTransactions();
-        switch(accountType){
-            case SAVINGS:
-                if (amount <= 1000)
-                    return amount * 0.001;
-                else
-                    return 1 + (amount-1000) * 0.002;
-//            case SUPER_SAVINGS:
-//                if (amount <= 4000)
-//                    return 20;
-            case MAXI_SAVINGS:
-                if (amount <= 1000)
-                    return amount * 0.02;
-                if (amount <= 2000)
-                    return 20 + (amount-1000) * 0.05;
-                return 70 + (amount-2000) * 0.1;
-            default:
-                return amount * 0.001;
-        }
+        System.out.println(getBalance());
+
+
     }
 
-    public double sumTransactions() {
-       return checkIfTransactionsExist(true);
+
+    public void getStatement() {
+        printTransactions();
+        printBalanceAmount();
     }
 
-    private double checkIfTransactionsExist(boolean checkAll) {
-        double amount = 0.0;
-        for (Transaction t: transactions)
-            amount += t.amount;
-        return amount;
+    public double getBalance() {
+        return balance;
     }
 
-    public int getAccountType() {
+    AccountType getAccountType() {
         return accountType;
     }
-
 }

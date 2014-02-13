@@ -1,54 +1,58 @@
 package com.abc;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import java.util.LinkedList;
+import java.util.List;
+
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 
 public class BankTest {
-    private static final double DOUBLE_DELTA = 1e-15;
 
-    @Test
-    public void customerSummary() {
-        Bank bank = new Bank();
-        Customer john = new Customer("John");
-        john.openAccount(new Account(Account.CHECKING));
-        bank.addCustomer(john);
+    Bank abcBank = new Bank();
 
-        assertEquals("Customer Summary\n - John (1 account)", bank.customerSummary());
+    @Before
+    public void before() throws Exception {
+    }
+
+    @After
+    public void after() throws Exception {
     }
 
     @Test
-    public void checkingAccount() {
-        Bank bank = new Bank();
-        Account checkingAccount = new Account(Account.CHECKING);
-        Customer bill = new Customer("Bill").openAccount(checkingAccount);
-        bank.addCustomer(bill);
-
-        checkingAccount.deposit(100.0);
-
-        assertEquals(0.1, bank.totalInterestPaid(), DOUBLE_DELTA);
+    public void bankShouldOpenAccount() throws Exception {
+        List<Account> accountList = new LinkedList<Account>();
+        accountList.add(new Account(AccountType.CHECKING_ACCOUNT, 100.0));
+        accountList.add(new Account(AccountType.SAVINGS_ACCOUNT, 200.0));
+        abcBank.openAccount("John", accountList);
+        List<Customer> customers = abcBank.getCustomers();
+        assertThat(customers.get(0).getName(), is("John"));
+        assertThat(customers.get(0).getNumberOfAccounts(), is(2));
+        assertThat(customers.get(0).getAccounts().get(0).getBalance(), is(100.0));
+        assertThat(customers.get(0).getAccounts().get(1).getBalance(), is(200.0));
+        assertThat(customers.get(0).getAccounts().get(0).getAccountType(), is(AccountType.CHECKING_ACCOUNT));
+        assertThat(customers.get(0).getAccounts().get(1).getAccountType(), is(AccountType.SAVINGS_ACCOUNT));
     }
 
     @Test
-    public void savings_account() {
-        Bank bank = new Bank();
-        Account checkingAccount = new Account(Account.SAVINGS);
-        bank.addCustomer(new Customer("Bill").openAccount(checkingAccount));
-
-        checkingAccount.deposit(1500.0);
-
-        assertEquals(2.0, bank.totalInterestPaid(), DOUBLE_DELTA);
+    public void bankShouldGenerateCustomerSummary() throws Exception {
+        List<Account> accountList = new LinkedList<Account>();
+        accountList.add(new Account(AccountType.CHECKING_ACCOUNT, 100.0));
+        accountList.add(new Account(AccountType.SAVINGS_ACCOUNT, 200.0));
+        abcBank.openAccount("John", accountList);
+        assertThat(abcBank.customerSummary(), is("Customer Summary\n - John ( Number of accounts are 2 )"));
     }
 
     @Test
-    public void maxi_savings_account() {
-        Bank bank = new Bank();
-        Account checkingAccount = new Account(Account.MAXI_SAVINGS);
-        bank.addCustomer(new Customer("Bill").openAccount(checkingAccount));
-
-        checkingAccount.deposit(3000.0);
-
-        assertEquals(170.0, bank.totalInterestPaid(), DOUBLE_DELTA);
+    public void testTotalInterestPaid() throws Exception {
+        List<Account> accountList = new LinkedList<Account>();
+        accountList.add(new Account(AccountType.CHECKING_ACCOUNT, 100.0));
+        accountList.add(new Account(AccountType.SAVINGS_ACCOUNT, 200.0));
+        abcBank.openAccount("John", accountList);
+        abcBank.openAccount("Bill", accountList);
+        assertThat(abcBank.totalInterestPaid(), is(0.6002992772823461));
     }
-
 }
