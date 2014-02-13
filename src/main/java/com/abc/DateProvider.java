@@ -3,16 +3,10 @@ package com.abc;
 import java.util.Calendar;
 import java.util.Date;
 
-public class DateProvider {
-    private static DateProvider instance = null;
+public enum DateProvider {
+    INSTANCE;
 
-    public static DateProvider getInstance() {
-        if (instance == null)
-            instance = new DateProvider();
-        return instance;
-    }
-
-    public Date now() {
+    Date now() {
         return Calendar.getInstance().getTime();
     }
 }
