@@ -5,7 +5,7 @@ import java.util.List;
 
 import static java.lang.Math.abs;
 
-public class Customer {
+public class Customer implements Comparable<Customer>{
     private String name;
     private List<Account> accounts;
 
@@ -40,7 +40,7 @@ public class Customer {
         double total = 0.0;
         for (Account a : accounts) {
             statement += "\n" + statementForAccount(a) + "\n";
-            total += a.sumTransactions();
+            total += a.getAccountBalance();
         }
         statement += "\nTotal In All Accounts " + toDollars(total);
         return statement;
@@ -74,5 +74,19 @@ public class Customer {
 
     private String toDollars(double d){
         return String.format("$%,.2f", abs(d));
+    }
+
+    @Override
+    public boolean equals(Object customer){
+        return compareTo((Customer)customer)==0;
+    }
+
+    @Override
+    public int hashCode(){
+      return 9*name.hashCode();
+    }
+
+    public int compareTo(Customer customer){
+        return name.compareTo(customer.name);
     }
 }
