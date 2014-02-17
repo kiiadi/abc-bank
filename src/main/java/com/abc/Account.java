@@ -6,16 +6,19 @@ import java.util.List;
 
 public class Account {
 
-    public static final int CHECKING = 0;
-    public static final int SAVINGS = 1;
-    public static final int MAXI_SAVINGS = 2;
+    private static long accNum;
+    public static final int CHECKING = 1;
+    public static final int SAVINGS = 2;
+    public static final int MAXI_SAVINGS = 3;
 
     private final int accountType;
-    public List<Transaction> transactions;
+    private final long accountNumber;
+    private List<Transaction> transactions;
 
     public Account(int accountType) {
         this.accountType = accountType;
         this.transactions = new ArrayList<Transaction>();
+        this.accountNumber = generateAccountNumber();
     }
 
     public void deposit(double amount) {
@@ -46,14 +49,14 @@ public class Account {
         java.util.Iterator<Transaction> itr=transactions.iterator();
         if(itr.hasNext()){
             t=itr.next(); amount=t.amount; fromDate=t.getTransactionDate();
-        }
-        while(itr.hasNext()){
-            t=itr.next(); toDate=t.getTransactionDate();
+            while(itr.hasNext()){
+                t=itr.next(); toDate=t.getTransactionDate();
+                interest += calculateInterest(amount, fromDate, toDate);
+                fromDate=toDate; amount=t.amount;
+            }
+            toDate=DateProvider.getInstance().now();
             interest += calculateInterest(amount, fromDate, toDate);
-            fromDate=toDate; amount=t.amount;
         }
-        toDate=DateProvider.getInstance().now();
-        interest += calculateInterest(amount, fromDate, toDate);
         return interest;
     }
 
@@ -93,5 +96,20 @@ public class Account {
             default:
                 return amount * getRate(numDays, 0.001);
         }
+    }
+
+    private synchronized long generateAccountNumber(){
+        // in addition to the static accNum it maybe a good idea
+        // to use Customer's name hascode or something pulled from a db
+        // fro now we'll just increment this static number
+        return accNum++;
+    }
+
+    public long getAccountNumber(){
+        return this.accountNumber;
+    }
+
+    public List<Transaction> transactions(){
+        return this.transactions;
     }
 }

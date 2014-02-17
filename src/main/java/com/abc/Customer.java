@@ -1,5 +1,7 @@
 package com.abc;
 
+import com.sun.xml.internal.bind.v2.TODO;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,9 +20,10 @@ public class Customer implements Comparable<Customer>{
         return name;
     }
 
-    public Customer openAccount(Account account) {
-        accounts.add(account);
-        return this;
+    public Account openAccount(int accountType) {
+        Account acc =  new Account(accountType);
+        accounts.add(acc);
+        return acc;
     }
 
     public int getNumberOfAccounts() {
@@ -64,12 +67,19 @@ public class Customer implements Comparable<Customer>{
 
         //Now total up all the transactions
         double total = 0.0;
-        for (Transaction t : a.transactions) {
+        for (Transaction t : a.transactions()) {
             s += "  " + (t.amount < 0 ? "withdrawal" : "deposit") + " " + toDollars(t.amount) + "\n";
             total += t.amount;
         }
         s += "Total " + toDollars(total);
         return s;
+    }
+
+    public void deposit(long accountNumber, double amount){
+//        TODO now this is not the best way, HashMap would be better , need refactoring
+        for(Account acc:accounts){
+            if(accountNumber == acc.getAccountNumber()) acc.deposit(amount);
+        }
     }
 
     private String toDollars(double d){

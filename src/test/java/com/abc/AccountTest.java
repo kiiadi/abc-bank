@@ -18,7 +18,7 @@ public class AccountTest {
         System.out.println("\n===\nTesting - "+new Object(){}.getClass().getEnclosingMethod().getName());
         Account account = new Account(Account.CHECKING);
         assertEquals(Account.CHECKING, account.getAccountType());
-        assertTrue(0 == account.transactions.size());
+        assertTrue(0 == account.transactions().size());
     }
 
     @Test
@@ -26,15 +26,15 @@ public class AccountTest {
         System.out.println("\n===\nTesting - "+new Object(){}.getClass().getEnclosingMethod().getName());
         Account account = new Account(Account.SAVINGS);
         assertEquals(Account.SAVINGS, account.getAccountType());
-        assertTrue(0 == account.transactions.size());
+        assertTrue(0 == account.transactions().size());
     }
 
     @Test
-    public void maxiAccount(){
+    public void testMaxiAccount(){
         System.out.println("\n===\nTesting - "+new Object(){}.getClass().getEnclosingMethod().getName());
         Account account = new Account(Account.MAXI_SAVINGS);
         assertEquals(Account.MAXI_SAVINGS, account.getAccountType());
-        assertTrue(0 == account.transactions.size());
+        assertTrue(0 == account.transactions().size());
     }
 
     @Test
@@ -42,8 +42,8 @@ public class AccountTest {
         System.out.println("\n===\nTesting - "+new Object(){}.getClass().getEnclosingMethod().getName());
         Account account = new Account(Account.CHECKING);
         account.deposit(100.0);
-        assertTrue(1 == account.transactions.size());
-        assertEquals(100.0, account.transactions.get(0).amount, DOUBLE_DELTA);
+        assertTrue(1 == account.transactions().size());
+        assertEquals(100.0, account.transactions().get(0).amount, DOUBLE_DELTA);
     }
 
     @Test
@@ -56,7 +56,7 @@ public class AccountTest {
         }catch(IllegalArgumentException e){
             eMessage=e.getMessage();
         }
-        assertTrue(0 == account.transactions.size());
+        assertTrue(0 == account.transactions().size());
         assertEquals(eMessage, "amount must be greater than zero");
         System.out.println("Deposit: "+eMessage);
     }
@@ -69,8 +69,8 @@ public class AccountTest {
         assertEquals(1000.0, account.getAccountBalance(), DOUBLE_DELTA);
         account.withdraw(1000.0);
         assertEquals(0.0, account.getAccountBalance(), DOUBLE_DELTA);
-        assertTrue(2 == account.transactions.size());
-        assertEquals(-1000.0, account.transactions.get(1).amount, DOUBLE_DELTA);
+        assertTrue(2 == account.transactions().size());
+        assertEquals(-1000.0, account.transactions().get(1).amount, DOUBLE_DELTA);
     }
 
     @Test
@@ -86,7 +86,7 @@ public class AccountTest {
             eMessage=e.getMessage();
         }
         assertEquals(1000.0, account.getAccountBalance(), DOUBLE_DELTA);
-        assertTrue(1 == account.transactions.size());
+        assertTrue(1 == account.transactions().size());
         System.out.println("Withdrawal: "+eMessage);
     }
 
@@ -100,7 +100,7 @@ public class AccountTest {
         }catch(IllegalArgumentException e){
             eMessage=e.getMessage();
         }
-        assertTrue(0 == account.transactions.size());
+        assertTrue(0 == account.transactions().size());
         assertEquals(eMessage, "amount must be greater than zero");
         System.out.println("Withdrawal: "+eMessage);
     }
@@ -110,8 +110,8 @@ public class AccountTest {
         System.out.println("\n===\nTesting - "+new Object(){}.getClass().getEnclosingMethod().getName());
         Account account = new Account(Account.CHECKING);
         account.deposit(1000.0);
-        assertTrue(1 == account.transactions.size());
-        assertEquals(1000.0, account.transactions.get(0).amount, DOUBLE_DELTA);
+        assertTrue(1 == account.transactions().size());
+        assertEquals(1000.0, account.transactions().get(0).amount, DOUBLE_DELTA);
         assertEquals(0.0, account.interestEarned(), DOUBLE_DELTA);
     }
 
@@ -121,8 +121,8 @@ public class AccountTest {
         Account account = new Account(Account.CHECKING);
         DateProvider.getInstance().setFutureDate(-365);
         account.deposit(1000.0);
-        assertTrue(1 == account.transactions.size());
-        assertEquals(1000.0, account.transactions.get(0).amount, DOUBLE_DELTA);
+        assertTrue(1 == account.transactions().size());
+        assertEquals(1000.0, account.transactions().get(0).amount, DOUBLE_DELTA);
         DateProvider.getInstance().reset();
         assertEquals(1.0, account.interestEarned(), DOUBLE_DELTA);
         assertEquals(1001.0, account.getAccountBalance(), DOUBLE_DELTA);
