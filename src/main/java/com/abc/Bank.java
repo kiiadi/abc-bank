@@ -1,23 +1,24 @@
 package com.abc;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Bank {
-    private List<Customer> customers;
+    private HashMap<String, Customer> customers;
 
     public Bank() {
-        customers = new ArrayList<Customer>();
+        customers = new HashMap<String, Customer>();
     }
 
     public void addCustomer(Customer customer) {
-        customers.add(customer);
+        customers.put(customer.getName(), customer);
     }
 
     public String customerSummary() {
         String summary = "Customer Summary";
-        for (Customer c : customers)
-            summary += "\n - " + c.getName() + " (" + format(c.getNumberOfAccounts(), "account") + ")";
+        for (String customerName : customers.keySet())
+            summary += "\n - " + customers.get(customerName).getName() + " (" + format(customers.get(customerName).getNumberOfAccounts(), "account") + ")";
         return summary;
     }
 
@@ -28,19 +29,25 @@ public class Bank {
     }
 
     public double totalInterestPaid() {
-        double total = 0;
-        for(Customer c: customers)
-            total += c.totalInterestEarned();
+        double total = 0.0;
+        for(String customerName: customers.keySet())
+            total += customers.get(customerName).totalInterestEarned();
         return total;
     }
 
-    public String getFirstCustomer() {
-        try {
-            customers = null;
-            return customers.get(0).getName();
-        } catch (Exception e){
-            e.printStackTrace();
-            return "Error";
-        }
+    private double truncate(double number){
+        int intPart = (int)number;
+        int decimalPart = (int)((number-intPart)*100);
+        return (double)intPart + (double)decimalPart;
     }
+
+//    public String getFirstCustomer() {
+//        try {
+//            customers = null;
+//            return customers.get(0).getName();
+//        } catch (Exception e){
+//            e.printStackTrace();
+//            return "Error";
+//        }
+//    }
 }
