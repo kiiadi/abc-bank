@@ -12,7 +12,7 @@ public class Bank {
     }
 
     public void addCustomer(Customer customer) {
-        customers.put(customer.getName(),customer);
+        customers.put(customer.getName(), customer);
     }
 
     public String customerSummary() {
@@ -29,10 +29,16 @@ public class Bank {
     }
 
     public double totalInterestPaid() {
-        double total = 0;
+        double total = 0.0;
         for(String customerName: customers.keySet())
             total += customers.get(customerName).totalInterestEarned();
-        return total;
+        return truncate(total);
+    }
+
+    private double truncate(double number){
+        int intPart = (int)number;
+        int decimalPart = (int)((number-intPart)*100);
+        return (double)intPart + (double)decimalPart;
     }
 
 //    public String getFirstCustomer() {
