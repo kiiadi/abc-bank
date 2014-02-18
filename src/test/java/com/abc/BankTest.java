@@ -62,7 +62,7 @@ public class BankTest {
         c3.deposit(c3Maxi.getAccountNumber(),10000.0);
 
         DateProvider.getInstance().reset();
-        assertEquals(877.0, bank.totalInterestPaid(), DOUBLE_DELTA);
+        assertEquals(507.0, bank.totalInterestPaid(), DOUBLE_DELTA);
     }
 
 }

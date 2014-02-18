@@ -45,19 +45,22 @@ public class Account {
         double amount=0.0;
         Date fromDate=null;
         Date toDate=null;
+        Date withdrawalDate = null;
         Transaction t;
         java.util.Iterator<Transaction> itr=transactions.iterator();
         if(itr.hasNext()){
-            t=itr.next(); amount=t.amount; fromDate=t.getTransactionDate();
+            t=itr.next(); amount=t.amount;
+            fromDate=t.getTransactionDate(); withdrawalDate=t.getTransactionDate();
             while(itr.hasNext()){
                 t=itr.next(); toDate=t.getTransactionDate();
-                interest += calculateInterest(amount, fromDate, toDate);
-                fromDate=toDate; amount=t.amount;
+                interest += calculateInterest(amount, fromDate, toDate, withdrawalDate);
+                fromDate=toDate; amount+=t.amount;
+                if(t.amount<0) withdrawalDate=toDate;
             }
             toDate=DateProvider.getInstance().now();
-            interest += calculateInterest(amount, fromDate, toDate);
+            interest += calculateInterest(amount, fromDate, toDate, withdrawalDate);
         }
-        return interest;
+        return Math.round(interest*100.0)/100.0;
     }
 
     private double sumTransactions() {
@@ -79,8 +82,9 @@ public class Account {
         return rate / 365 *numDays;
     }
 
-    private double calculateInterest(double amount, Date fromDate, Date toDate){
+    private double calculateInterest(double amount, Date fromDate, Date toDate, Date withdrawalDate){
         int numDays=(int)((toDate.getTime() - fromDate.getTime())/(1000*60*60*24));
+        amount=Math.abs(amount);
         switch(accountType){
             case SAVINGS:
                 if (amount <= 1000)
@@ -88,11 +92,17 @@ public class Account {
                 else
                     return 1000 * getRate(numDays, 0.001) + (amount-1000) * getRate(numDays, 0.002);
             case MAXI_SAVINGS:
-                if (amount <= 1000)
-                    return amount * getRate(numDays, 0.02);
-                if (amount <= 2000)
-                    return 1000 * getRate(numDays, 0.02) + (amount-1000) * getRate(numDays, 0.05);
-                return 1000 * getRate(numDays, 0.02) + 1000 * getRate(numDays, 0.05) + (amount-2000) * getRate(numDays, 0.1);
+// New Maxi Logic
+                if((int)((toDate.getTime() - withdrawalDate.getTime())/(1000*60*60*24)) >= 10)
+                    return amount * getRate(numDays, 0.05);
+                else
+                    return amount * getRate(numDays, 0.001);
+//Old Maxi logic
+//                if (amount <= 1000)
+//                    return amount * getRate(numDays, 0.02);
+//                if (amount <= 2000)
+//                    return 1000 * getRate(numDays, 0.02) + (amount-1000) * getRate(numDays, 0.05);
+//                return 1000 * getRate(numDays, 0.02) + 1000 * getRate(numDays, 0.05) + (amount-2000) * getRate(numDays, 0.1);
             default:
                 return amount * getRate(numDays, 0.001);
         }

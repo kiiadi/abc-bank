@@ -32,7 +32,7 @@ public class Bank {
         double total = 0.0;
         for(String customerName: customers.keySet())
             total += customers.get(customerName).totalInterestEarned();
-        return truncate(total);
+        return total;
     }
 
     private double truncate(double number){

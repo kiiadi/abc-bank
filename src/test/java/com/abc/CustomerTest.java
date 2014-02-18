@@ -88,9 +88,9 @@ public class CustomerTest {
         assertEquals(1001.0, checking.getAccountBalance(), DOUBLE_DELTA);
         assertEquals(1.0, saving.interestEarned(), DOUBLE_DELTA);
         assertEquals(1001.0, saving.getAccountBalance(), DOUBLE_DELTA);
-        assertEquals(20.0, maxi.interestEarned(), DOUBLE_DELTA);
-        assertEquals(1020.0, maxi.getAccountBalance(), DOUBLE_DELTA);
-        assertEquals(22.0, oscar.totalInterestEarned(), DOUBLE_DELTA);
+        assertEquals(50.0, maxi.interestEarned(), DOUBLE_DELTA);
+        assertEquals(1050.0, maxi.getAccountBalance(), DOUBLE_DELTA);
+        assertEquals(52.0, oscar.totalInterestEarned(), DOUBLE_DELTA);
         System.out.println("Total Interest Earned: "+oscar.totalInterestEarned());
     }
 }

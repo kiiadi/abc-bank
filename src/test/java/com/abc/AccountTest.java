@@ -129,10 +129,55 @@ public class AccountTest {
     }
 
     @Test
-    public void testInterestEarnedSaving(){
+    public void testInterestEarnedMaxiSavingWithWithdrawalInThePast10Days(){
+        System.out.println("\n===\nTesting - "+new Object(){}.getClass().getEnclosingMethod().getName());
+        Account account = new Account(Account.MAXI_SAVINGS);
+        DateProvider.getInstance().setFutureDate(-10);
+        account.deposit(2000.0);
+        assertTrue(1 == account.transactions().size());
+        assertEquals(2000.0, account.transactions().get(0).amount, DOUBLE_DELTA);
+        DateProvider.getInstance().reset();
+
+        DateProvider.getInstance().setFutureDate(-5);
+        account.withdraw(1000.0);
+        assertTrue(2 == account.transactions().size());
+        assertEquals(-1000.0, account.transactions().get(1).amount, DOUBLE_DELTA);
+        DateProvider.getInstance().reset();
+
+        account.deposit(1000.0);
+        assertTrue(3 == account.transactions().size());
+        assertEquals(1000.0, account.transactions().get(2).amount, DOUBLE_DELTA);
+
+        assertEquals(0.04, account.interestEarned(), DOUBLE_DELTA);
+        assertEquals(2000.04, account.getAccountBalance(), DOUBLE_DELTA);
     }
 
     @Test
-    public void testInterestEarnedMaxi(){
+    public void testInterestEarnedMaxiSavingNoWithdrawalInThePast10Days(){
+        System.out.println("\n===\nTesting - "+new Object(){}.getClass().getEnclosingMethod().getName());
+        Account account = new Account(Account.MAXI_SAVINGS);
+        DateProvider.getInstance().setFutureDate(-10);
+        account.deposit(1000.0);
+        assertTrue(1 == account.transactions().size());
+        assertEquals(1000.0, account.transactions().get(0).amount, DOUBLE_DELTA);
+        DateProvider.getInstance().reset();
+
+        DateProvider.getInstance().setFutureDate(-5);
+        account.deposit(1000.0);
+        assertTrue(2 == account.transactions().size());
+        assertEquals(1000.0, account.transactions().get(1).amount, DOUBLE_DELTA);
+        DateProvider.getInstance().reset();
+
+        account.deposit(1000.0);
+        assertTrue(3 == account.transactions().size());
+        assertEquals(1000.0, account.transactions().get(2).amount, DOUBLE_DELTA);
+
+        assertEquals(1.38, account.interestEarned(), DOUBLE_DELTA);
+        assertEquals(3001.38, account.getAccountBalance(), DOUBLE_DELTA);
     }
+
+    @Test
+    public void testInterestEarnedSaving(){
+    }
+
 }
