@@ -9,6 +9,7 @@ public class DateProvider {
 	private static DateProvider instance = null;
 	private Calendar calendar = Calendar.getInstance();
 	private final SimpleDateFormat formatterYYYYMMDD = new SimpleDateFormat("yyyyMMdd");
+	private final static long MILLISECONDS_IN_A_DAY = 24 * 60 * 60 * 1000;
 
 	private DateProvider() {
 	}
@@ -45,6 +46,16 @@ public class DateProvider {
 		calendar.set(year, month - 1, day, 0, 0, 0);
 		calendar.set(Calendar.MILLISECOND, 0);
 		return calendar.getTime();
+	}
+
+	public Date addDays(Date date, int numberOfDays) {
+		long newTime = date.getTime() + (numberOfDays * MILLISECONDS_IN_A_DAY);
+		return new Date(newTime);
+	}
+
+	public long calendarDaysDifference(Date d1, Date d2) {
+		long rv = (d2.getTime() - d1.getTime()) / MILLISECONDS_IN_A_DAY;
+		return rv;
 	}
 
 	public Date now() {

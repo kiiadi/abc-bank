@@ -37,4 +37,28 @@ public class DateProviderTest {
 		assertEquals(d1, d2);
 	}
 
+	@Test
+	public void testAddDays() {
+		Date d = DateProvider.getInstance().getDateByYMD(2014, 2, 15);
+		Date d0 = DateProvider.getInstance().addDays(d, 0);
+		Date d1 = DateProvider.getInstance().addDays(d, -14);
+		Date d2 = DateProvider.getInstance().addDays(d, 15);
+		Date dt1 = DateProvider.getInstance().getDateByYMD(2014, 2, 1);
+		Date dt2 = DateProvider.getInstance().getDateByYMD(2014, 3, 2);
+
+		assertEquals(d, d0);
+		assertEquals(d, d0);
+		assertEquals(d1, dt1);
+		assertEquals(d2, dt2);
+	}
+
+	@Test
+	public void testCalendarDaysDifference() {
+		Date d1 = DateProvider.getInstance().getDateByYMD(2014, 2, 1);
+		Date d2 = DateProvider.getInstance().getDateByYMD(2014, 2, 11);
+		Date d3 = DateProvider.getInstance().getDateByYMD(2014, 3, 1);
+		assertEquals(10, DateProvider.getInstance().calendarDaysDifference(d1, d2));
+		assertEquals(28, DateProvider.getInstance().calendarDaysDifference(d1, d3));
+	}
+
 }

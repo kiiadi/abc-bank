@@ -2,7 +2,11 @@ package com.abc;
 
 import org.junit.Test;
 
+import java.util.Date;
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * User: mchernyak
@@ -11,6 +15,49 @@ import static org.junit.Assert.assertEquals;
  */
 public class AccountTest {
 	private static final double DOUBLE_DELTA = 1e-15;
+
+	@Test
+	public void testCalculateDailyDateChecking() {
+		Account account = new Account(AccountType.CHECKING);
+
+		double balance = 1000.0;
+		double interest = account.calculateDailyInterest(balance);
+		assertEquals(0.0027397260273973, interest, DOUBLE_DELTA);
+		balance += interest;
+		interest = account.calculateDailyInterest(balance);
+		assertEquals(0.0027397335334960, interest, DOUBLE_DELTA);
+		balance += interest;
+		interest = account.calculateDailyInterest(balance);
+		assertEquals(0.0027397410396152, interest, DOUBLE_DELTA);
+	}
+
+	@Test
+	public void testCalculateDailyDateSavings() {
+		Account account = new Account(AccountType.SAVINGS);
+
+		// from spreadsheet calculation:
+		//0.0027397260273972600
+		//0.0054794520547945200
+		//0.0082191780821917800
+		//0.0136986301369863000
+		//0.0246575342465753000
+
+		double balance = 1000.0;
+		double interest = account.calculateDailyInterest(balance);
+		assertEquals(0.0027397260273972600, interest, DOUBLE_DELTA);
+
+		balance = 1500.0;
+		interest = account.calculateDailyInterest(balance);
+		assertEquals(0.0054794520547945200, interest, DOUBLE_DELTA);
+
+		balance = 3000.0;
+		interest = account.calculateDailyInterest(balance);
+		assertEquals(0.0136986301369863000, interest, DOUBLE_DELTA);
+
+		balance += interest;
+		interest = account.calculateDailyInterest(balance);
+		assertEquals(0.0136987051979734000, interest, DOUBLE_DELTA);
+	}
 
 	@Test(expected = java.lang.IllegalArgumentException.class)
 	public void testIllegalDeposit() {
@@ -22,6 +69,24 @@ public class AccountTest {
 	public void testIllegalWithdrawal() {
 		Account account = new Account(AccountType.SAVINGS);
 		account.withdraw(-100);
+	}
+
+	@Test
+	public void testHadRecentWithdrawals() {
+		Account account = new Account(AccountType.CHECKING);
+		Date today = new Date();
+
+		Date transactionDate = DateProvider.getInstance().addDays(new Date(), -5);
+		account.deposit(100, transactionDate);
+		transactionDate = DateProvider.getInstance().addDays(new Date(), -10);
+		account.deposit(100, transactionDate);
+		transactionDate = DateProvider.getInstance().addDays(new Date(), -13);
+		account.withdraw(50, transactionDate);
+		assertFalse(account.hadRecentWithdrawals(today));
+
+		transactionDate = DateProvider.getInstance().addDays(new Date(), -10);
+		account.withdraw(50, transactionDate);
+		assertTrue(account.hadRecentWithdrawals(today));
 	}
 
 	/**
