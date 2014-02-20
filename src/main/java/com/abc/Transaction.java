@@ -3,6 +3,9 @@ package com.abc;
 import java.util.Date;
 
 public class Transaction implements Comparable<Transaction> {
+
+	// a transaction id was added to differentiate between transactions
+	// with the same timestamp and amount
 	private long id;
 	private final double amount;
 	private final Date date;
@@ -27,31 +30,13 @@ public class Transaction implements Comparable<Transaction> {
 		return amount;
 	}
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-
-		Transaction that = (Transaction) o;
-
-		if (Double.compare(that.amount, amount) != 0) return false;
-		if (id != that.id) return false;
-		if (date != null ? !date.equals(that.date) : that.date != null) return false;
-
-		return true;
-	}
-
-	@Override
-	public int hashCode() {
-		int result;
-		long temp;
-		result = (int) (id ^ (id >>> 32));
-		temp = Double.doubleToLongBits(amount);
-		result = 31 * result + (int) (temp ^ (temp >>> 32));
-		result = 31 * result + (date != null ? date.hashCode() : 0);
-		return result;
-	}
-
+	/**
+	 * compareTo method will be used by the collection housing transactions
+	 * in transaction date order
+	 *
+	 * @param rhs "right-hand-side" transaction to compare "this" tansaction to
+	 * @return standard compareTo() integer return code
+	 */
 	@Override
 	public int compareTo(Transaction rhs) {
 		int rv = this.date.compareTo(rhs.date);

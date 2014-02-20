@@ -7,9 +7,9 @@ import java.util.Date;
 
 public class DateProvider {
 	private static DateProvider instance = null;
-	private Calendar calendar = Calendar.getInstance();
 	private final SimpleDateFormat formatterYYYYMMDD = new SimpleDateFormat("yyyyMMdd");
 	private final static long MILLISECONDS_IN_A_DAY = 24 * 60 * 60 * 1000;
+	private Calendar calendar = Calendar.getInstance();
 
 	private DateProvider() {
 	}

@@ -14,48 +14,143 @@ import static org.junit.Assert.assertTrue;
  * Time: 5:24 PM
  */
 public class AccountTest {
-	private static final double DOUBLE_DELTA = 1e-15;
+	private static final double DOUBLE_DELTA = 1e-10;
 
 	@Test
-	public void testCalculateDailyDateChecking() {
+	public void testCalculateAccruedInterestMaxiSavings() {
+		Account account = new Account(AccountType.MAXI_SAVINGS);
+		Date today = new Date();
+
+		Date transactionDate = DateProvider.getInstance().addDays(new Date(), -10);
+
+		account.deposit(2000, transactionDate);
+
+		double accruedInterest = account.calculateBalanceAndInterest(today);
+		assertEquals(2.7414155166900000, accruedInterest, DOUBLE_DELTA);
+
+		transactionDate = DateProvider.getInstance().addDays(new Date(), -5);
+		account.deposit(1000, transactionDate);
+
+		accruedInterest = account.calculateBalanceAndInterest(today);
+		assertEquals(3.4265347017200000, accruedInterest, DOUBLE_DELTA);
+
+		account = new Account(AccountType.MAXI_SAVINGS);
+		transactionDate = DateProvider.getInstance().addDays(new Date(), -10);
+		account.deposit(5000, transactionDate);
+
+		accruedInterest = account.calculateBalanceAndInterest(today);
+		assertEquals(6.8535387917300000, accruedInterest, DOUBLE_DELTA);
+
+		transactionDate = DateProvider.getInstance().addDays(new Date(), -5);
+		try {
+			account.withdraw(1000, transactionDate);
+		} catch (AccountModificationException e) {
+			e.printStackTrace();
+		}
+
+		accruedInterest = account.calculateBalanceAndInterest(today);
+		assertEquals(3.48043767214404000000, accruedInterest, DOUBLE_DELTA);
+	}
+
+	@Test
+	public void testCalculateAccruedInterestSavings() {
+		Account account = new Account(AccountType.SAVINGS);
+		Date today = new Date();
+
+		Date transactionDate = DateProvider.getInstance().addDays(new Date(), -10);
+		account.deposit(2000, transactionDate);
+
+		double accruedInterest = account.calculateBalanceAndInterest(today);
+		assertEquals(0.0821938075000000, accruedInterest, DOUBLE_DELTA);
+
+		transactionDate = DateProvider.getInstance().addDays(new Date(), -5);
+		account.deposit(1000, transactionDate);
+
+		accruedInterest = account.calculateBalanceAndInterest(today);
+		assertEquals(0.1095913680200000, accruedInterest, DOUBLE_DELTA);
+	}
+
+
+	@Test
+	public void testCalculateAccruedInterestChecking() {
+		Account account = new Account(AccountType.CHECKING);
+		Date today = new Date();
+
+		Date transactionDate = DateProvider.getInstance().addDays(new Date(), -10);
+		account.deposit(1000, transactionDate);
+
+		double accruedInterest = account.calculateBalanceAndInterest(today);
+		assertEquals(0.0273975980500, accruedInterest, DOUBLE_DELTA);
+
+		transactionDate = DateProvider.getInstance().addDays(new Date(), -5);
+		account.deposit(500, transactionDate);
+
+		accruedInterest = account.calculateBalanceAndInterest(today);
+		assertEquals(0.03424695065000, accruedInterest, DOUBLE_DELTA);
+	}
+
+	@Test
+	public void testCalculateDailyRateMaxiSavings() {
+
+		Account account = new Account(AccountType.MAXI_SAVINGS);
+		Date today = new Date();
+
+		Date transactionDate = DateProvider.getInstance().addDays(today, -9);
+		account.deposit(1000, transactionDate);
+		double balance = 1000.0;
+		double interest = account.calculateDailyInterest(balance, today);
+		assertEquals(0.1369863013698630, interest, DOUBLE_DELTA);
+		balance = 3000.0;
+		interest = account.calculateDailyInterest(balance, today);
+		assertEquals(0.4109589041095890, interest, DOUBLE_DELTA);
+
+		balance = 1000.0;
+		try {
+			account.withdraw(10, transactionDate);
+		} catch (AccountModificationException e) {
+			e.printStackTrace();
+		}
+		interest = account.calculateDailyInterest(balance, today);
+		assertEquals(0.0027397260273973, interest, DOUBLE_DELTA);
+
+		balance = 3000.0;
+		interest = account.calculateDailyInterest(balance, today);
+		assertEquals(0.0082191780821918, interest, DOUBLE_DELTA);
+	}
+
+	@Test
+	public void testCalculateDailyRateChecking() {
 		Account account = new Account(AccountType.CHECKING);
 
 		double balance = 1000.0;
-		double interest = account.calculateDailyInterest(balance);
+		double interest = account.calculateDailyInterest(balance, null);
 		assertEquals(0.0027397260273973, interest, DOUBLE_DELTA);
 		balance += interest;
-		interest = account.calculateDailyInterest(balance);
+		interest = account.calculateDailyInterest(balance, null);
 		assertEquals(0.0027397335334960, interest, DOUBLE_DELTA);
 		balance += interest;
-		interest = account.calculateDailyInterest(balance);
+		interest = account.calculateDailyInterest(balance, null);
 		assertEquals(0.0027397410396152, interest, DOUBLE_DELTA);
 	}
 
 	@Test
-	public void testCalculateDailyDateSavings() {
+	public void testCalculateDailyRateSavings() {
 		Account account = new Account(AccountType.SAVINGS);
 
-		// from spreadsheet calculation:
-		//0.0027397260273972600
-		//0.0054794520547945200
-		//0.0082191780821917800
-		//0.0136986301369863000
-		//0.0246575342465753000
-
 		double balance = 1000.0;
-		double interest = account.calculateDailyInterest(balance);
+		double interest = account.calculateDailyInterest(balance, null);
 		assertEquals(0.0027397260273972600, interest, DOUBLE_DELTA);
 
 		balance = 1500.0;
-		interest = account.calculateDailyInterest(balance);
+		interest = account.calculateDailyInterest(balance, null);
 		assertEquals(0.0054794520547945200, interest, DOUBLE_DELTA);
 
 		balance = 3000.0;
-		interest = account.calculateDailyInterest(balance);
+		interest = account.calculateDailyInterest(balance, null);
 		assertEquals(0.0136986301369863000, interest, DOUBLE_DELTA);
 
 		balance += interest;
-		interest = account.calculateDailyInterest(balance);
+		interest = account.calculateDailyInterest(balance, null);
 		assertEquals(0.0136987051979734000, interest, DOUBLE_DELTA);
 	}
 
@@ -68,7 +163,11 @@ public class AccountTest {
 	@Test(expected = java.lang.IllegalArgumentException.class)
 	public void testIllegalWithdrawal() {
 		Account account = new Account(AccountType.SAVINGS);
-		account.withdraw(-100);
+		try {
+			account.withdraw(-100);
+		} catch (AccountModificationException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Test
@@ -76,70 +175,27 @@ public class AccountTest {
 		Account account = new Account(AccountType.CHECKING);
 		Date today = new Date();
 
-		Date transactionDate = DateProvider.getInstance().addDays(new Date(), -5);
-		account.deposit(100, transactionDate);
+		Date transactionDate = DateProvider.getInstance().addDays(new Date(), -15);
+		account.deposit(200, transactionDate);
+
 		transactionDate = DateProvider.getInstance().addDays(new Date(), -10);
-		account.deposit(100, transactionDate);
+        account.deposit(100, transactionDate);
+
 		transactionDate = DateProvider.getInstance().addDays(new Date(), -13);
-		account.withdraw(50, transactionDate);
+
+		try {
+			account.withdraw(50, transactionDate);
+		} catch (AccountModificationException e) {
+			e.printStackTrace();
+		}
 		assertFalse(account.hadRecentWithdrawals(today));
 
-		transactionDate = DateProvider.getInstance().addDays(new Date(), -10);
-		account.withdraw(50, transactionDate);
+		transactionDate = DateProvider.getInstance().addDays(new Date(), -9);
+		try {
+			account.withdraw(50, transactionDate);
+		} catch (AccountModificationException e) {
+			e.printStackTrace();
+		}
 		assertTrue(account.hadRecentWithdrawals(today));
-	}
-
-	/**
-	 * Test Checking Account calculation, per specification:
-	 * Checking accounts have a flat rate of 0.1%
-	 * Maxi-Savings accounts have a rate of 2% for the first $1,000 then 5% for the next $1,000 then 10%
-	 */
-	@Test
-	public void testCalculateCheckingInterest() {
-		Account account = new Account(AccountType.CHECKING);
-		account.deposit(100);
-		account.deposit(100);
-		account.deposit(100);
-		assertEquals(0.3, account.interestEarned(), DOUBLE_DELTA);
-		account.deposit(700);
-		assertEquals(1.0, account.interestEarned(), DOUBLE_DELTA);
-	}
-
-	/**
-	 * Test Savings Account calculation, per specification:
-	 * Savings accounts have a rate of 0.1% for the first $1,000 then 0.2%
-	 */
-	@Test
-	public void testCalculateSavingsInterest() {
-		Account account = new Account(AccountType.SAVINGS);
-		account.deposit(500);
-		account.deposit(500);
-		assertEquals(1.0, account.interestEarned(), DOUBLE_DELTA);
-
-		account.deposit(500);
-		assertEquals(2.0, account.interestEarned(), DOUBLE_DELTA);
-
-		account.deposit(250);
-		assertEquals(2.5, account.interestEarned(), DOUBLE_DELTA);
-	}
-
-	/**
-	 * Test Maxi-Savings Account calculation, per specification:
-	 * Maxi-Savings accounts have a rate of 2% for the first $1,000 then 5% for the next $1,000 then 10%
-	 */
-	@Test
-	public void testCalculateMaxiSavingsInterest() {
-		Account account = new Account(AccountType.MAXI_SAVINGS);
-
-		account.deposit(500);
-		assertEquals(10.0, account.interestEarned(), DOUBLE_DELTA);
-
-		account.deposit(1000);
-		// bal=1500, interest: 1000 * 0.02 + 500 * 0.05 = 20 + 25
-		assertEquals(45.0, account.interestEarned(), DOUBLE_DELTA);
-
-		account.deposit(1000);
-		// bal=2500, interest: 1000 * 0.02 + 1000 * 0.05 + 500 * 0.1 = 20 + 50 + 50
-		assertEquals(120.0, account.interestEarned(), DOUBLE_DELTA);
 	}
 }
