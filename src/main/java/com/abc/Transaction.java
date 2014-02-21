@@ -4,8 +4,7 @@ import java.util.Date;
 
 public class Transaction implements Comparable<Transaction> {
 
-	// a transaction id was added to differentiate between transactions
-	// with the same timestamp and amount
+	// a transaction id uniquely identifies a transaction
 	private long id;
 	private final double amount;
 	private final Date date;
@@ -18,7 +17,7 @@ public class Transaction implements Comparable<Transaction> {
 
 	public Transaction(double amount) {
 		this.amount = amount;
-		this.date = DateProvider.getInstance().now();
+		this.date = DateUtil.getInstance().now();
 		this.id = IdGenerator.getInstance().getId();
 	}
 
@@ -34,7 +33,7 @@ public class Transaction implements Comparable<Transaction> {
 	 * compareTo method will be used by the collection housing transactions
 	 * in transaction date order
 	 *
-	 * @param rhs "right-hand-side" transaction to compare "this" tansaction to
+	 * @param rhs "right-hand-side" transaction to compare "this" transaction to
 	 * @return standard compareTo() integer return code
 	 */
 	@Override

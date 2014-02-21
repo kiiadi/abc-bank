@@ -1,18 +1,19 @@
 package com.abc;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import static java.lang.Math.abs;
+import java.util.Locale;
 
 public class Customer {
+	private static NumberFormat usFormat = NumberFormat.getCurrencyInstance(Locale.US);
 	private String name;
 	private List<Account> accounts;
 
 	public Customer(String name) {
 		this.name = name;
-		this.accounts = new ArrayList<Account>();
+		this.accounts = new ArrayList<>();
 	}
 
 	public String getName() {
@@ -24,7 +25,15 @@ public class Customer {
 		return this;
 	}
 
+	/**
+	 * Transfer money between accounts
+	 *
+	 * @param amount money to be transferred
+	 * @param fromAccount account to be debited
+	 * @param toAccount account to be credited
+	 */
 	public void performTransfer(double amount, Account fromAccount, Account toAccount) {
+		// todo: insure that the following two operations are done atomically
 		try {
 			fromAccount.withdraw(amount);
 			toAccount.deposit(amount);
@@ -46,38 +55,19 @@ public class Customer {
 		return total;
 	}
 
-	public String getStatement() {
-		StringBuffer statement = new StringBuffer("Statement for " + name + "\n");
+	public String generateStatement() {
+		StringBuffer statement = new StringBuffer("Statement for ");
+		statement.append(name).append("\n");
 		double total = 0.0;
+
 		for (Account a : accounts) {
-			statement.append("\n");
-			statement.append(statementForAccount(a));
-			statement.append("\n");
-			total += a.sumTransactions();
+			statement.append("\n").append(a.statement()).append("\n");
+			total += a.getBalance();
 		}
+
 		statement.append("\nTotal In All Accounts ");
-		statement.append(toDollars(total));
+		statement.append(usFormat.format(total));
 		return statement.toString();
 	}
 
-	private String statementForAccount(Account a) {
-
-		// Start with pretty account type
-		StringBuffer s = new StringBuffer(a.getAccountType().toString());
-		s.append("\n");
-
-		// Now total up all the transactions
-		double total = 0.0;
-		for (Transaction t : a.getTransactions()) {
-			s.append("  ").append(t.getAmount() < 0 ? "withdrawal" : "deposit").append(" ");
-			s.append(toDollars(t.getAmount())).append("\n");
-			total += t.getAmount();
-		}
-		s.append("Total ").append(toDollars(total));
-		return s.toString();
-	}
-
-	private String toDollars(double d) {
-		return String.format("$%,.2f", abs(d));
-	}
 }

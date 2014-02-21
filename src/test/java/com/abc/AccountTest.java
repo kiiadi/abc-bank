@@ -21,27 +21,27 @@ public class AccountTest {
 		Account account = new Account(AccountType.MAXI_SAVINGS);
 		Date today = new Date();
 
-		Date transactionDate = DateProvider.getInstance().addDays(new Date(), -10);
+		Date transactionDate = DateUtil.getInstance().addDays(new Date(), -10);
 
 		account.deposit(2000, transactionDate);
 
 		double accruedInterest = account.calculateBalanceAndInterest(today);
 		assertEquals(2.7414155166900000, accruedInterest, DOUBLE_DELTA);
 
-		transactionDate = DateProvider.getInstance().addDays(new Date(), -5);
+		transactionDate = DateUtil.getInstance().addDays(new Date(), -5);
 		account.deposit(1000, transactionDate);
 
 		accruedInterest = account.calculateBalanceAndInterest(today);
 		assertEquals(3.4265347017200000, accruedInterest, DOUBLE_DELTA);
 
 		account = new Account(AccountType.MAXI_SAVINGS);
-		transactionDate = DateProvider.getInstance().addDays(new Date(), -10);
+		transactionDate = DateUtil.getInstance().addDays(new Date(), -10);
 		account.deposit(5000, transactionDate);
 
 		accruedInterest = account.calculateBalanceAndInterest(today);
 		assertEquals(6.8535387917300000, accruedInterest, DOUBLE_DELTA);
 
-		transactionDate = DateProvider.getInstance().addDays(new Date(), -5);
+		transactionDate = DateUtil.getInstance().addDays(new Date(), -5);
 		try {
 			account.withdraw(1000, transactionDate);
 		} catch (AccountModificationException e) {
@@ -49,7 +49,10 @@ public class AccountTest {
 		}
 
 		accruedInterest = account.calculateBalanceAndInterest(today);
-		assertEquals(3.48043767214404000000, accruedInterest, DOUBLE_DELTA);
+		double balance =  account.getBalance();
+		assertEquals(3.48043767214404000, accruedInterest, DOUBLE_DELTA);
+		assertEquals(4003.48043767214404000, balance, DOUBLE_DELTA);
+
 	}
 
 	@Test
@@ -57,13 +60,13 @@ public class AccountTest {
 		Account account = new Account(AccountType.SAVINGS);
 		Date today = new Date();
 
-		Date transactionDate = DateProvider.getInstance().addDays(new Date(), -10);
+		Date transactionDate = DateUtil.getInstance().addDays(new Date(), -10);
 		account.deposit(2000, transactionDate);
 
 		double accruedInterest = account.calculateBalanceAndInterest(today);
 		assertEquals(0.0821938075000000, accruedInterest, DOUBLE_DELTA);
 
-		transactionDate = DateProvider.getInstance().addDays(new Date(), -5);
+		transactionDate = DateUtil.getInstance().addDays(new Date(), -5);
 		account.deposit(1000, transactionDate);
 
 		accruedInterest = account.calculateBalanceAndInterest(today);
@@ -76,13 +79,13 @@ public class AccountTest {
 		Account account = new Account(AccountType.CHECKING);
 		Date today = new Date();
 
-		Date transactionDate = DateProvider.getInstance().addDays(new Date(), -10);
+		Date transactionDate = DateUtil.getInstance().addDays(new Date(), -10);
 		account.deposit(1000, transactionDate);
 
 		double accruedInterest = account.calculateBalanceAndInterest(today);
 		assertEquals(0.0273975980500, accruedInterest, DOUBLE_DELTA);
 
-		transactionDate = DateProvider.getInstance().addDays(new Date(), -5);
+		transactionDate = DateUtil.getInstance().addDays(new Date(), -5);
 		account.deposit(500, transactionDate);
 
 		accruedInterest = account.calculateBalanceAndInterest(today);
@@ -95,7 +98,7 @@ public class AccountTest {
 		Account account = new Account(AccountType.MAXI_SAVINGS);
 		Date today = new Date();
 
-		Date transactionDate = DateProvider.getInstance().addDays(today, -9);
+		Date transactionDate = DateUtil.getInstance().addDays(today, -9);
 		account.deposit(1000, transactionDate);
 		double balance = 1000.0;
 		double interest = account.calculateDailyInterest(balance, today);
@@ -175,13 +178,13 @@ public class AccountTest {
 		Account account = new Account(AccountType.CHECKING);
 		Date today = new Date();
 
-		Date transactionDate = DateProvider.getInstance().addDays(new Date(), -15);
+		Date transactionDate = DateUtil.getInstance().addDays(new Date(), -15);
 		account.deposit(200, transactionDate);
 
-		transactionDate = DateProvider.getInstance().addDays(new Date(), -10);
+		transactionDate = DateUtil.getInstance().addDays(new Date(), -10);
         account.deposit(100, transactionDate);
 
-		transactionDate = DateProvider.getInstance().addDays(new Date(), -13);
+		transactionDate = DateUtil.getInstance().addDays(new Date(), -13);
 
 		try {
 			account.withdraw(50, transactionDate);
@@ -190,7 +193,7 @@ public class AccountTest {
 		}
 		assertFalse(account.hadRecentWithdrawals(today));
 
-		transactionDate = DateProvider.getInstance().addDays(new Date(), -9);
+		transactionDate = DateUtil.getInstance().addDays(new Date(), -9);
 		try {
 			account.withdraw(50, transactionDate);
 		} catch (AccountModificationException e) {

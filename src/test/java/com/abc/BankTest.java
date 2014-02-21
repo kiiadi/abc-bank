@@ -26,7 +26,7 @@ public class BankTest {
         Customer bill = new Customer("Bill").openAccount(checkingAccount);
         bank.addCustomer(bill);
 
-		Date transactionDate = DateProvider.getInstance().addDays(new Date(), -1);
+		Date transactionDate = DateUtil.getInstance().addDays(new Date(), -1);
         checkingAccount.deposit(1000.0, transactionDate);
 
         assertEquals(0.0027397260273972603, bank.totalInterestPaid(), DOUBLE_DELTA);
@@ -38,7 +38,7 @@ public class BankTest {
         Account checkingAccount = new Account(AccountType.SAVINGS);
         bank.addCustomer(new Customer("Bill").openAccount(checkingAccount));
 
-		Date transactionDate = DateProvider.getInstance().addDays(new Date(), -1);
+		Date transactionDate = DateUtil.getInstance().addDays(new Date(), -1);
 		checkingAccount.deposit(1500.0, transactionDate);
 
         assertEquals(0.005479452054794521, bank.totalInterestPaid(), DOUBLE_DELTA);
@@ -50,7 +50,7 @@ public class BankTest {
         Account checkingAccount = new Account(AccountType.MAXI_SAVINGS);
         bank.addCustomer(new Customer("Bill").openAccount(checkingAccount));
 
-   		Date transactionDate = DateProvider.getInstance().addDays(new Date(), -1);
+   		Date transactionDate = DateUtil.getInstance().addDays(new Date(), -1);
         checkingAccount.deposit(3000.0, transactionDate);
 		double testDayInterest = 3000.0 * (5.0 / 100.0 / 365.0);
         assertEquals(testDayInterest, bank.totalInterestPaid(), DOUBLE_DELTA);

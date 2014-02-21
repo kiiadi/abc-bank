@@ -1,13 +1,7 @@
 package com.abc;
 
 /**
- * User: mchernyak
- * Date: 2/20/14
- * Time: 10:42 AM
- */
-
-/**
- * This is a pseudo-unique integer ID generator.
+ * A pseudo-unique integer ID generator.
  * As implemented currently, it is not multi-threaded.
  */
 public class IdGenerator {

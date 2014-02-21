@@ -10,18 +10,15 @@ import static org.junit.Assert.assertTrue;
 
 public class TransactionTest {
 
-	@Test
-	public void transaction() {
-		Transaction t = new Transaction(5);
-		assertTrue(t instanceof Transaction);
-	}
-
+	/**
+	 * Test Transaction comparator method ensuring chronological ordering
+	 */
 	@Test
 	public void testTransactionComparator() {
-		Date d0 = DateProvider.getInstance().getDateByYMD(2014, 1, 1);
-		Date d1 = DateProvider.getInstance().dateFromString("20140101");
-		Date d2 = DateProvider.getInstance().getDateByYMD(2014, 1, 2);
-		Date d3 = DateProvider.getInstance().getDateByYMD(2014, 2, 20);
+		Date d0 = DateUtil.getInstance().dateFromYMD(2014, 1, 1);
+		Date d1 = DateUtil.getInstance().dateFromYYYYMMDDString("20140101");
+		Date d2 = DateUtil.getInstance().dateFromYMD(2014, 1, 2);
+		Date d3 = DateUtil.getInstance().dateFromYMD(2014, 2, 20);
 
 		Transaction t0 = new Transaction(5, d0);
 		Transaction t1 = new Transaction(5, d1);
@@ -46,16 +43,19 @@ public class TransactionTest {
 	}
 
 
+	/**
+	 * test that transaction set is presenting transaction in a chronological order in a TreeSet
+	 */
 	@Test
 	public void testTransactionSet() {
-		TreeSet<Transaction> transactions = new TreeSet<Transaction>();
+		TreeSet<Transaction> transactions = new TreeSet<>();
 
-		Transaction t1 = new Transaction(5, DateProvider.getInstance().dateFromString("20140101"));
-		Transaction t2 = new Transaction(5, DateProvider.getInstance().dateFromString("20140102"));
-		Transaction t3 = new Transaction(-3, DateProvider.getInstance().dateFromString("20140103"));
-		Transaction t4 = new Transaction(-4, DateProvider.getInstance().dateFromString("20140104"));
-		Transaction t5 = new Transaction(9, DateProvider.getInstance().dateFromString("20140102"));
-		Transaction t6 = new Transaction(8, DateProvider.getInstance().dateFromString("20140102"));
+		Transaction t1 = new Transaction(5, DateUtil.getInstance().dateFromYYYYMMDDString("20140101"));
+		Transaction t2 = new Transaction(5, DateUtil.getInstance().dateFromYYYYMMDDString("20140102"));
+		Transaction t3 = new Transaction(-3, DateUtil.getInstance().dateFromYYYYMMDDString("20140103"));
+		Transaction t4 = new Transaction(-4, DateUtil.getInstance().dateFromYYYYMMDDString("20140104"));
+		Transaction t5 = new Transaction(9, DateUtil.getInstance().dateFromYYYYMMDDString("20140102"));
+		Transaction t6 = new Transaction(8, DateUtil.getInstance().dateFromYYYYMMDDString("20140102"));
 
 		transactions.add(t1);
 		transactions.add(t2);

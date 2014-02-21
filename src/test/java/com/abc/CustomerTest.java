@@ -28,10 +28,9 @@ public class CustomerTest {
 	}
 
 	@Test
-	public void testPerformTransfer() {
+	public void testValidTransfer() {
 		Account checkingAccount = new Account(AccountType.CHECKING);
 		Account savingsAccount = new Account(AccountType.SAVINGS);
-		Date today = new Date();
 		Customer henry = new Customer("Henry").openAccount(checkingAccount).openAccount(savingsAccount);
 		checkingAccount.deposit(1000);
 		savingsAccount.deposit(1000);
@@ -47,14 +46,23 @@ public class CustomerTest {
 
 	@Test
 	public void testGenerateCustomerStatement() {
+		Date today = DateUtil.getInstance().now();
+		Date tenDaysAgo = DateUtil.getInstance().addDays(today, -10);
+		Date fiveDaysAgo = DateUtil.getInstance().addDays(today, -5);
 
 		Account checkingAccount = new Account(AccountType.CHECKING);
 		Account savingsAccount = new Account(AccountType.SAVINGS);
+		Account maxiSavingsAccount = new Account(AccountType.MAXI_SAVINGS);
 
-		Customer henry = new Customer("Henry").openAccount(checkingAccount).openAccount(savingsAccount);
+		Customer henry = new Customer("Henry");
+		henry.openAccount(checkingAccount);
+		henry.openAccount(savingsAccount);
+		henry.openAccount(maxiSavingsAccount);
 
-		checkingAccount.deposit(100.0);
-		savingsAccount.deposit(4000.0);
+		checkingAccount.deposit(1000.0, tenDaysAgo);
+		savingsAccount.deposit(4000.0, tenDaysAgo);
+		maxiSavingsAccount.deposit(5000.0, fiveDaysAgo);
+
 		try {
 			savingsAccount.withdraw(200.0);
 		} catch (AccountModificationException e) {
@@ -64,15 +72,22 @@ public class CustomerTest {
 		assertEquals("Statement for Henry\n" +
 				"\n" +
 				"Checking Account\n" +
-				"  deposit $100.00\n" +
-				"Total $100.00\n" +
+				"  deposit $1,000.00\n" +
+				"Accrued Interest $0.03\n" +
+				"Total $1,000.03\n" +
 				"\n" +
 				"Savings Account\n" +
 				"  deposit $4,000.00\n" +
 				"  withdrawal $200.00\n" +
-				"Total $3,800.00\n" +
+				"Accrued Interest $0.19\n" +
+				"Total $3,800.19\n" +
 				"\n" +
-				"Total In All Accounts $3,900.00", henry.getStatement());
+				"Maxi Savings Account\n" +
+				"  deposit $5,000.00\n" +
+				"Accrued Interest $3.43\n" +
+				"Total $5,003.43\n" +
+				"\n" +
+				"Total In All Accounts $9,803.64", henry.generateStatement());
 	}
 
 	@Test
