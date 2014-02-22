@@ -15,10 +15,10 @@ public class TransactionTest {
 	 */
 	@Test
 	public void testTransactionComparator() {
-		Date d0 = DateUtil.getInstance().dateFromYMD(2014, 1, 1);
-		Date d1 = DateUtil.getInstance().dateFromYYYYMMDDString("20140101");
-		Date d2 = DateUtil.getInstance().dateFromYMD(2014, 1, 2);
-		Date d3 = DateUtil.getInstance().dateFromYMD(2014, 2, 20);
+		Date d0 = DateUtil.dateFromYMD(2014, 1, 1);
+		Date d1 = DateUtil.dateFromYYYYMMDDString("20140101");
+		Date d2 = DateUtil.dateFromYMD(2014, 1, 2);
+		Date d3 = DateUtil.dateFromYMD(2014, 2, 20);
 
 		Transaction t0 = new Transaction(5, d0);
 		Transaction t1 = new Transaction(5, d1);
@@ -50,12 +50,12 @@ public class TransactionTest {
 	public void testTransactionSet() {
 		TreeSet<Transaction> transactions = new TreeSet<>();
 
-		Transaction t1 = new Transaction(5, DateUtil.getInstance().dateFromYYYYMMDDString("20140101"));
-		Transaction t2 = new Transaction(5, DateUtil.getInstance().dateFromYYYYMMDDString("20140102"));
-		Transaction t3 = new Transaction(-3, DateUtil.getInstance().dateFromYYYYMMDDString("20140103"));
-		Transaction t4 = new Transaction(-4, DateUtil.getInstance().dateFromYYYYMMDDString("20140104"));
-		Transaction t5 = new Transaction(9, DateUtil.getInstance().dateFromYYYYMMDDString("20140102"));
-		Transaction t6 = new Transaction(8, DateUtil.getInstance().dateFromYYYYMMDDString("20140102"));
+		Transaction t1 = new Transaction(5, DateUtil.dateFromYYYYMMDDString("20140101"));
+		Transaction t2 = new Transaction(5, DateUtil.dateFromYYYYMMDDString("20140102"));
+		Transaction t3 = new Transaction(-3, DateUtil.dateFromYYYYMMDDString("20140103"));
+		Transaction t4 = new Transaction(-4, DateUtil.dateFromYYYYMMDDString("20140104"));
+		Transaction t5 = new Transaction(9, DateUtil.dateFromYYYYMMDDString("20140102"));
+		Transaction t6 = new Transaction(8, DateUtil.dateFromYYYYMMDDString("20140102"));
 
 		transactions.add(t1);
 		transactions.add(t2);

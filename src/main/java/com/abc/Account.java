@@ -1,32 +1,44 @@
 package com.abc;
 
-import java.text.NumberFormat;
 import java.util.Date;
-import java.util.Locale;
 import java.util.TreeSet;
 
-public class Account {
+public abstract class Account {
 
-	// constants used by te current interest calculation logic
-	// implementation does not handle leap years
-	private static double TIER1_THRESHOLD_AMOUNT = 1000.0;
-	private static double CHECKING_DAILY_RATE_DEFAULT = 0.001 / 365.0;
-	private static double SAVINGS_DAILY_RATE_TIER1 = 0.001 / 365.0;
-	private static double SAVINGS_DAILY_RATE_TIER2 = 0.002 / 365.0;
-	private static double MAXI_SAVINGS_DAILY_RATE_DEFAULT = 0.001 / 365.0;
-	private static double MAXI_SAVINGS_DAILY_RATE_NO_WITHDRAWALS = 0.05 / 365.0;
-	private static long MINIMUM_NO_WITHDRAWAL_DAYS = 10;
-	private static NumberFormat usaFormat = NumberFormat.getCurrencyInstance(Locale.US);
-	private final AccountType accountType;
+	private double balance;
+	private double interest;
 
 	// use TreeSet to house transactions ordered chronologically
 	private TreeSet<Transaction> transactions;
-	private double balance;
-	private double accruedInterest;
 
-	public Account(AccountType accountType) {
-		this.accountType = accountType;
+	/**
+	 * default constructor;
+	 */
+	public Account() {
+		this.balance = 0.0;
+		this.interest = 0.0;
 		this.transactions = new TreeSet<>();
+	}
+
+	/**
+	 * Get the account type name, abstract method intended to be implemented in the sub-classes
+	 *
+	 * @return account type name
+	 */
+	public abstract String getTypeName();
+
+	/**
+	 * Calculate one day's worth of interest.  Abstract method intended to be implemented by the the specific
+	 * sub-classes
+	 *
+	 * @param balance base balance for daily interest calculation
+	 * @return one day's interest amount
+	 */
+	public abstract double calculateDailyInterest(double balance, Date asOfDate);
+
+
+	public TreeSet<Transaction> getTransactions() {
+		return transactions;
 	}
 
 	/**
@@ -82,11 +94,21 @@ public class Account {
 	}
 
 	/**
-	 * 	Get current account balance
+	 * Get current account balance
+	 *
 	 * @return account balance
 	 */
 	public double getBalance() {
 		return balance;
+	}
+
+	/**
+	 * Get current accrued interest
+	 *
+	 * @return interest
+	 */
+	public double getInterest() {
+		return interest;
 	}
 
 	/**
@@ -97,7 +119,7 @@ public class Account {
 	 * @return accrued interest value
 	 */
 	public double calculateBalanceAndInterest(Date asOfDate) {
-		accruedInterest = 0.0;
+		interest = 0.0;
 		balance = 0.0;
 
 		if (transactions.size() <= 0) {
@@ -106,108 +128,53 @@ public class Account {
 
 		// begin calculations starting from the first chronological transaction
 		Transaction firstTransaction = transactions.first();
-		asOfDate = DateUtil.getInstance().isolateDateComponents(asOfDate);
-		Date runnerDate = DateUtil.getInstance().isolateDateComponents(firstTransaction.getDate());
+		asOfDate = DateUtil.isolateDateComponents(asOfDate);
+		Date runnerDate = DateUtil.isolateDateComponents(firstTransaction.getDate());
 
 		while (runnerDate.compareTo(asOfDate) <= 0) {
 
 			// calculate interest and apply the result to balance
 			double interest = calculateDailyInterest(balance, runnerDate);
 			balance += interest;
-			accruedInterest += interest;
+			this.interest += interest;
 
 			// iterate over transactions to apply the day's transactions' amounts to balance
 			for (Transaction t : transactions) {
-				Date transactionDate = DateUtil.getInstance().isolateDateComponents(t.getDate());
+				Date transactionDate = DateUtil.isolateDateComponents(t.getDate());
 				if (transactionDate.compareTo(runnerDate) == 0) {
 					balance += t.getAmount();
 				}
 			}
 
 			// advance the runner date
-			runnerDate = DateUtil.getInstance().addDays(runnerDate, 1);
-		}
-
-		return accruedInterest;
-	}
-
-	/**
-	 * Calculate one day's worth of interest, based on the current balance and account type
-	 *
-	 * @param balance base balance for daily interest calculation
-	 * @return one day's interest amount
-	 */
-	double calculateDailyInterest(double balance, Date asOfDate) {
-		double interest;
-
-		switch (accountType) {
-			case SAVINGS:
-				if (balance <= TIER1_THRESHOLD_AMOUNT) {
-					interest = balance * SAVINGS_DAILY_RATE_TIER1;
-				} else {
-					interest = TIER1_THRESHOLD_AMOUNT * SAVINGS_DAILY_RATE_TIER1;
-					interest += (balance - TIER1_THRESHOLD_AMOUNT) * SAVINGS_DAILY_RATE_TIER2;
-				}
-				break;
-
-			case MAXI_SAVINGS:
-				double dailyRate = (hadRecentWithdrawals(asOfDate)) ?
-						MAXI_SAVINGS_DAILY_RATE_DEFAULT : MAXI_SAVINGS_DAILY_RATE_NO_WITHDRAWALS;
-
-				interest = balance * dailyRate;
-				break;
-
-			default:
-				interest = balance * CHECKING_DAILY_RATE_DEFAULT;
+			runnerDate = DateUtil.addDays(runnerDate, 1);
 		}
 
 		return interest;
 	}
 
 	/**
-	 * Determine whether there were any withdrawal transactions with N days of asOfDate
+	 * Determine whether there were had been withdrawal transactions with N previous days of asOfDate
 	 *
 	 * @param asOfDate as-of date
-	 * @return true if there are withdrawal transactions within N days
+	 * @param nDays    number of days
+	 * @return true if there are withdrawal transactions within N previous days
 	 */
-	boolean hadRecentWithdrawals(Date asOfDate) {
+	protected boolean hadRecentWithdrawals(Date asOfDate, int nDays) {
 		boolean rv = false;
 		for (Transaction t : transactions) {
+			if (t.getDate().compareTo(asOfDate) > 0) {
+				// skip checking future transactions
+				break;
+			}
+
+			// debit transaction within previous nDays
 			if (t.getAmount() < 0 &&
-					t.getDate().compareTo(asOfDate) <= 0 &&
-					MINIMUM_NO_WITHDRAWAL_DAYS > DateUtil.getInstance().calendarDaysDifference
-							(t.getDate(), asOfDate)) {
+					nDays > DateUtil.calendarDaysDifference(t.getDate(), asOfDate)) {
 				rv = true;
 				break;
 			}
 		}
 		return rv;
-	}
-
-	/**
-	 * Generate an account statement string
-	 *
-	 * @return String representing an account statement
-	 */
-	public String statement() {
-   		calculateBalanceAndInterest(new Date());
-
-		// Start with pretty account type
-		StringBuffer s = new StringBuffer(accountType.toString());
-		s.append("\n");
-
-		// List transactions
-		for (Transaction t : transactions) {
-			s.append("  ").append(t.getAmount() < 0 ? "withdrawal" : "deposit").append(" ");
-			s.append(usaFormat.format(Math.abs(t.getAmount()))).append("\n");
-		}
-
-		// Account accrued interest
-		s.append("Accrued Interest ").append(usaFormat.format(accruedInterest)).append("\n");
-
-		// Account balance
-		s.append("Total ").append(usaFormat.format(balance));
-
-		return s.toString();
 	}
 }

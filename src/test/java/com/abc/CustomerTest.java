@@ -11,8 +11,8 @@ public class CustomerTest {
 
 	@Test
 	public void testInvalidTransfer() {
-		Account checkingAccount = new Account(AccountType.CHECKING);
-		Account savingsAccount = new Account(AccountType.SAVINGS);
+		Account checkingAccount = AccountFactory.createAccount(AccountType.CHECKING);
+		Account savingsAccount = AccountFactory.createAccount(AccountType.SAVINGS);
 		Customer henry = new Customer("Henry").openAccount(checkingAccount).openAccount(savingsAccount);
 		checkingAccount.deposit(1000);
 		savingsAccount.deposit(1000);
@@ -29,8 +29,8 @@ public class CustomerTest {
 
 	@Test
 	public void testValidTransfer() {
-		Account checkingAccount = new Account(AccountType.CHECKING);
-		Account savingsAccount = new Account(AccountType.SAVINGS);
+		Account checkingAccount = AccountFactory.createAccount(AccountType.CHECKING);
+		Account savingsAccount = AccountFactory.createAccount(AccountType.SAVINGS);
 		Customer henry = new Customer("Henry").openAccount(checkingAccount).openAccount(savingsAccount);
 		checkingAccount.deposit(1000);
 		savingsAccount.deposit(1000);
@@ -46,13 +46,13 @@ public class CustomerTest {
 
 	@Test
 	public void testGenerateCustomerStatement() {
-		Date today = DateUtil.getInstance().now();
-		Date tenDaysAgo = DateUtil.getInstance().addDays(today, -10);
-		Date fiveDaysAgo = DateUtil.getInstance().addDays(today, -5);
+		Date today = new Date();
+		Date tenDaysAgo = DateUtil.addDays(today, -10);
+		Date fiveDaysAgo = DateUtil.addDays(today, -5);
 
-		Account checkingAccount = new Account(AccountType.CHECKING);
-		Account savingsAccount = new Account(AccountType.SAVINGS);
-		Account maxiSavingsAccount = new Account(AccountType.MAXI_SAVINGS);
+		Account checkingAccount = AccountFactory.createAccount(AccountType.CHECKING);
+		Account savingsAccount = AccountFactory.createAccount(AccountType.SAVINGS);
+		Account maxiSavingsAccount = AccountFactory.createAccount(AccountType.MAXI_SAVINGS);
 
 		Customer henry = new Customer("Henry");
 		henry.openAccount(checkingAccount);
@@ -87,29 +87,29 @@ public class CustomerTest {
 				"Accrued Interest $3.43\n" +
 				"Total $5,003.43\n" +
 				"\n" +
-				"Total In All Accounts $9,803.64", henry.generateStatement());
+				"Total In All Accounts $9,803.64", SimpleReport.customerStatement(henry, today));
 	}
 
 	@Test
 	public void testOneAccount() {
-		Customer oscar = new Customer("Oscar").openAccount(new Account(AccountType.SAVINGS));
+		Customer oscar = new Customer("Oscar").openAccount(AccountFactory.createAccount(AccountType.SAVINGS));
 		assertEquals(1, oscar.getNumberOfAccounts());
 	}
 
 	@Test
 	public void testTwoAccount() {
 		Customer oscar = new Customer("Oscar")
-				.openAccount(new Account(AccountType.SAVINGS));
-		oscar.openAccount(new Account(AccountType.CHECKING));
+				.openAccount(AccountFactory.createAccount(AccountType.SAVINGS));
+		oscar.openAccount(AccountFactory.createAccount(AccountType.CHECKING));
 		assertEquals(2, oscar.getNumberOfAccounts());
 	}
 
 	@Test
 	public void testThreeAccounts() {
 		Customer oscar = new Customer("Oscar")
-				.openAccount(new Account(AccountType.SAVINGS));
-		oscar.openAccount(new Account(AccountType.CHECKING));
-		oscar.openAccount(new Account(AccountType.MAXI_SAVINGS));
+				.openAccount(AccountFactory.createAccount(AccountType.SAVINGS));
+		oscar.openAccount(AccountFactory.createAccount(AccountType.CHECKING));
+		oscar.openAccount(AccountFactory.createAccount(AccountType.MAXI_SAVINGS));
 		assertEquals(3, oscar.getNumberOfAccounts());
 	}
 }

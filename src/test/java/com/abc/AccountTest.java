@@ -18,30 +18,30 @@ public class AccountTest {
 
 	@Test
 	public void testCalculateAccruedInterestMaxiSavings() {
-		Account account = new Account(AccountType.MAXI_SAVINGS);
+		Account account = AccountFactory.createAccount(AccountType.MAXI_SAVINGS);
 		Date today = new Date();
 
-		Date transactionDate = DateUtil.getInstance().addDays(new Date(), -10);
+		Date transactionDate = DateUtil.addDays(new Date(), -10);
 
 		account.deposit(2000, transactionDate);
 
 		double accruedInterest = account.calculateBalanceAndInterest(today);
 		assertEquals(2.7414155166900000, accruedInterest, DOUBLE_DELTA);
 
-		transactionDate = DateUtil.getInstance().addDays(new Date(), -5);
+		transactionDate = DateUtil.addDays(new Date(), -5);
 		account.deposit(1000, transactionDate);
 
 		accruedInterest = account.calculateBalanceAndInterest(today);
 		assertEquals(3.4265347017200000, accruedInterest, DOUBLE_DELTA);
 
-		account = new Account(AccountType.MAXI_SAVINGS);
-		transactionDate = DateUtil.getInstance().addDays(new Date(), -10);
+		account = AccountFactory.createAccount(AccountType.MAXI_SAVINGS);
+		transactionDate = DateUtil.addDays(new Date(), -10);
 		account.deposit(5000, transactionDate);
 
 		accruedInterest = account.calculateBalanceAndInterest(today);
 		assertEquals(6.8535387917300000, accruedInterest, DOUBLE_DELTA);
 
-		transactionDate = DateUtil.getInstance().addDays(new Date(), -5);
+		transactionDate = DateUtil.addDays(new Date(), -5);
 		try {
 			account.withdraw(1000, transactionDate);
 		} catch (AccountModificationException e) {
@@ -57,16 +57,16 @@ public class AccountTest {
 
 	@Test
 	public void testCalculateAccruedInterestSavings() {
-		Account account = new Account(AccountType.SAVINGS);
+		Account account = AccountFactory.createAccount(AccountType.SAVINGS);
 		Date today = new Date();
 
-		Date transactionDate = DateUtil.getInstance().addDays(new Date(), -10);
+		Date transactionDate = DateUtil.addDays(new Date(), -10);
 		account.deposit(2000, transactionDate);
 
 		double accruedInterest = account.calculateBalanceAndInterest(today);
 		assertEquals(0.0821938075000000, accruedInterest, DOUBLE_DELTA);
 
-		transactionDate = DateUtil.getInstance().addDays(new Date(), -5);
+		transactionDate = DateUtil.addDays(new Date(), -5);
 		account.deposit(1000, transactionDate);
 
 		accruedInterest = account.calculateBalanceAndInterest(today);
@@ -76,16 +76,16 @@ public class AccountTest {
 
 	@Test
 	public void testCalculateAccruedInterestChecking() {
-		Account account = new Account(AccountType.CHECKING);
+		Account account = AccountFactory.createAccount(AccountType.CHECKING);
 		Date today = new Date();
 
-		Date transactionDate = DateUtil.getInstance().addDays(new Date(), -10);
+		Date transactionDate = DateUtil.addDays(new Date(), -10);
 		account.deposit(1000, transactionDate);
 
 		double accruedInterest = account.calculateBalanceAndInterest(today);
 		assertEquals(0.0273975980500, accruedInterest, DOUBLE_DELTA);
 
-		transactionDate = DateUtil.getInstance().addDays(new Date(), -5);
+		transactionDate = DateUtil.addDays(new Date(), -5);
 		account.deposit(500, transactionDate);
 
 		accruedInterest = account.calculateBalanceAndInterest(today);
@@ -95,10 +95,10 @@ public class AccountTest {
 	@Test
 	public void testCalculateDailyRateMaxiSavings() {
 
-		Account account = new Account(AccountType.MAXI_SAVINGS);
+		Account account = AccountFactory.createAccount(AccountType.MAXI_SAVINGS);
 		Date today = new Date();
 
-		Date transactionDate = DateUtil.getInstance().addDays(today, -9);
+		Date transactionDate = DateUtil.addDays(today, -9);
 		account.deposit(1000, transactionDate);
 		double balance = 1000.0;
 		double interest = account.calculateDailyInterest(balance, today);
@@ -123,7 +123,7 @@ public class AccountTest {
 
 	@Test
 	public void testCalculateDailyRateChecking() {
-		Account account = new Account(AccountType.CHECKING);
+		Account account = AccountFactory.createAccount(AccountType.CHECKING);
 
 		double balance = 1000.0;
 		double interest = account.calculateDailyInterest(balance, null);
@@ -138,7 +138,7 @@ public class AccountTest {
 
 	@Test
 	public void testCalculateDailyRateSavings() {
-		Account account = new Account(AccountType.SAVINGS);
+		Account account = AccountFactory.createAccount(AccountType.SAVINGS);
 
 		double balance = 1000.0;
 		double interest = account.calculateDailyInterest(balance, null);
@@ -159,13 +159,13 @@ public class AccountTest {
 
 	@Test(expected = java.lang.IllegalArgumentException.class)
 	public void testIllegalDeposit() {
-		Account account = new Account(AccountType.CHECKING);
+		Account account = AccountFactory.createAccount(AccountType.CHECKING);
 		account.deposit(-100);
 	}
 
 	@Test(expected = java.lang.IllegalArgumentException.class)
 	public void testIllegalWithdrawal() {
-		Account account = new Account(AccountType.SAVINGS);
+		Account account = AccountFactory.createAccount(AccountType.SAVINGS);
 		try {
 			account.withdraw(-100);
 		} catch (AccountModificationException e) {
@@ -175,30 +175,47 @@ public class AccountTest {
 
 	@Test
 	public void testHadRecentWithdrawals() {
-		Account account = new Account(AccountType.CHECKING);
+		Account account = AccountFactory.createAccount(AccountType.CHECKING);
 		Date today = new Date();
 
-		Date transactionDate = DateUtil.getInstance().addDays(new Date(), -15);
+		Date transactionDate = DateUtil.addDays(new Date(), -15);
 		account.deposit(200, transactionDate);
 
-		transactionDate = DateUtil.getInstance().addDays(new Date(), -10);
+		transactionDate = DateUtil.addDays(new Date(), -10);
         account.deposit(100, transactionDate);
 
-		transactionDate = DateUtil.getInstance().addDays(new Date(), -13);
+		transactionDate = DateUtil.addDays(new Date(), -13);
 
 		try {
 			account.withdraw(50, transactionDate);
 		} catch (AccountModificationException e) {
 			e.printStackTrace();
 		}
-		assertFalse(account.hadRecentWithdrawals(today));
+		assertFalse(account.hadRecentWithdrawals(today, 10));
 
-		transactionDate = DateUtil.getInstance().addDays(new Date(), -9);
+		transactionDate = DateUtil.addDays(new Date(), -9);
 		try {
 			account.withdraw(50, transactionDate);
 		} catch (AccountModificationException e) {
 			e.printStackTrace();
 		}
-		assertTrue(account.hadRecentWithdrawals(today));
+		assertTrue(account.hadRecentWithdrawals(today, 10));
 	}
+
+	@Test
+	public void testAccountTypeAsString() {
+		AccountType accountTypeChecking = AccountType.CHECKING;
+		AccountType accountTypeSavings = AccountType.SAVINGS;
+		AccountType accountTypeMaxiSavings = AccountType.MAXI_SAVINGS;
+
+		assertEquals("account type strings should match",
+				"Checking Account", accountTypeChecking.toString());
+
+		assertEquals("account type strings should match",
+				"Savings Account", accountTypeSavings.toString());
+
+		assertEquals("account type strings should match",
+				"Maxi Savings Account", accountTypeMaxiSavings.toString());
+	}
+
 }

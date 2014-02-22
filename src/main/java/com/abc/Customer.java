@@ -1,13 +1,11 @@
 package com.abc;
 
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class Customer {
-	private static NumberFormat usFormat = NumberFormat.getCurrencyInstance(Locale.US);
+
 	private String name;
 	private List<Account> accounts;
 
@@ -23,6 +21,10 @@ public class Customer {
 	public Customer openAccount(Account account) {
 		accounts.add(account);
 		return this;
+	}
+
+	public List<Account> getAccounts() {
+		return accounts;
 	}
 
 	/**
@@ -53,21 +55,6 @@ public class Customer {
 		}
 
 		return total;
-	}
-
-	public String generateStatement() {
-		StringBuffer statement = new StringBuffer("Statement for ");
-		statement.append(name).append("\n");
-		double total = 0.0;
-
-		for (Account a : accounts) {
-			statement.append("\n").append(a.statement()).append("\n");
-			total += a.getBalance();
-		}
-
-		statement.append("\nTotal In All Accounts ");
-		statement.append(usFormat.format(total));
-		return statement.toString();
 	}
 
 }

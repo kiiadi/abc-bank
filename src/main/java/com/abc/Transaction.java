@@ -15,12 +15,6 @@ public class Transaction implements Comparable<Transaction> {
 		this.id = IdGenerator.getInstance().getId();
 	}
 
-	public Transaction(double amount) {
-		this.amount = amount;
-		this.date = DateUtil.getInstance().now();
-		this.id = IdGenerator.getInstance().getId();
-	}
-
 	public Date getDate() {
 		return date;
 	}
@@ -38,6 +32,8 @@ public class Transaction implements Comparable<Transaction> {
 	 */
 	@Override
 	public int compareTo(Transaction rhs) {
+		if (this == rhs)
+			return 0;
 		int rv = this.date.compareTo(rhs.date);
 		if (rv == 0) {
 			if (id < rhs.id) {
