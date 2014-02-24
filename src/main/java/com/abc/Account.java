@@ -2,72 +2,89 @@ package com.abc;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Account {
+	private int accountNumber;
+	private AccountType accountType;
+	public List<Transaction> transactions;
+	// Object aLock = new Object();
+	private final Lock accountLock = new ReentrantLock();
 
-    public static final int CHECKING = 0;
-    public static final int SAVINGS = 1;
-    public static final int MAXI_SAVINGS = 2;
+	public Account(AccountType accountType) {
+		this.accountType = accountType;
+		this.transactions = new ArrayList<Transaction>();
+	}
 
-    private final int accountType;
-    public List<Transaction> transactions;
+	public void deposit(double amount) {
 
-    public Account(int accountType) {
-        this.accountType = accountType;
-        this.transactions = new ArrayList<Transaction>();
-    }
+		if (amount <= 0) {
+			throw new IllegalArgumentException(
+					"amount must be greater than zero");
+		} else {
+			// synchronized (aLock) {
+			accountLock.lock();
+			try {
+				transactions.add(new Transaction(amount));
 
-    public void deposit(double amount) {
-        if (amount <= 0) {
-            throw new IllegalArgumentException("amount must be greater than zero");
-        } else {
-            transactions.add(new Transaction(amount));
-        }
-    }
+			} finally {
+				accountLock.unlock();
+			}
+		}
 
-public void withdraw(double amount) {
-    if (amount <= 0) {
-        throw new IllegalArgumentException("amount must be greater than zero");
-    } else {
-        transactions.add(new Transaction(-amount));
-    }
-}
+	}
 
-    public double interestEarned() {
-        double amount = sumTransactions();
-        switch(accountType){
-            case SAVINGS:
-                if (amount <= 1000)
-                    return amount * 0.001;
-                else
-                    return 1 + (amount-1000) * 0.002;
-//            case SUPER_SAVINGS:
-//                if (amount <= 4000)
-//                    return 20;
-            case MAXI_SAVINGS:
-                if (amount <= 1000)
-                    return amount * 0.02;
-                if (amount <= 2000)
-                    return 20 + (amount-1000) * 0.05;
-                return 70 + (amount-2000) * 0.1;
-            default:
-                return amount * 0.001;
-        }
-    }
+	public void withdraw(double amount) {
+		//double sumTransactions = sumTransactions();
+		if (amount <= 0 ) {
+			throw new IllegalArgumentException(
+					"Withdrawal amount must be greater than zero");
+		} else {
+			// synchronized (aLock) {
+			accountLock.lock();
+			try {
+				transactions.add(new Transaction(-amount));
 
-    public double sumTransactions() {
-       return checkIfTransactionsExist(true);
-    }
+			} finally {
+				accountLock.unlock();
+			}
+		}
+	}
 
-    private double checkIfTransactionsExist(boolean checkAll) {
-        double amount = 0.0;
-        for (Transaction t: transactions)
-            amount += t.amount;
-        return amount;
-    }
+	public double interestEarned() {
+		double amount = sumTransactions();
+		IInterestStrategy str = new InterestStrategyImpl(accountType);
+		return str.calculateInterest(amount);
+	}
 
-    public int getAccountType() {
-        return accountType;
-    }
+	public double sumTransactions() {
+		return checkIfTransactionsExist(true);
+	}
+
+	private double checkIfTransactionsExist(boolean checkAll) {
+		double amount = 0.0;
+		// synchronized (aLock) {
+		accountLock.lock();
+		try {
+			for (Transaction t : transactions)
+				amount += t.amount;
+		} finally {
+			accountLock.unlock();
+		}
+		return amount;
+	}
+
+	public AccountType getAccountType() {
+		return accountType;
+	}
+
+	public int getAccountNumber() {
+		return accountNumber;
+	}
+
+	public void setAccountNumber(int accountNumber) {
+		this.accountNumber = accountNumber;
+	}
 
 }

@@ -10,8 +10,8 @@ public class BankTest {
     @Test
     public void customerSummary() {
         Bank bank = new Bank();
-        Customer john = new Customer("John");
-        john.openAccount(new Account(Account.CHECKING));
+        Customer john = new Customer("John",1000);
+        john.openAccount(new Account(AccountType.CHECKING));
         bank.addCustomer(john);
 
         assertEquals("Customer Summary\n - John (1 account)", bank.customerSummary());
@@ -20,8 +20,8 @@ public class BankTest {
     @Test
     public void checkingAccount() {
         Bank bank = new Bank();
-        Account checkingAccount = new Account(Account.CHECKING);
-        Customer bill = new Customer("Bill").openAccount(checkingAccount);
+        Account checkingAccount = new Account(AccountType.CHECKING);
+        Customer bill = new Customer("Bill",1001).openAccount(checkingAccount);
         bank.addCustomer(bill);
 
         checkingAccount.deposit(100.0);
@@ -32,8 +32,8 @@ public class BankTest {
     @Test
     public void savings_account() {
         Bank bank = new Bank();
-        Account checkingAccount = new Account(Account.SAVINGS);
-        bank.addCustomer(new Customer("Bill").openAccount(checkingAccount));
+        Account checkingAccount = new Account(AccountType.SAVINGS);
+        bank.addCustomer(new Customer("Bill",1001).openAccount(checkingAccount));
 
         checkingAccount.deposit(1500.0);
 
@@ -43,8 +43,8 @@ public class BankTest {
     @Test
     public void maxi_savings_account() {
         Bank bank = new Bank();
-        Account checkingAccount = new Account(Account.MAXI_SAVINGS);
-        bank.addCustomer(new Customer("Bill").openAccount(checkingAccount));
+        Account checkingAccount = new Account(AccountType.MaxiSavings);
+        bank.addCustomer(new Customer("Bill",1001).openAccount(checkingAccount));
 
         checkingAccount.deposit(3000.0);
 
