@@ -90,7 +90,6 @@ public class MaxiSavingsAccountTest {
         maxiSavingsAccount.deposit(new BigDecimal("4000.00"));
         assertEquals(new BigDecimal("200.00"), maxiSavingsAccount.interestEarned());
 
-        Calendar today = Calendar.getInstance();
         Calendar nineDaysAgo = Calendar.getInstance();
         Calendar tenDaysAgo = Calendar.getInstance();
         Calendar elevenDaysAgo = Calendar.getInstance();
@@ -114,7 +113,7 @@ public class MaxiSavingsAccountTest {
             fail();
         }
 
-        testDateProvider = new VirtualDateProvider(today);
+        testDateProvider = new VirtualDateProvider(Calendar.getInstance());
         dateProvider.setInstance(testDateProvider);
 
         assertEquals(new BigDecimal("0.90"), maxiSavingsAccount.interestEarned());
@@ -132,7 +131,7 @@ public class MaxiSavingsAccountTest {
             fail();
         }
 
-        testDateProvider = new VirtualDateProvider(today);
+        testDateProvider = new VirtualDateProvider(Calendar.getInstance());
         dateProvider.setInstance(testDateProvider);
 
         assertEquals(new BigDecimal("0.90"), maxiSavingsAccount.interestEarned());
@@ -150,7 +149,7 @@ public class MaxiSavingsAccountTest {
             fail();
         }
 
-        testDateProvider = new VirtualDateProvider(today);
+        testDateProvider = new VirtualDateProvider(Calendar.getInstance());
         dateProvider.setInstance(testDateProvider);
 
         assertEquals(new BigDecimal("45.00"), maxiSavingsAccount.interestEarned());
