@@ -23,7 +23,7 @@ public class DateProvider {
         return System.currentTimeMillis();
     }
     
-    public void setInstance(DateProvider provider) {
+    public synchronized void setInstance(DateProvider provider) {
         instance = provider;
     }
     
