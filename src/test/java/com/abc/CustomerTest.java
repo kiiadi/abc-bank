@@ -169,6 +169,7 @@ public class CustomerTest {
         henry.openAccount(checkingAccount);
         henry.openAccount(savingsAccount);
 
+        //transfer test
         checkingAccount.deposit(new BigDecimal("5000.00"));
         savingsAccount.deposit(new BigDecimal("1000.00"));
 

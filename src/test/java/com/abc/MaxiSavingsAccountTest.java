@@ -25,7 +25,7 @@ public class MaxiSavingsAccountTest {
 
     /*
      ignored as new functionality added.
-     comment the interestEarned overriden method to run this.
+     comment the interestEarned overriden method in MaxiSavigsAccount to run this.
      */
     @Ignore
     public void interestEarned() {
@@ -35,14 +35,17 @@ public class MaxiSavingsAccountTest {
 
         MaxiSavingsAccount maxiSavingsAccount = new MaxiSavingsAccount();
 
+        // ----
         maxiSavingsAccount = new MaxiSavingsAccount();
         maxiSavingsAccount.deposit(new BigDecimal("500.00"));
         assertEquals(new BigDecimal("10.00"), maxiSavingsAccount.interestEarned());
 
+        // ----
         maxiSavingsAccount = new MaxiSavingsAccount();
         maxiSavingsAccount.deposit(new BigDecimal("1000.00"));
         assertEquals(new BigDecimal("20.00"), maxiSavingsAccount.interestEarned());
 
+        // ----
         maxiSavingsAccount = new MaxiSavingsAccount();
         maxiSavingsAccount.deposit(new BigDecimal("1500.00"));
 
@@ -52,6 +55,7 @@ public class MaxiSavingsAccountTest {
 
         assertEquals(interest, maxiSavingsAccount.interestEarned());
 
+        // ----
         maxiSavingsAccount = new MaxiSavingsAccount();
         maxiSavingsAccount.deposit(new BigDecimal("2000.00"));
 
@@ -61,6 +65,7 @@ public class MaxiSavingsAccountTest {
 
         assertEquals(interest, maxiSavingsAccount.interestEarned());
 
+        // ----
         maxiSavingsAccount = new MaxiSavingsAccount();
         maxiSavingsAccount.deposit(new BigDecimal("4000.00"));
 
@@ -75,10 +80,12 @@ public class MaxiSavingsAccountTest {
     public void interestEarnedTenDayCheck() {
         MaxiSavingsAccount maxiSavingsAccount = new MaxiSavingsAccount();
 
+        // ----
         maxiSavingsAccount = new MaxiSavingsAccount();
         maxiSavingsAccount.deposit(new BigDecimal("1000.00"));
         assertEquals(new BigDecimal("50.00"), maxiSavingsAccount.interestEarned());
 
+        // ----
         maxiSavingsAccount = new MaxiSavingsAccount();
         maxiSavingsAccount.deposit(new BigDecimal("4000.00"));
         assertEquals(new BigDecimal("200.00"), maxiSavingsAccount.interestEarned());

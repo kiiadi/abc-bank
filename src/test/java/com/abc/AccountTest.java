@@ -53,6 +53,7 @@ public class AccountTest {
                 
         CheckingAccount checkingAccount = new CheckingAccount();
         
+        // test negative input
         try {
             checkingAccount.withdraw(new BigDecimal("-150.00"));
         } catch (InsufficientFundsException isf) {
@@ -66,6 +67,7 @@ public class AccountTest {
         
         withdrawalCheck = false;
         
+        // check excess withdrawal
         try {
             checkingAccount.withdraw(new BigDecimal("150.00"));
         } catch (InsufficientFundsException isf) {
@@ -76,6 +78,7 @@ public class AccountTest {
         
         checkingAccount.deposit(new BigDecimal("100.00"));
         
+        // check excess withdrawal
         withdrawalCheck = false;
         try {
             checkingAccount.withdraw(new BigDecimal("150.00"));

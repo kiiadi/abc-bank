@@ -18,6 +18,7 @@ public class TransactionTest {
 
         boolean iaeCaught = false;
 
+        // ----
         try {
             t = new Transaction(null);
         } catch (Exception e) {
@@ -27,6 +28,7 @@ public class TransactionTest {
             assertTrue(iaeCaught);
         }
 
+        // ----
         iaeCaught = false;
 
         try {
@@ -38,6 +40,8 @@ public class TransactionTest {
             assertTrue(iaeCaught);
         }
 
+        
+        // ----
         BigDecimal amount = null;
         amount = new BigDecimal("-105678395.00");
 
@@ -52,6 +56,7 @@ public class TransactionTest {
 
         System.out.println(t.statement());
 
+        // ----
         amount = new BigDecimal("10000.00");
         t = new Transaction(amount);
 

@@ -26,17 +26,20 @@ public class SavingsAccountTest {
         SavingsAccount savingsAccount = new SavingsAccount();
         savingsAccount.deposit(new BigDecimal("3000.00"));
         
+        // ----
         _longInterest = 1 + 4;
         interest = new BigDecimal(_longInterest);
         interest = interest.setScale(2);
         
         assertEquals(interest, savingsAccount.interestEarned());
         
+        // ----
         savingsAccount = new SavingsAccount();
         savingsAccount.deposit(new BigDecimal("1000.00"));
         
         assertEquals(new BigDecimal("1.00"), savingsAccount.interestEarned());
 
+        // ----
         savingsAccount = new SavingsAccount();
         savingsAccount.deposit(new BigDecimal("888.00"));
         
