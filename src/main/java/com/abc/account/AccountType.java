@@ -7,7 +7,7 @@
 package com.abc.account;
 
 /**
- *
+ * Specifies the different account types
  * @author hiecaxb
  */
 public enum AccountType {
