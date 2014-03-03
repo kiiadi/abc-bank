@@ -90,16 +90,10 @@ public class MaxiSavingsAccountTest {
         maxiSavingsAccount.deposit(new BigDecimal("4000.00"));
         assertEquals(new BigDecimal("200.00"), maxiSavingsAccount.interestEarned());
 
-        Calendar nineDaysAgo = Calendar.getInstance();
-        Calendar tenDaysAgo = Calendar.getInstance();
-        Calendar elevenDaysAgo = Calendar.getInstance();
-        Calendar fifteenDaysAgo = Calendar.getInstance();
-
-        nineDaysAgo.add(Calendar.DAY_OF_MONTH, -9);
-        tenDaysAgo.add(Calendar.DAY_OF_MONTH, -10);
-        elevenDaysAgo.add(Calendar.DAY_OF_MONTH, -11);
-
         // test withdrawal 9 days ago
+        Calendar nineDaysAgo = Calendar.getInstance();
+        nineDaysAgo.add(Calendar.DAY_OF_MONTH, -9);
+
         VirtualDateProvider testDateProvider = new VirtualDateProvider(nineDaysAgo);
         DateProvider dateProvider = DateProvider.getInstance();
         dateProvider.setInstance(testDateProvider);
@@ -119,6 +113,9 @@ public class MaxiSavingsAccountTest {
         assertEquals(new BigDecimal("0.90"), maxiSavingsAccount.interestEarned());
 
         // test withdrawal 10 days ago
+        Calendar tenDaysAgo = Calendar.getInstance();
+        tenDaysAgo.add(Calendar.DAY_OF_MONTH, -10);
+
         testDateProvider = new VirtualDateProvider(tenDaysAgo);
         dateProvider.setInstance(testDateProvider);
 
@@ -136,7 +133,10 @@ public class MaxiSavingsAccountTest {
 
         assertEquals(new BigDecimal("0.90"), maxiSavingsAccount.interestEarned());
 
-    // test withdrawal 11 days ago
+        // test withdrawal 11 days ago
+        Calendar elevenDaysAgo = Calendar.getInstance();
+        elevenDaysAgo.add(Calendar.DAY_OF_MONTH, -11);
+
         testDateProvider = new VirtualDateProvider(elevenDaysAgo);
         dateProvider.setInstance(testDateProvider);
 
