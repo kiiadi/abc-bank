@@ -23,6 +23,9 @@ public class DateProvider {
         return System.currentTimeMillis();
     }
     
+    /*
+    for testing use only.
+    */
     public synchronized void setInstance(DateProvider provider) {
         instance = provider;
     }
