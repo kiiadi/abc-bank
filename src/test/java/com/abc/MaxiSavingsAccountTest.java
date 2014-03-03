@@ -102,7 +102,7 @@ public class MaxiSavingsAccountTest {
 
         // test withdrawal 9 days ago
         VirtualDateProvider testDateProvider = new VirtualDateProvider(nineDaysAgo);
-        DateProvider dateProvider = new DateProvider();
+        DateProvider dateProvider = DateProvider.getInstance();
         dateProvider.setInstance(testDateProvider);
 
         maxiSavingsAccount = new MaxiSavingsAccount();
