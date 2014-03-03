@@ -96,7 +96,6 @@ public abstract class AbstractAccount implements Account {
         BigDecimal _amountApplicable = null;
         
         BigDecimal hundred = new BigDecimal("100.00");
-        BigDecimal daysInYear = new BigDecimal("365");
         BigDecimal totalInterest = BigDecimal.ZERO.setScale(2);
         BigDecimal accountBalance = balance();
         
