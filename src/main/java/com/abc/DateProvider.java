@@ -1,18 +1,33 @@
 package com.abc;
 
-import java.util.Calendar;
+/**
+ * 
+ */
+
 import java.util.Date;
 
 public class DateProvider {
+    
     private static DateProvider instance = null;
-
+    
     public static DateProvider getInstance() {
-        if (instance == null)
+        
+        if (instance == null) {
             instance = new DateProvider();
+        }
+        
         return instance;
     }
-
-    public Date now() {
-        return Calendar.getInstance().getTime();
+    
+    public long now() {
+        return System.currentTimeMillis();
     }
+    
+    /*
+    for testing use only.
+    */
+    public synchronized void setInstance(DateProvider provider) {
+        instance = provider;
+    }
+    
 }
