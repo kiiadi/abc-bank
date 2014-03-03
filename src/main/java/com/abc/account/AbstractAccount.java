@@ -1,7 +1,6 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ *
+ *
  */
 package com.abc.account;
 
@@ -18,7 +17,12 @@ import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- *
+ * Define new interest ladder as follows
+ * interest rate, starting amount, maximum amount for range
+ * if maximum value is unknown use Long.MAX_VALUE. This would be for the last range in the ladder.
+ * 
+ * @see SavingsAccount for an example
+ * 
  * @author hiecaxb
  */
 public abstract class AbstractAccount implements Account {
