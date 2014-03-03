@@ -4,8 +4,10 @@
  */
 package com.abc.account;
 
+import com.abc.DateProvider;
 import com.abc.account.transaction.Transaction;
 import com.abc.account.exception.InsufficientFundsException;
+import com.abc.utils.DateUtils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -79,6 +81,9 @@ public abstract class AbstractAccount implements Account {
         return interestEarned(interestRangeLadder);
     }
     
+    /*
+    Core calculator for interests based on the ladder of amounts
+    */
     protected BigDecimal interestEarned(List<InterestRange> interestRangeLadder) {
         
         BigDecimal interestRate = null;
@@ -91,6 +96,7 @@ public abstract class AbstractAccount implements Account {
         BigDecimal _amountApplicable = null;
         
         BigDecimal hundred = new BigDecimal("100.00");
+        BigDecimal daysInYear = new BigDecimal("365");
         BigDecimal totalInterest = BigDecimal.ZERO.setScale(2);
         BigDecimal accountBalance = balance();
         
@@ -109,20 +115,18 @@ public abstract class AbstractAccount implements Account {
             interestRatePct = interestRate.divide(hundred);
             
             if (accountBalance.compareTo(minimumAmount) > 0 && accountBalance.compareTo(maximumAmount) <= 0) {
-                
+                // amount in ladder range; calc and stop as no more ranges need to be evaluated.
                 _interestCalcHolder = _amountCalcHolder.multiply(interestRatePct);
-                _interestCalcHolder = _interestCalcHolder.setScale(2, RoundingMode.HALF_EVEN);
-
                 totalInterest = totalInterest.add(_interestCalcHolder);
                 
                 break;
                 
             } else if (accountBalance.compareTo(minimumAmount) > 0 && accountBalance.compareTo(maximumAmount) > 0) {
                
+                // amount is greater than ladder range; calc and continue. make sure to remove the amount interest calculated on from the
+                // temp balance holder.
                 _amountApplicable = maximumAmount.subtract(minimumAmount);
-                
                 _interestCalcHolder = _amountApplicable.multiply(interestRatePct);
-                _interestCalcHolder = _interestCalcHolder.setScale(2, RoundingMode.HALF_EVEN);
 
                 totalInterest = totalInterest.add(_interestCalcHolder);
                 _amountCalcHolder = _amountCalcHolder.subtract(_amountApplicable);
@@ -135,6 +139,7 @@ public abstract class AbstractAccount implements Account {
 
         }
 
+        totalInterest = totalInterest.setScale(2, RoundingMode.HALF_EVEN);
         return totalInterest;
     }
 
