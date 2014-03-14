@@ -16,7 +16,7 @@ import com.abc.domain.bank.Customer;
 public class CustomerSummaryStatementTest {
 
 	@Test
-	public void testPrintOneCustomerOneAccount() {
+	public void testGenerateOneCustomerOneAccount() {
 		List<Customer> customers = new ArrayList<Customer>();
 		customers.add(new Customer("John").openAccount(new CheckingAccount()));
 		
@@ -29,7 +29,7 @@ public class CustomerSummaryStatementTest {
 	}
 	
 	@Test
-	public void testPrintOneCustomerTwoAccounts() {
+	public void testGenerateOneCustomerTwoAccounts() {
 		List<Customer> customers = new ArrayList<Customer>();
 		customers.add(new Customer("John").openAccount(new CheckingAccount()).openAccount(new SavingsAccount()));
 		
@@ -42,7 +42,7 @@ public class CustomerSummaryStatementTest {
 	}
 	
 	@Test
-	public void testPrintTwoCustomer() {
+	public void testGenerateTwoCustomer() {
 		List<Customer> customers = new ArrayList<Customer>();
 		customers.add(new Customer("John").openAccount(new CheckingAccount()).openAccount(new SavingsAccount()));
 		customers.add(new Customer("Oscar").openAccount(new CheckingAccount()));

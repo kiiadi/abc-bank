@@ -2,7 +2,6 @@ package com.abc.domain.sub.time;
 
 import java.util.Calendar;
 
-
 public class Duration {
     
     public static final long SECONDS_IN_MILLESECONDS = 1000;

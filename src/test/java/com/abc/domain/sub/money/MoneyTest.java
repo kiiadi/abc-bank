@@ -1,6 +1,3 @@
-/*
- * Copyright 2010 New York Stock Exchange. All rights reserved.
- */
 package com.abc.domain.sub.money;
 
 import static org.hamcrest.CoreMatchers.is;

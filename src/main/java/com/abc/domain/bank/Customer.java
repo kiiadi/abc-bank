@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.abc.domain.account.Account;
-import com.abc.domain.account.transaction.Deposit;
-import com.abc.domain.account.transaction.Transfer;
-import com.abc.domain.account.transaction.Withdrawal;
 import com.abc.domain.statement.CustomerStatement;
 import com.abc.domain.sub.money.Money;
 import com.abc.domain.sub.time.Clock;
@@ -60,15 +57,16 @@ public class Customer {
 	}
 	
 	public void deposit(Money amount, Account to, Clock clock) {
-		new Deposit(amount, to, clock);
+	    to.deposit(amount, clock.now());
 	}
 	
 	public void withdraw(Money amount, Account from, Clock clock) {
-		new Withdrawal(amount, from, clock);
+	    from.withdraw(amount, clock.now());
 	}
 	
 	public void transfer(Money amount, Account from, Account to, Clock clock) {
-		new Transfer(amount, from, to, clock);
+	    from.withdraw(amount, clock.now());
+	    to.deposit(amount, clock.now());
 	}
 	
     @Override

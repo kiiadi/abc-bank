@@ -23,8 +23,7 @@ public class BankTest {
 	}
 	
 	@Test
-    public void testOpenAccount() throws Exception
-    {
+    public void testOpenAccount() throws Exception {
 	    Customer bill = new Customer("Bill");
         bank.openAccount(bill, new CheckingAccount());
         

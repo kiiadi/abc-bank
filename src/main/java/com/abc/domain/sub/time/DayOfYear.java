@@ -2,9 +2,6 @@ package com.abc.domain.sub.time;
 
 import java.util.Calendar;
 
-/**
- * This represents the specific day of the year.
- */
 public final class DayOfYear implements Comparable<DayOfYear> {
 
     private int year;

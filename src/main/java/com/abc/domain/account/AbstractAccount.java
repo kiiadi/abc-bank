@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.abc.domain.account.interest.Interest;
-import com.abc.domain.account.transaction.Transaction;
 import com.abc.domain.statement.AccountStatement;
 import com.abc.domain.statement.Statement;
 import com.abc.domain.sub.money.Money;
@@ -13,22 +12,17 @@ import com.abc.domain.sub.time.TimePoint;
 public abstract class AbstractAccount implements Account {
 	
     private String name;
-    
 	private Money balance;
-
-	Interest interest;
-	
-	protected Entry lastWithdraw;
-
-	protected List<Transaction> transactions;
+	protected Interest interest;
+	private Statement accountStatement;
 	
 	protected List<Entry> entries;
-
+	
 	public AbstractAccount(String name) {
 	    this.name = name;
-		this.transactions = new ArrayList<Transaction>();
 		this.entries = new ArrayList<Entry>();
 		this.balance = Money.dollars(0);
+		this.accountStatement = new AccountStatement(this);
 	}
 
 	@Override
@@ -44,9 +38,7 @@ public abstract class AbstractAccount implements Account {
 		}
 		
 		balance = balance.minus(amount);
-		
-		lastWithdraw = new Entry(amount.negate(), timePoint);
-		entries.add(lastWithdraw);
+		entries.add(new Entry(amount.negate(), timePoint));
 	}
 	
 	@Override
@@ -60,11 +52,13 @@ public abstract class AbstractAccount implements Account {
 	}
 	
 	@Override
-	public abstract Money interest(); 
+	public Money interest() {
+	    return interest.amount(entries());
+	}
 
 	@Override
 	public Statement statement() {
-		return new AccountStatement(this);
+		return accountStatement;
 	}
 	
 	@Override

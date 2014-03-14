@@ -28,12 +28,35 @@ public class Entry {
 		return entryType.getName();
 	}
 	
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) {
+            return true;
+        }
+
+        if (!(object instanceof Entry)) {
+            return false;
+        }
+
+        Entry other = (Entry) object;
+        return amount().equals(other.amount()) && whenBooked().equals(other.whenBooked());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 17;
+        result = 37 * result + amount().hashCode();
+        result = 37 * result + whenBooked().hashCode();
+
+        return result;
+    }
+    
 	@Override
 	public String toString() {
 		return "amount: " + amount + ", booked at: " + whenBooked;
 	}
 	
-	public enum EntryType {
+	enum EntryType {
 		
 		Deposit("deposit"), Withdrawal("withdrawal");
 		
@@ -43,7 +66,7 @@ public class Entry {
 		
 		private String name;
 		
-		public String getName() {
+		String getName() {
 			return name;
 		}
 	}
