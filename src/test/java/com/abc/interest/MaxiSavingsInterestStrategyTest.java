@@ -27,18 +27,16 @@ public class MaxiSavingsInterestStrategyTest {
         test(transactions, ONE_THOUSAND_TH);
     }
 
-    private void test(List<Transaction> trasactions, BigDecimal expectedRate) {
+    private void test(List<Transaction> transactions, BigDecimal expectedRate) {
         InterestStrategyFactory factory = InterestStrategyFactory.getInstance();
         InterestStrategy strategy = factory.getStrategy(AccountType.MaxiSavings);
 
-        TestUtils.assertEquals(BigDecimal.ZERO, strategy.interestEarned(BigDecimal.ZERO, trasactions));
-        TestUtils.assertEquals(BigDecimal.ONE.multiply(expectedRate), strategy.interestEarned(BigDecimal.ONE, trasactions));
-        TestUtils.assertEquals(new BigDecimal(1000).multiply(expectedRate), strategy.interestEarned(new BigDecimal(1000), trasactions));
-        TestUtils.assertEquals(new BigDecimal(2000).multiply(expectedRate), strategy.interestEarned(new BigDecimal(2000), trasactions));
-        TestUtils.assertEquals(new BigDecimal(10001).multiply(expectedRate), strategy.interestEarned(new BigDecimal(10001), trasactions));
+        TestUtils.assertEquals(BigDecimal.ZERO, strategy.interestEarned(BigDecimal.ZERO, transactions));
+        TestUtils.assertEquals(BigDecimal.ONE.multiply(expectedRate), strategy.interestEarned(BigDecimal.ONE, transactions));
+        TestUtils.assertEquals(new BigDecimal(1000).multiply(expectedRate), strategy.interestEarned(new BigDecimal(1000), transactions));
+        TestUtils.assertEquals(new BigDecimal(2000).multiply(expectedRate), strategy.interestEarned(new BigDecimal(2000), transactions));
+        TestUtils.assertEquals(new BigDecimal(10001).multiply(expectedRate), strategy.interestEarned(new BigDecimal(10001), transactions));
     }
-
-//    Change Maxi-Savings accounts to have an interest rate of 5% assuming no withdrawals in the past 10 days otherwise 0.1%
 
 }
 

@@ -12,7 +12,7 @@ import java.util.List;
 public class Account {
     private final AccountType accountType;
     private final List<Transaction> transactions;
-    private InterestStrategy interestStrategy;
+    private final InterestStrategy interestStrategy;
 
     public Account(AccountType accountType) {
         this.accountType = accountType;
