@@ -1,23 +1,29 @@
 package com.abc;
 
+import junit.framework.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.math.BigDecimal;
+import java.util.List;
+
+import static com.abc.AccountType.Checking;
+import static com.abc.AccountType.Savings;
 import static org.junit.Assert.assertEquals;
 
 public class CustomerTest {
 
-    @Test //Test customer statement generation
-    public void testApp(){
+    @Test
+    public void testCustomerStatement() {
 
-        Account checkingAccount = new Account(Account.CHECKING);
-        Account savingsAccount = new Account(Account.SAVINGS);
+        Account checkingAccount = new Account(Checking);
+        Account savingsAccount = new Account(Savings);
 
         Customer henry = new Customer("Henry").openAccount(checkingAccount).openAccount(savingsAccount);
 
-        checkingAccount.deposit(100.0);
-        savingsAccount.deposit(4000.0);
-        savingsAccount.withdraw(200.0);
+        checkingAccount.deposit(new BigDecimal("100.0"));
+        savingsAccount.deposit(new BigDecimal("4000.0"));
+        savingsAccount.withdraw(new BigDecimal("200.0"));
 
         assertEquals("Statement for Henry\n" +
                 "\n" +
@@ -34,24 +40,71 @@ public class CustomerTest {
     }
 
     @Test
-    public void testOneAccount(){
-        Customer oscar = new Customer("Oscar").openAccount(new Account(Account.SAVINGS));
+    public void testOneAccount() {
+        Customer oscar = new Customer("Oscar").openAccount(new Account(Savings));
         assertEquals(1, oscar.getNumberOfAccounts());
     }
 
     @Test
-    public void testTwoAccount(){
-        Customer oscar = new Customer("Oscar")
-                .openAccount(new Account(Account.SAVINGS));
-        oscar.openAccount(new Account(Account.CHECKING));
+    public void testTwoAccount() {
+        Customer oscar = new Customer("Oscar");
+        oscar.openAccount(new Account(Savings));
+        oscar.openAccount(new Account(Checking));
         assertEquals(2, oscar.getNumberOfAccounts());
     }
 
-    @Ignore
-    public void testThreeAcounts() {
-        Customer oscar = new Customer("Oscar")
-                .openAccount(new Account(Account.SAVINGS));
-        oscar.openAccount(new Account(Account.CHECKING));
-        assertEquals(3, oscar.getNumberOfAccounts());
+    @Test(expected = UnknownAccountException.class)
+    public void testInvalidTransfer() throws UnknownAccountException {
+        Customer oscar = new Customer("Oscar");
+        Account checkingOscar = new Account(Checking);
+        oscar.openAccount(checkingOscar);
+
+        Customer miguel = new Customer("Miguel");
+        Account checkingMiguel = new Account(Checking);
+        miguel.openAccount(checkingMiguel);
+
+        oscar.transfer(checkingOscar, checkingMiguel, BigDecimal.ONE);
+    }
+
+    @Test(expected = NegativeOrZeroAmountException.class)
+    public void testZeroTransfer() throws UnknownAccountException {
+        Customer oscar = new Customer("Oscar");
+        Account checking  = new Account(Checking);
+        oscar.openAccount(checking);
+        Account savings = new Account(Savings);
+        oscar.openAccount(savings);
+
+        oscar.transfer(checking, savings, BigDecimal.ZERO);
+    }
+
+    @Test
+    public void testTransfer() throws UnknownAccountException {
+        Customer oscar = new Customer("Oscar");
+        Account checking  = new Account(Checking);
+        oscar.openAccount(checking);
+        Account savings = new Account(Savings);
+        oscar.openAccount(savings);
+
+        oscar.transfer(checking, savings, BigDecimal.ONE);
+
+        List<Transaction> checkingTransactions = checking.getTransactions();
+        Assert.assertEquals(1, checkingTransactions.size());
+        TestUtils.assertEquals(BigDecimal.ONE.negate(), checkingTransactions.get(0).getAmount());
+
+        List<Transaction> savingsTransactions = savings.getTransactions();
+        Assert.assertEquals(1, savingsTransactions.size());
+        TestUtils.assertEquals(BigDecimal.ONE, savingsTransactions.get(0).getAmount());
+    }
+
+    @Test
+    public void testTotalInterestEarned() {
+        Customer oscar = new Customer("Oscar");
+        Account checking  = new Account(Checking);
+        oscar.openAccount(checking);
+        checking.deposit(new BigDecimal(1000));
+        Account checking2 = new Account(Checking);
+        oscar.openAccount(checking2);
+        checking.deposit(new BigDecimal(1000));
+        TestUtils.assertEquals(new BigDecimal(2), oscar.totalInterestEarned());
     }
 }

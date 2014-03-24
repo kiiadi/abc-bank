@@ -1,73 +1,60 @@
 package com.abc;
 
+import com.abc.interest.InterestStrategy;
+import com.abc.interest.InterestStrategyFactory;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Account {
+    private final AccountType accountType;
+    private final List<Transaction> transactions;
+    private InterestStrategy interestStrategy;
 
-    public static final int CHECKING = 0;
-    public static final int SAVINGS = 1;
-    public static final int MAXI_SAVINGS = 2;
-
-    private final int accountType;
-    public List<Transaction> transactions;
-
-    public Account(int accountType) {
+    public Account(AccountType accountType) {
         this.accountType = accountType;
+        this.interestStrategy = InterestStrategyFactory.getInstance().getStrategy(accountType);
         this.transactions = new ArrayList<Transaction>();
     }
 
-    public void deposit(double amount) {
-        if (amount <= 0) {
-            throw new IllegalArgumentException("amount must be greater than zero");
-        } else {
-            transactions.add(new Transaction(amount));
+    public void deposit(BigDecimal amount) {
+        Utils.ensurePositive(amount);
+        transactions.add(new Transaction(amount));
+    }
+
+    public void withdraw(BigDecimal amount) {
+        Utils.ensurePositive(amount);
+        transactions.add(new Transaction(amount.negate()));
+    }
+
+    public BigDecimal interestEarned() {
+        BigDecimal amount = sumTransactions();
+        return interestStrategy.interestEarned(amount, getTransactions());
+    }
+
+    public BigDecimal sumTransactions() {
+        BigDecimal amount = new BigDecimal(BigInteger.ZERO);
+        for (Transaction t : transactions) {
+            amount = amount.add(t.getAmount());
         }
-    }
-
-public void withdraw(double amount) {
-    if (amount <= 0) {
-        throw new IllegalArgumentException("amount must be greater than zero");
-    } else {
-        transactions.add(new Transaction(-amount));
-    }
-}
-
-    public double interestEarned() {
-        double amount = sumTransactions();
-        switch(accountType){
-            case SAVINGS:
-                if (amount <= 1000)
-                    return amount * 0.001;
-                else
-                    return 1 + (amount-1000) * 0.002;
-//            case SUPER_SAVINGS:
-//                if (amount <= 4000)
-//                    return 20;
-            case MAXI_SAVINGS:
-                if (amount <= 1000)
-                    return amount * 0.02;
-                if (amount <= 2000)
-                    return 20 + (amount-1000) * 0.05;
-                return 70 + (amount-2000) * 0.1;
-            default:
-                return amount * 0.001;
-        }
-    }
-
-    public double sumTransactions() {
-       return checkIfTransactionsExist(true);
-    }
-
-    private double checkIfTransactionsExist(boolean checkAll) {
-        double amount = 0.0;
-        for (Transaction t: transactions)
-            amount += t.amount;
         return amount;
     }
 
-    public int getAccountType() {
+    public AccountType getAccountType() {
         return accountType;
     }
 
+    public List<Transaction> getTransactions() {
+        return Collections.unmodifiableList(transactions);
+    }
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "accountType=" + accountType +
+                '}';
+    }
 }
