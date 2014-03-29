@@ -8,11 +8,15 @@ public class Account {
     public static final int CHECKING = 0;
     public static final int SAVINGS = 1;
     public static final int MAXI_SAVINGS = 2;
+    /* Add id for the account - simple imcrementing integer */
+    public static int UID  = 0;
 
     private final int accountType;
+    private int accountId;
     public List<Transaction> transactions;
 
     public Account(int accountType) {
+        setAccountId();
         this.accountType = accountType;
         this.transactions = new ArrayList<Transaction>();
     }
@@ -68,6 +72,14 @@ public void withdraw(double amount) {
 
     public int getAccountType() {
         return accountType;
+    }
+    
+    private synchronized void setAccountId () {
+        accountId=UID++;
+    }
+    
+    public int getAccountId () {
+        return accountId;
     }
 
 }
