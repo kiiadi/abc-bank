@@ -2,6 +2,7 @@ package com.abc;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.locks.ReentrancLock;
 
 public class Account {
 
@@ -14,6 +15,8 @@ public class Account {
     private final int accountType;
     private int accountId;
     public List<Transaction> transactions;
+    /* Add reentrant lock for thread safety */
+    private final ReentrantLock lock = new ReentrantLock();
 
     public Account(int accountType) {
         setAccountId();
@@ -25,7 +28,12 @@ public class Account {
         if (amount <= 0) {
             throw new IllegalArgumentException("amount must be greater than zero");
         } else {
-            transactions.add(new Transaction(amount));
+            lock.lock();
+            try {
+                transactions.add(new Transaction(amount));
+            } finally {
+                lock.unlock();
+            }
         }
     }
 
@@ -33,7 +41,12 @@ public void withdraw(double amount) {
     if (amount <= 0) {
         throw new IllegalArgumentException("amount must be greater than zero");
     } else {
-        transactions.add(new Transaction(-amount));
+        lock.lock();
+        try {
+            transactions.add(new Transaction(-amount));
+        } finally {
+            lock.unlock();
+        }
     }
 }
 
