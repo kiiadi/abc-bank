@@ -30,7 +30,7 @@ public class Customer {
     public double totalInterestEarned() {
         double total = 0;
         for (Account a : accounts)
-            total += a.interestEarned();
+            total += a.getTotalInterest();
         return total;
     }
 
@@ -40,7 +40,7 @@ public class Customer {
         double total = 0.0;
         for (Account a : accounts) {
             statement += "\n" + statementForAccount(a) + "\n";
-            total += a.sumTransactions();
+            total += a.getCurrentBalance();
         }
         statement += "\nTotal In All Accounts " + toDollars(total);
         return statement;
@@ -68,6 +68,9 @@ public class Customer {
             s += "  " + (t.amount < 0 ? "withdrawal" : "deposit") + " " + toDollars(t.amount) + "\n";
             total += t.amount;
         }
+        double interest = a.getTotalInterest();
+        s += "  interest  " + toDollars(interest) + "\n";
+        total += interest;
         s += "Total " + toDollars(total);
         return s;
     }
