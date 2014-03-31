@@ -94,5 +94,10 @@ public void withdraw(double amount) {
     public int getAccountId () {
         return accountId;
     }
+    
+    public void transferFunds(Account destination, double amount) {
+        this.withdraw(amount);
+        destination.deposit(amount);
+    }
 
 }
