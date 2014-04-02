@@ -29,8 +29,10 @@ public class Customer {
 
     public double totalInterestEarned() {
         double total = 0;
-        for (Account a : accounts)
+        for (Account a : accounts) {
+        	a.getCurrentBalance();
             total += a.getTotalInterest();
+        }
         return total;
     }
 
@@ -50,17 +52,8 @@ public class Customer {
         String s = "";
 
        //Translate to pretty account type
-        switch(a.getAccountType()){
-            case Account.CHECKING:
-                s += "Checking Account\n";
-                break;
-            case Account.SAVINGS:
-                s += "Savings Account\n";
-                break;
-            case Account.MAXI_SAVINGS:
-                s += "Maxi Savings Account\n";
-                break;
-        }
+        s += a.getDescription();
+        s += "\n";
 
         //Now total up all the transactions
         double total = 0.0;
@@ -69,8 +62,10 @@ public class Customer {
             total += t.amount;
         }
         double interest = a.getTotalInterest();
-        s += "  interest  " + toDollars(interest) + "\n";
-        total += interest;
+        if (interest > 0.0) {
+        	s += "  interest  " + toDollars(interest) + "\n";
+        	total += interest;
+        }
         s += "Total " + toDollars(total);
         return s;
     }
