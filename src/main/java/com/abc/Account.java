@@ -2,72 +2,133 @@ package com.abc;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
+import java.util.concurrent.locks.ReentrantLock;
 
-public class Account {
+public abstract class Account {
 
-    public static final int CHECKING = 0;
-    public static final int SAVINGS = 1;
-    public static final int MAXI_SAVINGS = 2;
+    /* Add id for the account - simple incrementing integer */
+    public static int UID  = 0;
 
-    private final int accountType;
+    private int accountId;
+    private AccountBalance accountBalance;
+    private double totalInterest;
     public List<Transaction> transactions;
+    /* Add reentrant lock for thread safety */
+    private final ReentrantLock lock = new ReentrantLock();
 
-    public Account(int accountType) {
-        this.accountType = accountType;
+    public Account() {
+        setAccountId();
         this.transactions = new ArrayList<Transaction>();
+        this.accountBalance = new AccountBalance();
+        this.totalInterest=0;
     }
+    
+    /* Add a simple inner class encapsulating accountBalance and the date of this balance */
+    class AccountBalance {
+        Date date;
+        double balance;
+        
+        AccountBalance () {
+            setBalance(0.0,DateProvider.getInstance().now());
+        }
+        
+        void setBalance(double amount, Date transDate) {
+            balance = amount;
+            date = transDate;
+        }
+    }
+    
+    /* Current balance is the most recent balance plus interest earned */ 
+    private double currentBalance() {
+        Date currentDate = DateProvider.getInstance().now();
+        return currentBalance(currentDate);
+     }
+    
+     
+    private double currentBalance(Date date) {
+        Date pastDate = accountBalance.date;
+        int daysBetween =  (int)( (date.getTime() - pastDate.getTime()) / (1000 * 60 * 60 * 24)); // Milliseconds in a day
+        double balance = accountBalance.balance;
+        
+        /* Increment interest daily in case an interest rate threshold is breached and the rate increases */
+        for (int i=1; i <= daysBetween;i++) {
+        	double newInterest = interestEarned(balance,1);
+        	balance += newInterest;
+            this.totalInterest += newInterest;
+        }
+        return balance;
+     }
 
-    public void deposit(double amount) {
+    public void deposit(double amount, Date date) {
         if (amount <= 0) {
             throw new IllegalArgumentException("amount must be greater than zero");
         } else {
-            transactions.add(new Transaction(amount));
+            lock.lock();
+            try {
+                transactions.add(new Transaction(amount,date));
+                accountBalance.setBalance(currentBalance()+amount, date);
+            } finally {
+                lock.unlock();
+            }
         }
     }
-
-public void withdraw(double amount) {
-    if (amount <= 0) {
-        throw new IllegalArgumentException("amount must be greater than zero");
-    } else {
-        transactions.add(new Transaction(-amount));
+    
+    public void deposit(double amount) {
+        Date currentDate = DateProvider.getInstance().now();
+        deposit(amount, currentDate);
     }
-}
 
-    public double interestEarned() {
-        double amount = sumTransactions();
-        switch(accountType){
-            case SAVINGS:
-                if (amount <= 1000)
-                    return amount * 0.001;
-                else
-                    return 1 + (amount-1000) * 0.002;
-//            case SUPER_SAVINGS:
-//                if (amount <= 4000)
-//                    return 20;
-            case MAXI_SAVINGS:
-                if (amount <= 1000)
-                    return amount * 0.02;
-                if (amount <= 2000)
-                    return 20 + (amount-1000) * 0.05;
-                return 70 + (amount-2000) * 0.1;
-            default:
-                return amount * 0.001;
+    public void withdraw(double amount, Date date) {
+        if (amount <= 0) {
+            throw new IllegalArgumentException("amount must be greater than zero");
+        } else {
+            lock.lock();
+            try {
+                double balance=currentBalance();
+                if (amount > balance) {
+                    throw new IllegalArgumentException("insufficient funds");
+                } else {
+                    transactions.add(new Transaction(-amount, date));
+                    accountBalance.setBalance(balance-amount,date);
+                }
+            } finally {
+                lock.unlock();
+            }
         }
+    }    
+    
+    public void withdraw(double amount) {
+        Date currentDate = DateProvider.getInstance().now();
+        withdraw(amount, currentDate);
+    }
+    
+    /* Replacement function showing interest accruing daily */
+    protected abstract double interestEarned(double amount, int days);
+
+   
+    private synchronized void setAccountId () {
+        accountId=UID++;
+    }
+    
+    public int getAccountId () {
+        return accountId;
+    }
+    
+    public void transferFunds(Account destination, double amount) {
+        this.withdraw(amount);
+        destination.deposit(amount);
     }
 
-    public double sumTransactions() {
-       return checkIfTransactionsExist(true);
+    public double getTotalInterest () {
+        return totalInterest;
     }
-
-    private double checkIfTransactionsExist(boolean checkAll) {
-        double amount = 0.0;
-        for (Transaction t: transactions)
-            amount += t.amount;
-        return amount;
+    
+    public double getCurrentBalance() {
+        accountBalance.setBalance(currentBalance(), DateProvider.getInstance().now());
+        return accountBalance.balance;
     }
-
-    public int getAccountType() {
-        return accountType;
-    }
-
+    
+    public abstract String getDescription();
+    
 }
