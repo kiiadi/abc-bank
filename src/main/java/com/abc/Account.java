@@ -53,7 +53,7 @@ public abstract class Account {
         
         /* Increment interest daily in case an interest rate threshold is breached and the rate increases */
         for (int i=1; i <= daysBetween;i++) {
-        	double newInterest = interestEarned(balance,i);
+        	double newInterest = interestEarned(balance,1);
         	balance += newInterest;
             this.totalInterest += newInterest;
         }
