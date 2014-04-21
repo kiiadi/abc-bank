@@ -24,7 +24,7 @@ public abstract class Account {
 	private List<Transaction> transactions;
 	
 	public Account(AccountType accountType) {
-		this.accountId = getNextId();  // generate universally unique id for the account
+		this.accountId = getNextId();
         this.accountType = accountType;
         this.transactions = new ArrayList<Transaction>();
     }
