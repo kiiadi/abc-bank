@@ -33,9 +33,7 @@ public abstract class Account {
 	 * Can be a UUID in java or a sequence db object in the real-world
 	 */
 	private static int idCounter = 0;
-	
 	private static int getNextId() {
-		// TODO Auto-generated method stub
 		return ++idCounter;
 	}
 
