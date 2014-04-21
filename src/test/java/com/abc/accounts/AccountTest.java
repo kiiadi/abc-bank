@@ -24,9 +24,9 @@ public class AccountTest {
 	}
 
 	@Test
-	public void getAccountId_ForNewAccount_RandomUUIDIsGenerated() {
+	public void getAccountId_ForNewAccount_AccountIdIsGenerated() {
 		assertNotNull(account.getAccountId());
-		assertTrue(account.getAccountId() == 1);
+		assertTrue(account.getAccountId() > 0);
 	}
 	
 	@Test

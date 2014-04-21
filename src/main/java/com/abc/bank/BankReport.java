@@ -8,7 +8,7 @@ import java.util.Collection;
 import com.abc.customer.Customer;
 
 /**
- * Contains static helper methods used for Customer reports
+ * Contains static helper methods used for Bank reports
  *
  */
 public class BankReport {
