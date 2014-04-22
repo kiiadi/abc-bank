@@ -15,7 +15,7 @@ public abstract class Account {
 		this.transactions = new ArrayList<Transaction>();
 	}
 
-	public void deposit(double amount) {
+	public synchronized void deposit(double amount) {
 
 		if (amount <= 0) {
 			throw new IllegalArgumentException(
@@ -26,7 +26,7 @@ public abstract class Account {
 
 	}
 
-	public void withdraw(double amount) throws Exception {
+	public synchronized void withdraw(double amount) throws Exception {
 
 		if (amount <= 0) {
 			throw new IllegalArgumentException(
@@ -61,10 +61,6 @@ public abstract class Account {
 
 	public List<Transaction> getTransactions() {
 		return transactions;
-	}
-
-	public void setTransactions(List<Transaction> transactions) {
-		this.transactions = transactions;
 	}
 
 }
