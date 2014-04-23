@@ -1,4 +1,6 @@
-package com.abc;
+package com.abc.businessobjects;
+
+import com.abc.businessobjects.Customer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,18 +31,22 @@ public class Bank {
 
     public double totalInterestPaid() {
         double total = 0;
-        for(Customer c: customers)
+        for (Customer c : customers) {
             total += c.totalInterestEarned();
+        }
         return total;
     }
 
-    public String getFirstCustomer() {
+    //todo check for correctness - add test
+    public String getFirstCustomerName() {
         try {
-            customers = null;
-            return customers.get(0).getName();
-        } catch (Exception e){
+            if (null != customers) {
+                return customers.get(0).getName();
+            }
+        } catch (Exception e) {
             e.printStackTrace();
             return "Error";
         }
+        return null;
     }
 }
