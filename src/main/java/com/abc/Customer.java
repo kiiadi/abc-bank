@@ -78,7 +78,7 @@ public class Customer {
 		sb.append(name);
 		sb.append("\n");
 
-		BigDecimal total = new BigDecimal("0");
+		BigDecimal total = new BigDecimal("0.00");
 		for (Account a : accounts) {
 
 			sb.append("\n");
