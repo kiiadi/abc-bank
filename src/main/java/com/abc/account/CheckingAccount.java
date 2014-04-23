@@ -7,6 +7,9 @@ public class CheckingAccount extends Account {
 		label = "Checking Account\n";
 	}
 
+	/*
+	 * checking accounts have a flat rate of 0.1%
+	 */
 	@Override
 	public double interestEarned() {
 		double amount = sumTransactions();

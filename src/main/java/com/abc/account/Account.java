@@ -5,6 +5,11 @@ import java.util.List;
 
 import com.abc.Transaction;
 
+/**
+ * Base class for concrete Account classes. Subclasses will override abstract
+ * methods and provide concrete implementations.
+ * 
+ */
 public abstract class Account {
 
 	protected String label;

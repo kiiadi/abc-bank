@@ -7,6 +7,9 @@ public class SavingsAccount extends Account {
 		label = "Savings Account\n";
 	}
 
+	/* 
+	 * savings accounts have a rate of 0.1% for the first $1,000 then 0.2%
+	 */
 	@Override
 	public double interestEarned() {
 		double amount = sumTransactions();

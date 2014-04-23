@@ -39,14 +39,4 @@ public class Bank {
 		return total;
 	}
 
-	// TODO delete ?
-	public String getFirstCustomer() {
-		try {
-			customers = null;
-			return customers.get(0).getName();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "Error";
-		}
-	}
 }

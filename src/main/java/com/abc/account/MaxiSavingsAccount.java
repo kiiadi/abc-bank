@@ -7,7 +7,9 @@ import java.util.GregorianCalendar;
 import com.abc.Transaction;
 
 public class MaxiSavingsAccount extends SavingsAccount {
-
+	
+	private int withdrawalRuleDays = 10;
+	
 	public MaxiSavingsAccount() {
 		super();
 		label = "Maxi Savings Account\n";
@@ -23,26 +25,32 @@ public class MaxiSavingsAccount extends SavingsAccount {
 		double amount = sumTransactions();
 
 		Calendar cal = GregorianCalendar.getInstance();
-		cal.add(Calendar.DAY_OF_YEAR, -10);
-		Date tenDaysAgo = cal.getTime();
+		cal.add(Calendar.DAY_OF_YEAR, -withdrawalRuleDays);
+		Date offset = cal.getTime();
 
-		boolean withdrawalInThePast10Days = false;
+		boolean withdrawalRuleBroken = false;
 
 		for (Transaction transaction : getTransactions()) {
 			if (transaction.getAmount() < 0) { // a withdrawal
-				if (transaction.getTransactionDate().after(tenDaysAgo)) {
-					withdrawalInThePast10Days = true;
+				if (transaction.getTransactionDate().after(offset)) {
+					withdrawalRuleBroken = true;
 					break;
 				}
 			}
 		}
 
-		if (withdrawalInThePast10Days) {
+		if (withdrawalRuleBroken) {
 			return amount * 0.001;
 		} else {
 			return amount * 0.05;
 		}
 
 	}
+
+	public void setWithdrawalRuleDays(int withdrawalRuleDays) {
+		this.withdrawalRuleDays = withdrawalRuleDays;
+	}
+	
+	
 
 }

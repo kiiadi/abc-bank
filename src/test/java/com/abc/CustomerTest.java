@@ -49,8 +49,6 @@ public class CustomerTest {
 		assertEquals(2, oscar.getNumberOfAccounts());
 	}
 
-	// TODO fix this test
-
 	@Test
 	public void testTransfer() throws Exception {
 
@@ -65,11 +63,8 @@ public class CustomerTest {
 
 		henry.transfer(savingsAccount, checkingAccount, 4000.00);
 
-		assertEquals(4104.10, checkingAccount.balance(), DOUBLE_DELTA); // accounts
-																		// for
-																		// interest
-																		// earned
-		assertEquals(savingsAccount.balance(), 0, DOUBLE_DELTA);
+		assertEquals(4100.00, checkingAccount.sumTransactions(), DOUBLE_DELTA);
+		assertEquals(savingsAccount.sumTransactions(), 0, DOUBLE_DELTA);
 
 	}
 
