@@ -86,8 +86,6 @@ public class Customer {
 			sb.append(statementForAccount(a));
 			sb.append("\n");
 
-			// total += a.sumTransactions();
-
 			total = total.add(a.sumTransactions());
 		}
 		sb.append("\nTotal In All Accounts ");
