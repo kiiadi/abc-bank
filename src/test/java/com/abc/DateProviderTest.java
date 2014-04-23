@@ -8,13 +8,6 @@ import org.junit.Test;
 
 public class DateProviderTest {
 
-	@Before
-	public void setUp() throws Exception {
-	}
-
-	@After
-	public void tearDown() throws Exception {
-	}
 
 	@Test
 	public void testDateProviderSingelton() {
