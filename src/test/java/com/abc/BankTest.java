@@ -2,6 +2,8 @@ package com.abc;
 
 import static org.junit.Assert.assertEquals;
 
+import java.math.BigDecimal;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -11,8 +13,6 @@ import com.abc.account.MaxiSavingsAccount;
 import com.abc.account.SavingsAccount;
 
 public class BankTest {
-
-	private static final double DOUBLE_DELTA = 1e-15;
 
 	private Bank bank;
 
@@ -39,9 +39,9 @@ public class BankTest {
 		Customer bill = new Customer("Bill").openAccount(checkingAccount);
 		bank.addCustomer(bill);
 
-		checkingAccount.deposit(100.0);
+		checkingAccount.deposit(new BigDecimal("100.0"));
 
-		assertEquals(0.1, bank.totalInterestPaid(), DOUBLE_DELTA);
+		assertEquals(new BigDecimal("0.10"), bank.totalInterestPaid());
 	}
 
 	@Test
@@ -50,9 +50,9 @@ public class BankTest {
 		Account savingsAccount = new SavingsAccount();
 		bank.addCustomer(new Customer("Bill").openAccount(savingsAccount));
 
-		savingsAccount.deposit(1500.0);
+		savingsAccount.deposit(new BigDecimal("1500.00"));
 
-		assertEquals(2.0, bank.totalInterestPaid(), DOUBLE_DELTA);
+		assertEquals(new BigDecimal("2.00"), bank.totalInterestPaid());
 	}
 
 	@Test
@@ -61,9 +61,11 @@ public class BankTest {
 		Account maxiSavingsAccount = new MaxiSavingsAccount();
 		bank.addCustomer(new Customer("Bill").openAccount(maxiSavingsAccount));
 
-		maxiSavingsAccount.deposit(3000.0);
+		maxiSavingsAccount.deposit(new BigDecimal("3000.00"));
 
-		assertEquals(3000 * .05, bank.totalInterestPaid(), DOUBLE_DELTA);
+		BigDecimal expected = new BigDecimal("3000.00").multiply(
+				new BigDecimal(".05")).setScale(2, BigDecimal.ROUND_CEILING);
+		assertEquals(expected, bank.totalInterestPaid());
 	}
 
 }

@@ -1,7 +1,8 @@
-package com.abc;
+package com.abc.account;
 
 import static org.junit.Assert.assertEquals;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -9,13 +10,11 @@ import java.util.GregorianCalendar;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.abc.Transaction;
 import com.abc.account.Account;
 import com.abc.account.MaxiSavingsAccount;
 
 public class MaxiSavingsAccountTest {
-
-	// TODO get rid of this
-	private static final double DOUBLE_DELTA = 1e-15;
 
 	private Account maxiSavingsAccount;
 
@@ -26,42 +25,47 @@ public class MaxiSavingsAccountTest {
 
 	@Test
 	public void testDeposit() throws Exception {
-		maxiSavingsAccount.deposit(100);
-		assertEquals(100, maxiSavingsAccount.sumTransactions(), DOUBLE_DELTA);
+		maxiSavingsAccount.deposit(new BigDecimal("100.00"));
+		assertEquals(new BigDecimal("100.00"),
+				maxiSavingsAccount.sumTransactions());
 	}
 
 	@Test(expected = Exception.class)
 	public void testWithdrawalInsufficientFunds() throws Exception {
-		assertEquals(0, maxiSavingsAccount.sumTransactions(), DOUBLE_DELTA);
-		maxiSavingsAccount.withdraw(1000);
+		assertEquals(new BigDecimal("0.00"),
+				maxiSavingsAccount.sumTransactions());
+		maxiSavingsAccount.withdraw(new BigDecimal("1000.00"));
 	}
 
 	@Test
 	public void testWithdrawal() throws Exception {
-		maxiSavingsAccount.deposit(100);
-		assertEquals(100, maxiSavingsAccount.sumTransactions(), DOUBLE_DELTA);
-		maxiSavingsAccount.withdraw(100);
-		assertEquals(0, maxiSavingsAccount.sumTransactions(), DOUBLE_DELTA);
+		maxiSavingsAccount.deposit(new BigDecimal("100.00"));
+		assertEquals(new BigDecimal("100.00"),
+				maxiSavingsAccount.sumTransactions());
+
+		maxiSavingsAccount.withdraw(new BigDecimal("100.00"));
+		assertEquals(new BigDecimal("0.00"),
+				maxiSavingsAccount.sumTransactions());
 	}
 
 	@Test
 	public void testInterestEarnedTransactionsInLast10Days() throws Exception {
 
-		maxiSavingsAccount.deposit(1000);
-		maxiSavingsAccount.withdraw(100);
+		maxiSavingsAccount.deposit(new BigDecimal("1000.00"));
+		maxiSavingsAccount.withdraw(new BigDecimal("100.00"));
 
 		assertEquals(2, maxiSavingsAccount.getTransactions().size());
 
-		assertEquals(900 * .001, maxiSavingsAccount.interestEarned(),
-				DOUBLE_DELTA);
+		assertEquals(new BigDecimal("900.00").multiply(new BigDecimal(".001")),
+				maxiSavingsAccount.interestEarned());
 
 	}
 
 	@Test
 	public void testInterestEarnedNoTransactionsInLast10Days() throws Exception {
 
-		maxiSavingsAccount.deposit(1000);
-		maxiSavingsAccount.withdraw(100);
+		maxiSavingsAccount.deposit(new BigDecimal("1000.00"));
+		maxiSavingsAccount.withdraw(new BigDecimal("100.00"));
 
 		assertEquals(2, maxiSavingsAccount.getTransactions().size());
 
@@ -71,13 +75,13 @@ public class MaxiSavingsAccountTest {
 
 		// manipulate the transaction date for purposes of test
 		for (Transaction transaction : maxiSavingsAccount.getTransactions()) {
-			if (transaction.getAmount() < 0) { // a withdrawal
+			if (transaction.getAmount().compareTo(new BigDecimal("0")) < 0) { // withdrawal
 				transaction.setTransactionDate(thirtyDaysAgo);
 			}
 		}
 
-		assertEquals((900 * .05), maxiSavingsAccount.interestEarned(),
-				DOUBLE_DELTA);
+		assertEquals(new BigDecimal("900.00").multiply(new BigDecimal(".05")),
+				maxiSavingsAccount.interestEarned());
 	}
 
 }

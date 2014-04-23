@@ -2,6 +2,8 @@ package com.abc;
 
 import static org.junit.Assert.assertEquals;
 
+import java.math.BigDecimal;
+
 import org.junit.Test;
 
 import com.abc.account.Account;
@@ -9,8 +11,6 @@ import com.abc.account.CheckingAccount;
 import com.abc.account.SavingsAccount;
 
 public class CustomerTest {
-	// TODO get rid of this
-	private static final double DOUBLE_DELTA = 1e-15;
 
 	@Test
 	public void testGetStatement() throws Exception {
@@ -21,9 +21,9 @@ public class CustomerTest {
 		Customer henry = new Customer("Henry").openAccount(checkingAccount)
 				.openAccount(savingsAccount);
 
-		checkingAccount.deposit(100.0);
-		savingsAccount.deposit(4000.0);
-		savingsAccount.withdraw(200.0);
+		checkingAccount.deposit(new BigDecimal("100.00"));
+		savingsAccount.deposit(new BigDecimal("4000.00"));
+		savingsAccount.withdraw(new BigDecimal("200.00"));
 
 		assertEquals("Statement for Henry\n" + "\n" + "Checking Account\n"
 				+ "  deposit $100.00\n" + "Total $100.00\n" + "\n"
@@ -58,13 +58,15 @@ public class CustomerTest {
 		Customer henry = new Customer("Henry").openAccount(checkingAccount)
 				.openAccount(savingsAccount);
 
-		checkingAccount.deposit(100.0);
-		savingsAccount.deposit(4000.0);
+		checkingAccount.deposit(new BigDecimal("100.00"));
+		savingsAccount.deposit(new BigDecimal("4000.00"));
 
-		henry.transfer(savingsAccount, checkingAccount, 4000.00);
+		henry.transfer(savingsAccount, checkingAccount, new BigDecimal(
+				"4000.00"));
 
-		assertEquals(4100.00, checkingAccount.sumTransactions(), DOUBLE_DELTA);
-		assertEquals(savingsAccount.sumTransactions(), 0, DOUBLE_DELTA);
+		assertEquals(new BigDecimal("4100.00"),
+				checkingAccount.sumTransactions());
+		assertEquals(savingsAccount.sumTransactions(), new BigDecimal("0.00"));
 
 	}
 
@@ -77,10 +79,11 @@ public class CustomerTest {
 		Customer henry = new Customer("Henry").openAccount(checkingAccount)
 				.openAccount(savingsAccount);
 
-		checkingAccount.deposit(100.0);
-		savingsAccount.deposit(4000.0);
+		checkingAccount.deposit(new BigDecimal("100.0"));
+		savingsAccount.deposit(new BigDecimal("4000.0"));
 
-		henry.transfer(savingsAccount, checkingAccount, 5000.00);
+		henry.transfer(savingsAccount, checkingAccount, new BigDecimal(
+				"5000.00"));
 
 	}
 
@@ -93,10 +96,10 @@ public class CustomerTest {
 		Customer henry = new Customer("Henry").openAccount(checkingAccount)
 				.openAccount(savingsAccount);
 
-		checkingAccount.deposit(100.0);
-		savingsAccount.deposit(4000.0);
+		checkingAccount.deposit(new BigDecimal("100.00"));
+		savingsAccount.deposit(new BigDecimal("4000.00"));
 
-		henry.transfer(savingsAccount, checkingAccount, 0);
+		henry.transfer(savingsAccount, checkingAccount, new BigDecimal("0.00"));
 
 	}
 

@@ -1,5 +1,6 @@
 package com.abc.account;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,9 +21,9 @@ public abstract class Account {
 		this.transactions = new ArrayList<Transaction>();
 	}
 
-	public synchronized void deposit(double amount) {
+	public synchronized void deposit(BigDecimal amount) {
 
-		if (amount <= 0) {
+		if (amount.compareTo(new BigDecimal("0.00")) <= 0) {
 			throw new IllegalArgumentException(
 					"amount must be greater than zero");
 		}
@@ -31,33 +32,34 @@ public abstract class Account {
 
 	}
 
-	public synchronized void withdraw(double amount) throws Exception {
+	public synchronized void withdraw(BigDecimal amount) throws Exception {
 
-		if (amount <= 0) {
+		if (amount.compareTo(new BigDecimal("0.00")) <= 0) {
 			throw new IllegalArgumentException(
 					"amount must be greater than zero");
 		}
 
-		if (amount > sumTransactions()) {
+		if (amount.compareTo(sumTransactions()) > 0) {
 			throw new Exception("insufficient funds on withdrawal");
 		}
 
-		transactions.add(new Transaction(-amount));
+		transactions.add(new Transaction(amount.negate()));
 
 	}
 
-	public abstract double interestEarned();
+	public abstract BigDecimal interestEarned();
 
-	public double balance() {
-		return sumTransactions() + interestEarned();
-	}
+	public BigDecimal sumTransactions() {
 
-	public double sumTransactions() {
+		BigDecimal total = new BigDecimal("0.00");
 
-		double amount = 0.0;
-		for (Transaction t : transactions)
-			amount += t.getAmount();
-		return amount;
+		for (Transaction t : transactions) {
+
+			total = total.add(t.getAmount());
+
+		}
+
+		return total.setScale(2, BigDecimal.ROUND_CEILING);
 	}
 
 	public String getLabel() {

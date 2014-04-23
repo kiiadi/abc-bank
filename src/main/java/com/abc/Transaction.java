@@ -1,19 +1,20 @@
 package com.abc;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class Transaction {
 
-	private final double amount;
+	private final BigDecimal amount;
 
 	private Date transactionDate;
 
-	public Transaction(double amount) {
+	public Transaction(BigDecimal amount) {
 		this.amount = amount;
 		this.setTransactionDate(DateProvider.getInstance().now());
 	}
 
-	public double getAmount() {
+	public BigDecimal getAmount() {
 		return amount;
 	}
 

@@ -1,5 +1,6 @@
 package com.abc.account;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -7,9 +8,9 @@ import java.util.GregorianCalendar;
 import com.abc.Transaction;
 
 public class MaxiSavingsAccount extends SavingsAccount {
-	
+
 	private int withdrawalRuleDays = 10;
-	
+
 	public MaxiSavingsAccount() {
 		super();
 		label = "Maxi Savings Account\n";
@@ -20,9 +21,9 @@ public class MaxiSavingsAccount extends SavingsAccount {
 	 * otherwise 0.1%
 	 */
 	@Override
-	public double interestEarned() {
+	public BigDecimal interestEarned() {
 
-		double amount = sumTransactions();
+		BigDecimal amount = sumTransactions();
 
 		Calendar cal = GregorianCalendar.getInstance();
 		cal.add(Calendar.DAY_OF_YEAR, -withdrawalRuleDays);
@@ -31,7 +32,8 @@ public class MaxiSavingsAccount extends SavingsAccount {
 		boolean withdrawalRuleBroken = false;
 
 		for (Transaction transaction : getTransactions()) {
-			if (transaction.getAmount() < 0) { // a withdrawal
+			if (transaction.getAmount().compareTo(new BigDecimal("0")) < 0) { // a
+																				// withdrawal
 				if (transaction.getTransactionDate().after(offset)) {
 					withdrawalRuleBroken = true;
 					break;
@@ -40,9 +42,9 @@ public class MaxiSavingsAccount extends SavingsAccount {
 		}
 
 		if (withdrawalRuleBroken) {
-			return amount * 0.001;
+			return amount.multiply(new BigDecimal("0.001"));
 		} else {
-			return amount * 0.05;
+			return amount.multiply(new BigDecimal("0.05"));
 		}
 
 	}
@@ -50,7 +52,5 @@ public class MaxiSavingsAccount extends SavingsAccount {
 	public void setWithdrawalRuleDays(int withdrawalRuleDays) {
 		this.withdrawalRuleDays = withdrawalRuleDays;
 	}
-	
-	
 
 }
