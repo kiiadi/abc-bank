@@ -1,78 +1,131 @@
 package com.abc;
 
+import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Currency;
 import java.util.List;
 
-import static java.lang.Math.abs;
+import com.abc.account.Account;
 
 public class Customer {
-    private String name;
-    private List<Account> accounts;
 
-    public Customer(String name) {
-        this.name = name;
-        this.accounts = new ArrayList<Account>();
-    }
+	private String name;
 
-    public String getName() {
-        return name;
-    }
+	private List<Account> accounts;
 
-    public Customer openAccount(Account account) {
-        accounts.add(account);
-        return this;
-    }
+	public Customer(String name) {
+		this.name = name;
+		this.accounts = new ArrayList<Account>();
+	}
 
-    public int getNumberOfAccounts() {
-        return accounts.size();
-    }
+	public String getName() {
+		return name;
+	}
 
-    public double totalInterestEarned() {
-        double total = 0;
-        for (Account a : accounts)
-            total += a.interestEarned();
-        return total;
-    }
+	public Customer openAccount(Account account) {
+		accounts.add(account);
+		return this;
+	}
 
-    public String getStatement() {
-        String statement = null;
-        statement = "Statement for " + name + "\n";
-        double total = 0.0;
-        for (Account a : accounts) {
-            statement += "\n" + statementForAccount(a) + "\n";
-            total += a.sumTransactions();
-        }
-        statement += "\nTotal In All Accounts " + toDollars(total);
-        return statement;
-    }
+	public void transfer(Account fromAccount, Account toAccount,
+			BigDecimal amount) throws Exception {
 
-    private String statementForAccount(Account a) {
-        String s = "";
+		if (fromAccount == null) {
+			throw new IllegalArgumentException("fromAccount must be specified");
+		}
 
-       //Translate to pretty account type
-        switch(a.getAccountType()){
-            case Account.CHECKING:
-                s += "Checking Account\n";
-                break;
-            case Account.SAVINGS:
-                s += "Savings Account\n";
-                break;
-            case Account.MAXI_SAVINGS:
-                s += "Maxi Savings Account\n";
-                break;
-        }
+		if (toAccount == null) {
+			throw new IllegalArgumentException("toAccount must be specified");
+		}
 
-        //Now total up all the transactions
-        double total = 0.0;
-        for (Transaction t : a.transactions) {
-            s += "  " + (t.amount < 0 ? "withdrawal" : "deposit") + " " + toDollars(t.amount) + "\n";
-            total += t.amount;
-        }
-        s += "Total " + toDollars(total);
-        return s;
-    }
+		if (amount.compareTo(new BigDecimal("0")) <= 0) {
+			throw new IllegalArgumentException(
+					"amount must be greater than zero");
+		}
 
-    private String toDollars(double d){
-        return String.format("$%,.2f", abs(d));
-    }
+		if (getNumberOfAccounts() <= 1) {
+			throw new Exception(
+					"customer must have more than 1 accounts for transfer");
+		}
+		if (amount.compareTo(fromAccount.sumTransactions()) > 0) {
+			throw new Exception("fromAccount has insufficient balance");
+		}
+
+		synchronized (this) {
+			fromAccount.withdraw(amount);
+			toAccount.deposit(amount);
+		}
+
+	}
+
+	public int getNumberOfAccounts() {
+		return accounts.size();
+	}
+
+	public BigDecimal totalInterestEarned() {
+		BigDecimal total = new BigDecimal("0");
+		for (Account a : accounts) {
+			total = total.add(a.interestEarned());
+		}
+		return total;
+	}
+
+	public String getStatement() {
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("Statement for ");
+		sb.append(name);
+		sb.append("\n");
+
+		BigDecimal total = new BigDecimal("0.00");
+		for (Account a : accounts) {
+
+			sb.append("\n");
+
+			sb.append(statementForAccount(a));
+			sb.append("\n");
+
+			total = total.add(a.sumTransactions());
+		}
+		sb.append("\nTotal In All Accounts ");
+
+		sb.append(toDollars(total));
+
+		return sb.toString();
+	}
+
+	private String statementForAccount(Account account) {
+
+		StringBuilder sb = new StringBuilder();
+
+		sb.append(account.getLabel());
+
+		// Now total up all the transactions
+		BigDecimal total = new BigDecimal("0.00");
+
+		for (Transaction transaction : account.getTransactions()) {
+			sb.append("  ");
+			sb.append(((transaction.getAmount().compareTo(
+					new BigDecimal("0.00")) < 0) ? "withdrawal" : "deposit"));
+			sb.append(" ");
+			sb.append(toDollars(transaction.getAmount()));
+			sb.append("\n");
+
+			total = total.add(transaction.getAmount());
+		}
+		sb.append("Total ");
+		sb.append(toDollars(total));
+
+		return sb.toString();
+	}
+
+	private String toDollars(BigDecimal amount) {
+
+		NumberFormat nf = NumberFormat.getCurrencyInstance();
+		nf.setCurrency(Currency.getInstance("USD"));
+
+		return nf.format(amount.abs());
+
+	}
 }

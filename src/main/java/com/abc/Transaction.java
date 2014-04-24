@@ -1,16 +1,29 @@
 package com.abc;
 
-import java.util.Calendar;
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class Transaction {
-    public final double amount;
 
-    private Date transactionDate;
+	private final BigDecimal amount;
 
-    public Transaction(double amount) {
-        this.amount = amount;
-        this.transactionDate = DateProvider.getInstance().now();
-    }
+	private Date transactionDate;
+
+	public Transaction(BigDecimal amount) {
+		this.amount = amount;
+		this.setTransactionDate(DateProvider.getInstance().now());
+	}
+
+	public BigDecimal getAmount() {
+		return amount;
+	}
+
+	public Date getTransactionDate() {
+		return transactionDate;
+	}
+
+	public void setTransactionDate(Date transactionDate) {
+		this.transactionDate = transactionDate;
+	}
 
 }
