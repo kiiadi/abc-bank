@@ -24,31 +24,6 @@ public class MaxiSavingsAccountTest {
 	}
 
 	@Test
-	public void testDeposit() throws Exception {
-		maxiSavingsAccount.deposit(new BigDecimal("100.00"));
-		assertEquals(new BigDecimal("100.00"),
-				maxiSavingsAccount.sumTransactions());
-	}
-
-	@Test(expected = Exception.class)
-	public void testWithdrawalInsufficientFunds() throws Exception {
-		assertEquals(new BigDecimal("0.00"),
-				maxiSavingsAccount.sumTransactions());
-		maxiSavingsAccount.withdraw(new BigDecimal("1000.00"));
-	}
-
-	@Test
-	public void testWithdrawal() throws Exception {
-		maxiSavingsAccount.deposit(new BigDecimal("100.00"));
-		assertEquals(new BigDecimal("100.00"),
-				maxiSavingsAccount.sumTransactions());
-
-		maxiSavingsAccount.withdraw(new BigDecimal("100.00"));
-		assertEquals(new BigDecimal("0.00"),
-				maxiSavingsAccount.sumTransactions());
-	}
-
-	@Test
 	public void testInterestEarnedTransactionsInLast10Days() throws Exception {
 
 		maxiSavingsAccount.deposit(new BigDecimal("1000.00"));
