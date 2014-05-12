@@ -35,7 +35,7 @@ public class Customer {
     }
 
     public String getStatement() {
-        String statement = null;
+        String statement;
         statement = "Statement for " + name + "\n";
         double total = 0.0;
         for (Account a : accounts) {
