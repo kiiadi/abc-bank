@@ -33,4 +33,14 @@ public abstract class Account {
       amount += transaction.amount;
     return amount;
   }
+
+  public String getStatementText() {
+      String statement = String.format("%s\n", getName());
+
+      for(Transaction transaction : transactions)
+        statement += "  " + transaction.getStatementText() + "\n";
+
+      statement += "Total " + Util.toDollars(sumTransactions());
+      return statement;
+  }
 }
