@@ -6,7 +6,9 @@ import java.util.List;
 import static java.lang.Math.abs;
 
 public class Customer {
-    private String name;
+
+    private final String name;
+    @SuppressWarnings("FieldMayBeFinal")
     private List<Account> accounts;
 
     public Customer(String name) {
@@ -23,20 +25,75 @@ public class Customer {
         return this;
     }
 
+    /**
+     *
+     * @param from
+     * @param to
+     * @param amount
+     * @return success
+     * @throws java.lang.Exception
+     */
+    public boolean transferBetweenAccounts(int from, int to, double amount) throws Exception {
+        boolean success = false;
+        Account fromAcct = findAccountById(from);
+        Account toAcct = findAccountById(to);
+        if (null == fromAcct || null == toAcct) {
+            throw new Exception("Account not found");
+        }
+        boolean enough = isSufficientFunds(fromAcct, amount);
+        if (!enough) {
+            throw new Exception("insufficient funds");
+        }
+
+        fromAcct.withdraw(amount);
+        toAcct.deposit(amount);
+        double transfered = fromAcct.getLastTransaction().amount + toAcct.getLastTransaction().amount;
+        double expected = 0.0;
+        if (transfered == expected) {
+            success = true;
+        }
+        return success;
+    }
+
+    /**
+     *
+     * @param fromAcct
+     * @param amount
+     * @return
+     */
+    private boolean isSufficientFunds(Account fromAcct, double amount) {
+        boolean enough = false;
+        double currentBallance = fromAcct.sumTransactions();
+        if (amount <= currentBallance) {
+            enough = true;
+        }
+        return enough;
+
+    }
+
+    private Account findAccountById(int id) {
+        for (Account a : accounts) {
+            if (a.getAccountType() == id) {
+                return a;
+            }
+        }
+        return null;
+    }
+
     public int getNumberOfAccounts() {
         return accounts.size();
     }
 
     public double totalInterestEarned() {
         double total = 0;
-        for (Account a : accounts)
+        for (Account a : accounts) {
             total += a.interestEarned();
+        }
         return total;
     }
 
     public String getStatement() {
-        String statement = null;
-        statement = "Statement for " + name + "\n";
+        String statement = "Statement for " + name + "\n";
         double total = 0.0;
         for (Account a : accounts) {
             statement += "\n" + statementForAccount(a) + "\n";
@@ -49,8 +106,8 @@ public class Customer {
     private String statementForAccount(Account a) {
         String s = "";
 
-       //Translate to pretty account type
-        switch(a.getAccountType()){
+        //Translate to pretty account type
+        switch (a.getAccountType()) {
             case Account.CHECKING:
                 s += "Checking Account\n";
                 break;
@@ -72,7 +129,7 @@ public class Customer {
         return s;
     }
 
-    private String toDollars(double d){
+    private String toDollars(double d) {
         return String.format("$%,.2f", abs(d));
     }
 }

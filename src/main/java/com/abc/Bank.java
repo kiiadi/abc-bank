@@ -34,6 +34,7 @@ public class Bank {
         return total;
     }
 
+    @SuppressWarnings("CallToThreadDumpStack")
     public String getFirstCustomer() {
         try {
             customers = null;
