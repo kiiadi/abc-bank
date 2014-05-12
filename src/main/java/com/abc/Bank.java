@@ -27,16 +27,4 @@ public class Bank {
       total += customer.totalInterestEarned();
     return total;
   }
-
-  //TODO: find out if getFirstCustomer() is used outside of this package remove if unused
-  @Deprecated
-  public String getFirstCustomer() {
-    try {
-      if (customers.size() > 0)
-        return customers.get(0).getName();
-    } catch (Exception e){
-      e.printStackTrace();
-    }
-    return "Error";
-  }
 }
