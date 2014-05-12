@@ -1,0 +1,15 @@
+Bank Account application refactoring notes
+==========================================
+
+Account class 
+=============
+
+1. 	Moved the static final account types into an AccountType enum 
+	in the AccountType.java file. Provides for type safety.
+
+2. 	Replaced the static final account types with an AccountType
+ 	enum.
+ 	
+ 	
+ 	
+ 	

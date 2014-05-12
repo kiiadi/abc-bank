@@ -10,26 +10,19 @@ import java.util.List;
  * 
  */
 public class Account
-    {
-
-	// possible bank account types
-	public static final int CHECKING = 0;
-	public static final int SAVINGS = 1;
-	public static final int MAXI_SAVINGS = 2;
-
-	private final int accountType;
+    {	
+	private final AccountType accountType;
 	public List<Transaction> transactions;
 
 	/**
-	 * Create an account object
-	 * 
-	 * @param accountType
+	 * Create an Account object
+	 * @param _type - the account type to create
 	 */
-	public Account(int accountType)
-	    {
-		this.accountType = accountType;
-		this.transactions = new ArrayList<Transaction>();
-	    }
+	public Account( com.abc.AccountType _type )
+	{
+		this.accountType = _type;
+		this.transactions = new ArrayList<Transaction>();		
+	}
 
 	/**
 	 * Deposit funds into an existing account
@@ -79,7 +72,7 @@ public class Account
 	public double interestEarned()
 	    {
 		double amount = sumTransactions();
-		switch (accountType)
+		switch (this.accountType )
 		    {
 		    case SAVINGS:
 			if (amount <= 1000)
@@ -89,7 +82,7 @@ public class Account
 			// case SUPER_SAVINGS:
 			// if (amount <= 4000)
 			// return 20;
-		    case MAXI_SAVINGS:
+		    case MAXISAVINGS:
 			if (amount <= 1000)
 			    return amount * 0.02;
 			if (amount <= 2000)
@@ -125,9 +118,10 @@ public class Account
 
 	/**
 	 * Return the account type of this account
-	 * @return
+	 * @return the type defined for this account 
+	 * @see AccountType
 	 */
-	public int getAccountType()
+	public AccountType getType()
 	    {
 		return accountType;
 	    }
