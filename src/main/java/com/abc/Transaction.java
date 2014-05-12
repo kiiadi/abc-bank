@@ -1,9 +1,15 @@
 package com.abc;
 
-public class Transaction {
-  public final double amount;
+import java.util.Date;
 
-  public Transaction(double amount) {
-    this.amount = amount;
-  }
+public class Transaction {
+    public final double amount;
+
+    private Date transactionDate;
+
+    public Transaction(double amount) {
+        this.amount = amount;
+        this.transactionDate = DateProvider.getInstance().now();
+    }
+
 }
