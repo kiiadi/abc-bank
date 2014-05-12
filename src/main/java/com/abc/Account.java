@@ -41,9 +41,6 @@ public void withdraw(double amount) {
                     return amount * 0.001;
                 else
                     return 1 + (amount-1000) * 0.002;
-//            case SUPER_SAVINGS:
-//                if (amount <= 4000)
-//                    return 20;
             case MAXI_SAVINGS:
                 if (amount <= 1000)
                     return amount * 0.02;
@@ -56,10 +53,10 @@ public void withdraw(double amount) {
     }
 
     public double sumTransactions() {
-       return checkIfTransactionsExist(true);
+       return checkIfTransactionsExist();
     }
 
-    private double checkIfTransactionsExist(boolean checkAll) {
+    private double checkIfTransactionsExist() {
         double amount = 0.0;
         for (Transaction t: transactions)
             amount += t.amount;
