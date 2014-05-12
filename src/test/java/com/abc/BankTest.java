@@ -10,11 +10,19 @@ public class BankTest {
   @Test
   public void testCustomerSummary() {
     Bank bank = new Bank();
-    Customer customer = new Customer("Customer Name");
-    customer.openAccount(new CheckingAccount());
-    bank.addCustomer(customer);
 
-    assertEquals("Customer Summary\n - Customer Name (1 account)", bank.customerSummary());
+    Customer customer1 = new Customer("Customer1 Name");
+    customer1.openAccount(new CheckingAccount());
+    bank.addCustomer(customer1);
+
+    Customer customer2 = new Customer("Customer2 Name");
+    customer2.openAccount(new SavingsAccount());
+    customer2.openAccount(new MaxiSavingsAccount());
+    bank.addCustomer(customer2);
+
+    assertEquals("Customer Summary\n" +
+                   " - Customer1 Name (1 account)\n" +
+                   " - Customer2 Name (2 accounts)", bank.customerSummary());
   }
 
   @Test
