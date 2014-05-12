@@ -9,8 +9,8 @@ public class CustomerTest {
   @Test //Test customer statement generation
   public void testApp() {
 
-    Account checkingAccount = new Account(Account.CHECKING);
-    Account savingsAccount = new Account(Account.SAVINGS);
+    Account checkingAccount = new CheckingAccount();
+    Account savingsAccount = new SavingsAccount();
 
     Customer customer = new Customer("Customer Name").openAccount(checkingAccount).openAccount(savingsAccount);
 
@@ -41,17 +41,17 @@ public class CustomerTest {
   @Test
   public void testTwoAccounts() {
     Customer customer = new Customer("Customer Name");
-    customer.openAccount(new Account(Account.SAVINGS));
-    customer.openAccount(new Account(Account.CHECKING));
+    customer.openAccount(new SavingsAccount());
+    customer.openAccount(new CheckingAccount());
     assertEquals(2, customer.getNumberOfAccounts());
   }
 
   @Test
   public void testThreeAccounts() {
     Customer customer = new Customer("Customer Name");
-    customer.openAccount(new Account(Account.SAVINGS));
-    customer.openAccount(new Account(Account.CHECKING));
-    customer.openAccount(new Account(Account.MAXI_SAVINGS));
+    customer.openAccount(new SavingsAccount());
+    customer.openAccount(new CheckingAccount());
+    customer.openAccount(new MaxiSavingsAccount());
     assertEquals(3, customer.getNumberOfAccounts());
   }
 }
