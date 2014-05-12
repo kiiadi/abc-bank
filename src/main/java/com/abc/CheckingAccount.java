@@ -7,7 +7,7 @@ package com.abc;
  *         Time: 1:26 PM
  */
 public class CheckingAccount extends Account {
-  private static final double CHECKING_RATE = 0.001;
+  private static final double INTEREST_RATE = 0.001;
 
   @Override
   public String getName() {
@@ -16,6 +16,6 @@ public class CheckingAccount extends Account {
 
   @Override
   public double interestEarned() {
-    return sumTransactions() * CHECKING_RATE;
+    return sumTransactions() * INTEREST_RATE;
   }
 }
