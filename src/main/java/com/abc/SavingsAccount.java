@@ -6,12 +6,21 @@ package com.abc;
  *         Time: 1:36 PM
  */
 public class SavingsAccount extends Account {
-  public SavingsAccount() {
-    super(SAVINGS);
+  private static final double LOWER_SAVINGS_RATE = 0.001;
+  private static final double HIGHER_SAVINGS_RATE = 0.002;
+
+  @Override
+  public String getName() {
+    return "Savings Account";
   }
 
   @Override
-  String getName() {
-    return "Savings Account";
+  public double interestEarned() {
+    double amount = sumTransactions();
+    if(amount <= 1000) {
+      return amount * LOWER_SAVINGS_RATE;
+    } else {
+      return 1 + (amount - 1000) * HIGHER_SAVINGS_RATE;
+    }
   }
 }

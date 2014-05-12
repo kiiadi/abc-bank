@@ -47,7 +47,7 @@ public class Customer {
   }
 
   private String statementForAccount(Account account) {
-    String statement = account.getName();
+    String statement = String.format("%s\n", account.getName());
 
     //Now total up all the transactions
     double total = 0.0;
