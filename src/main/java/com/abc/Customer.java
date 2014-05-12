@@ -51,7 +51,7 @@ public class Customer {
     //Now total up all the transactions
     double total = 0.0;
     for(Transaction transaction : account.transactions) {
-      statement += "  " + (transaction.amount < 0 ? "withdrawal" : "deposit") + " " + toDollars(transaction.amount) + "\n";
+      statement += "  " + transaction.getStatementText() + "\n";
       total += transaction.amount;
     }
     statement += "Total " + toDollars(total);
@@ -59,6 +59,9 @@ public class Customer {
   }
 
   private String toDollars(double amount) {
-    return String.format("$%,.2f", abs(amount));
+    if (amount < 0)
+      return String.format("-$%,.2f", abs(amount));
+    else
+      return String.format("$%,.2f", abs(amount));
   }
 }
