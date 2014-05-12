@@ -58,8 +58,8 @@ public class Account {
 
   private double checkIfTransactionsExist() {
     double amount = 0.0;
-    for(Transaction t : transactions)
-      amount += t.amount;
+    for(Transaction transaction : transactions)
+      amount += transaction.amount;
     return amount;
   }
 
