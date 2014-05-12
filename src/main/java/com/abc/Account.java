@@ -28,10 +28,6 @@ public abstract class Account {
   }
 
   public double sumTransactions() {
-    return checkIfTransactionsExist();
-  }
-
-  private double checkIfTransactionsExist() {
     double amount = 0.0;
     for(Transaction transaction : transactions)
       amount += transaction.amount;
