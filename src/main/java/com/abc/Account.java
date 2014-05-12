@@ -3,7 +3,7 @@ package com.abc;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Account {
+public abstract class Account {
 
   public static final int CHECKING = 0;
   public static final int SAVINGS = 1;
@@ -63,8 +63,5 @@ public class Account {
     return amount;
   }
 
-  public int getAccountType() {
-    return accountType;
-  }
-
+  abstract String getName();
 }

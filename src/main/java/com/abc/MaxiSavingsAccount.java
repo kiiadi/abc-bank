@@ -9,4 +9,9 @@ public class MaxiSavingsAccount extends Account {
   public MaxiSavingsAccount() {
     super(MAXI_SAVINGS);
   }
+
+  @Override
+  String getName() {
+    return "Maxi Savings Account";
+  }
 }

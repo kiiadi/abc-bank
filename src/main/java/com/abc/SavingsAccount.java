@@ -9,4 +9,9 @@ public class SavingsAccount extends Account {
   public SavingsAccount() {
     super(SAVINGS);
   }
+
+  @Override
+  String getName() {
+    return "Savings Account";
+  }
 }

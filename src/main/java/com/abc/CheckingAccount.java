@@ -10,4 +10,9 @@ public class CheckingAccount extends Account {
   public CheckingAccount() {
     super(CHECKING);
   }
+
+  @Override
+  String getName() {
+    return "Checking Account";
+  }
 }

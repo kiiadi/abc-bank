@@ -34,7 +34,7 @@ public class CustomerTest {
 
   @Test
   public void testOneAccount() {
-    Customer customer = new Customer("Customer Name").openAccount(new Account(Account.SAVINGS));
+    Customer customer = new Customer("Customer Name").openAccount(new SavingsAccount());
     assertEquals(1, customer.getNumberOfAccounts());
   }
 
