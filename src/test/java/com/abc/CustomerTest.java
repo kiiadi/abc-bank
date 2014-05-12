@@ -6,8 +6,8 @@ import static org.junit.Assert.assertEquals;
 
 public class CustomerTest {
 
-  @Test //Test customer statement generation
-  public void testApp() {
+  @Test
+  public void testStatement() {
 
     Account checkingAccount = new CheckingAccount();
     Account savingsAccount = new SavingsAccount();
