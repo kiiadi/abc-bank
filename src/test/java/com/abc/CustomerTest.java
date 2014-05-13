@@ -5,6 +5,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 public class CustomerTest {
+  private static final double DOUBLE_DELTA = 1e-15;
 
   @Test
   public void testStatement() {
@@ -79,5 +80,19 @@ public class CustomerTest {
     customer.openAccount(new CheckingAccount());
     customer.openAccount(new MaxiSavingsAccount());
     assertEquals(3, customer.getNumberOfAccounts());
+  }
+
+  @Test
+  public void testAccountTransfer() {
+    Account checkingAccount = new CheckingAccount();
+    Account savingsAccount = new SavingsAccount();
+
+    Customer customer = new Customer("Customer Name").openAccount(checkingAccount).openAccount(savingsAccount);
+
+    checkingAccount.deposit(100.0);
+    savingsAccount.deposit(400.0);
+    customer.transfer(250.0, savingsAccount, checkingAccount);
+    assertEquals(400.0 - 250.0, savingsAccount.sumTransactions(), DOUBLE_DELTA);
+    assertEquals(100.0 + 250.0, checkingAccount.sumTransactions(), DOUBLE_DELTA);
   }
 }
