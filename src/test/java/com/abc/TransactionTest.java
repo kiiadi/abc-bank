@@ -31,4 +31,13 @@ public class TransactionTest {
     Transaction transaction = new Deposit(1234567.89);
     assertEquals(1234567.89, transaction.getAmount(), DOUBLE_DELTA);
   }
+
+  @Test
+  public void testNegativeAmount() {
+    try {
+      new Withdrawal(-1234567.89);
+    } catch(IllegalArgumentException exception) {
+      assertEquals("Transaction amount must be greater than zero.", exception.getMessage());
+    }
+  }
 }

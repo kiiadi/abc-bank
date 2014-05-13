@@ -8,7 +8,7 @@ abstract class Transaction {
    */
   public Transaction(double amount) {
     if(amount <= 0.0)
-      throw new IllegalArgumentException("amount must be greater than zero");
+      throw new IllegalArgumentException("Transaction amount must be greater than zero.");
     this.amount = amount;
   }
 

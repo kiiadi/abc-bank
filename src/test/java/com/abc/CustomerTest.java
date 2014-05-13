@@ -12,12 +12,15 @@ public class CustomerTest {
 
     Account checkingAccount = new CheckingAccount();
     Account savingsAccount = new SavingsAccount();
+    Account maxiAccount = new MaxiSavingsAccount();
 
-    Customer customer = new Customer("Customer Name").openAccount(checkingAccount).openAccount(savingsAccount);
+    Customer customer = new Customer("Customer Name").openAccount(checkingAccount)
+                          .openAccount(savingsAccount).openAccount(maxiAccount);
 
     checkingAccount.deposit(100.0);
     savingsAccount.deposit(4000.0);
     savingsAccount.withdraw(200.0);
+    maxiAccount.deposit(9000.0);
 
     assertEquals("Statement for Customer Name\n" +
                    "\n" +
@@ -30,7 +33,11 @@ public class CustomerTest {
                    "  withdrawal $200.00\n" +
                    "Total $3,800.00\n" +
                    "\n" +
-                   "Total In All Accounts $3,900.00", customer.getStatement());
+                   "Maxi Savings Account\n" +
+                   "  deposit $9,000.00\n" +
+                   "Total $9,000.00\n" +
+                   "\n" +
+                   "Total In All Accounts $12,900.00", customer.getStatement());
   }
 
   @Test
@@ -114,9 +121,8 @@ public class CustomerTest {
     assertEquals(100.0, checkingAccount.sumTransactions(), DOUBLE_DELTA);
   }
 
-
   @Test
-  public void testAccountNotFoundTransfer() {
+  public void testSourceAccountNotFoundTransfer() {
     Account checkingAccount = new CheckingAccount();
     Account savingsAccount = new SavingsAccount();
     Account maxiAccount = new MaxiSavingsAccount();
@@ -135,4 +141,28 @@ public class CustomerTest {
     assertEquals(100.0, checkingAccount.sumTransactions(), DOUBLE_DELTA);
     assertEquals(8000.0, maxiAccount.sumTransactions(), DOUBLE_DELTA);
   }
+
+  @Test
+  public void testDestinationAccountNotFoundTransfer() {
+    Account checkingAccount = new CheckingAccount();
+    Account savingsAccount = new SavingsAccount();
+    Account maxiAccount = new MaxiSavingsAccount();
+
+    Customer customer = new Customer("Customer Name").openAccount(checkingAccount).openAccount(savingsAccount);
+
+    checkingAccount.deposit(100.0);
+    savingsAccount.deposit(400.0);
+    maxiAccount.deposit(8000.0);
+    try {
+      customer.transfer(250.0, checkingAccount, maxiAccount);
+    } catch(IllegalArgumentException exception) {
+      assertEquals("Destination account not found under customer.", exception.getMessage());
+    }
+    assertEquals(400.0, savingsAccount.sumTransactions(), DOUBLE_DELTA);
+    assertEquals(100.0, checkingAccount.sumTransactions(), DOUBLE_DELTA);
+    assertEquals(8000.0, maxiAccount.sumTransactions(), DOUBLE_DELTA);
+  }
+
 }
+
+

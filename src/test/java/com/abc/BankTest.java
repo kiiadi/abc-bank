@@ -1,44 +1,11 @@
 package com.abc;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
 public class BankTest {
   private static final double DOUBLE_DELTA = 1e-15;
-
-  double checkingDepositAmount = 100.0;
-  double savingsDepositAmount = 1500.0;
-  double maxiDepositAmount = 3000.0;
-  double expectedCheckingInterest;
-  double expectedSavingsInterest;
-  double expectedMaxiInterest;
-  double expectedTotalInterest;
-
-  @Before
-  public void setUp() {
-    expectedCheckingInterest = checkingDepositAmount * CheckingAccount.INTEREST_RATE;
-
-    if(savingsDepositAmount <= SavingsAccount.LOW_HIGH_BOUNDARY) {
-      expectedSavingsInterest = savingsDepositAmount * SavingsAccount.LOW_RATE;
-    } else {
-      expectedSavingsInterest = SavingsAccount.TOTAL_LOW_INTEREST
-                                  + (savingsDepositAmount - SavingsAccount.LOW_HIGH_BOUNDARY) * SavingsAccount.HIGH_RATE;
-    }
-
-    if(maxiDepositAmount <= MaxiSavingsAccount.LOW_MED_BOUNDARY) {
-      expectedMaxiInterest = maxiDepositAmount * MaxiSavingsAccount.LOW_RATE;
-    } else if(maxiDepositAmount <= MaxiSavingsAccount.MED_HIGH_BOUNDARY) {
-      expectedMaxiInterest = MaxiSavingsAccount.TOTAL_LOW_INTEREST
-                               + (maxiDepositAmount - MaxiSavingsAccount.LOW_MED_BOUNDARY) * MaxiSavingsAccount.MED_RATE;
-    } else {
-      expectedMaxiInterest = MaxiSavingsAccount.TOTAL_LOW_INTEREST + MaxiSavingsAccount.TOTAL_MED_INTEREST
-                               + (maxiDepositAmount - MaxiSavingsAccount.MED_HIGH_BOUNDARY) * MaxiSavingsAccount.HIGH_RATE;
-    }
-
-    expectedTotalInterest = expectedCheckingInterest + expectedSavingsInterest + expectedMaxiInterest;
-  }
 
   @Test
   public void testCustomerSummary() {
@@ -65,47 +32,93 @@ public class BankTest {
     Customer customer = new Customer("Customer Name").openAccount(checkingAccount);
     bank.addCustomer(customer);
 
-    checkingAccount.deposit(checkingDepositAmount);
+    checkingAccount.deposit(1234567.89);
 
-    assertEquals(expectedCheckingInterest, bank.totalInterestPaid(), DOUBLE_DELTA);
+    assertEquals(getExpectedCheckingInterest(1234567.89), bank.totalInterestPaid(), DOUBLE_DELTA);
   }
 
   @Test
-  public void testSavingsAccountInterestPaid() {
+  public void testSavingsAccountLowInterestPaid() {
     Bank bank = new Bank();
     Account savingsAccount = new SavingsAccount();
     bank.addCustomer(new Customer("Customer Name").openAccount(savingsAccount));
 
-    savingsAccount.deposit(savingsDepositAmount);
+    double lowSavingsDeposit = SavingsAccount.LOW_HIGH_BOUNDARY / 2;
+    savingsAccount.deposit(lowSavingsDeposit);
 
-    assertEquals(expectedSavingsInterest, bank.totalInterestPaid(), DOUBLE_DELTA);
+    assertEquals(getExpectedSavingsInterest(lowSavingsDeposit), bank.totalInterestPaid(), DOUBLE_DELTA);
   }
 
   @Test
-  public void testMaxiSavingsAccountInterestPaid() {
+  public void testSavingsAccountHighInterestPaid() {
+    Bank bank = new Bank();
+    Account savingsAccount = new SavingsAccount();
+    bank.addCustomer(new Customer("Customer Name").openAccount(savingsAccount));
+
+    double highSavingsDeposit = SavingsAccount.LOW_HIGH_BOUNDARY * 2;
+    savingsAccount.deposit(highSavingsDeposit);
+
+    assertEquals(getExpectedSavingsInterest(highSavingsDeposit), bank.totalInterestPaid(), DOUBLE_DELTA);
+  }
+
+  @Test
+  public void testMaxiSavingsAccountLowInterestPaid() {
     Bank bank = new Bank();
     Account maxiSavingsAccount = new MaxiSavingsAccount();
     bank.addCustomer(new Customer("Customer Name").openAccount(maxiSavingsAccount));
 
-    maxiSavingsAccount.deposit(maxiDepositAmount);
+    double lowMaxiDeposit = MaxiSavingsAccount.LOW_MED_BOUNDARY / 2;
+    maxiSavingsAccount.deposit(lowMaxiDeposit);
 
-    assertEquals(expectedMaxiInterest, bank.totalInterestPaid(), DOUBLE_DELTA);
+    assertEquals(getExpectedMaxiInterest(lowMaxiDeposit), bank.totalInterestPaid(), DOUBLE_DELTA);
   }
 
   @Test
-  public void testCombinedInterestPaid() {
+  public void testMaxiSavingsAccountMedInterestPaid() {
     Bank bank = new Bank();
-    Account savingsAccount = new SavingsAccount();
-    Account checkingAccount = new CheckingAccount();
     Account maxiSavingsAccount = new MaxiSavingsAccount();
-    bank.addCustomer(new Customer("Customer Name").openAccount(savingsAccount)
-                       .openAccount(checkingAccount)
-                       .openAccount(maxiSavingsAccount));
+    bank.addCustomer(new Customer("Customer Name").openAccount(maxiSavingsAccount));
 
-    checkingAccount.deposit(checkingDepositAmount);
-    savingsAccount.deposit(savingsDepositAmount);
-    maxiSavingsAccount.deposit(maxiDepositAmount);
+    double medMaxiDeposit = (MaxiSavingsAccount.LOW_MED_BOUNDARY + MaxiSavingsAccount.MED_HIGH_BOUNDARY) / 2;
+    maxiSavingsAccount.deposit(medMaxiDeposit);
 
-    assertEquals(expectedTotalInterest, bank.totalInterestPaid(), DOUBLE_DELTA);
+    assertEquals(getExpectedMaxiInterest(medMaxiDeposit), bank.totalInterestPaid(), DOUBLE_DELTA);
+  }
+
+
+  @Test
+  public void testMaxiSavingsAccountHighInterestPaid() {
+    Bank bank = new Bank();
+    Account maxiSavingsAccount = new MaxiSavingsAccount();
+    bank.addCustomer(new Customer("Customer Name").openAccount(maxiSavingsAccount));
+
+    double highMaxiDeposit = MaxiSavingsAccount.MED_HIGH_BOUNDARY * 2;
+    maxiSavingsAccount.deposit(highMaxiDeposit);
+
+    assertEquals(getExpectedMaxiInterest(highMaxiDeposit), bank.totalInterestPaid(), DOUBLE_DELTA);
+  }
+
+  private double getExpectedCheckingInterest(double amount) {
+    return amount * CheckingAccount.INTEREST_RATE;
+  }
+
+  private double getExpectedSavingsInterest(double amount) {
+    if(amount <= SavingsAccount.LOW_HIGH_BOUNDARY) {
+      return amount * SavingsAccount.LOW_RATE;
+    } else {
+      return SavingsAccount.TOTAL_LOW_INTEREST + (amount - SavingsAccount.LOW_HIGH_BOUNDARY) * SavingsAccount.HIGH_RATE;
+    }
+  }
+
+  private double getExpectedMaxiInterest(double amount) {
+    if(amount <= MaxiSavingsAccount.LOW_MED_BOUNDARY) {
+      return amount * MaxiSavingsAccount.LOW_RATE;
+    } else if(amount <= MaxiSavingsAccount.MED_HIGH_BOUNDARY) {
+      return MaxiSavingsAccount.TOTAL_LOW_INTEREST
+               + (amount - MaxiSavingsAccount.LOW_MED_BOUNDARY) * MaxiSavingsAccount.MED_RATE;
+    } else {
+      return MaxiSavingsAccount.TOTAL_LOW_INTEREST + MaxiSavingsAccount.TOTAL_MED_INTEREST
+               + (amount - MaxiSavingsAccount.MED_HIGH_BOUNDARY) * MaxiSavingsAccount.HIGH_RATE;
+    }
   }
 }
