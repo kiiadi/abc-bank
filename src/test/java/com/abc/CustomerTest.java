@@ -95,4 +95,44 @@ public class CustomerTest {
     assertEquals(400.0 - 250.0, savingsAccount.sumTransactions(), DOUBLE_DELTA);
     assertEquals(100.0 + 250.0, checkingAccount.sumTransactions(), DOUBLE_DELTA);
   }
+
+  @Test
+  public void testNegativeAmountTransfer() {
+    Account checkingAccount = new CheckingAccount();
+    Account savingsAccount = new SavingsAccount();
+
+    Customer customer = new Customer("Customer Name").openAccount(checkingAccount).openAccount(savingsAccount);
+
+    checkingAccount.deposit(100.0);
+    savingsAccount.deposit(400.0);
+    try {
+      customer.transfer(-250.0, savingsAccount, checkingAccount);
+    } catch(IllegalArgumentException exception) {
+      assertEquals("Transfer amount must be greater than zero.", exception.getMessage());
+    }
+    assertEquals(400.0, savingsAccount.sumTransactions(), DOUBLE_DELTA);
+    assertEquals(100.0, checkingAccount.sumTransactions(), DOUBLE_DELTA);
+  }
+
+
+  @Test
+  public void testAccountNotFoundTransfer() {
+    Account checkingAccount = new CheckingAccount();
+    Account savingsAccount = new SavingsAccount();
+    Account maxiAccount = new MaxiSavingsAccount();
+
+    Customer customer = new Customer("Customer Name").openAccount(checkingAccount).openAccount(savingsAccount);
+
+    checkingAccount.deposit(100.0);
+    savingsAccount.deposit(400.0);
+    maxiAccount.deposit(8000.0);
+    try {
+      customer.transfer(250.0, maxiAccount, checkingAccount);
+    } catch(IllegalArgumentException exception) {
+      assertEquals("Source account not found under customer.", exception.getMessage());
+    }
+    assertEquals(400.0, savingsAccount.sumTransactions(), DOUBLE_DELTA);
+    assertEquals(100.0, checkingAccount.sumTransactions(), DOUBLE_DELTA);
+    assertEquals(8000.0, maxiAccount.sumTransactions(), DOUBLE_DELTA);
+  }
 }
