@@ -1,11 +1,44 @@
 package com.abc;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
 public class BankTest {
   private static final double DOUBLE_DELTA = 1e-15;
+
+  double checkingDepositAmount = 100.0;
+  double savingsDepositAmount = 1500.0;
+  double maxiDepositAmount = 3000.0;
+  double expectedCheckingInterest;
+  double expectedSavingsInterest;
+  double expectedMaxiInterest;
+  double expectedTotalInterest;
+
+  @Before
+  public void setUp() {
+    expectedCheckingInterest = checkingDepositAmount * CheckingAccount.INTEREST_RATE;
+
+    if(savingsDepositAmount <= SavingsAccount.LOW_HIGH_BOUNDARY) {
+      expectedSavingsInterest = savingsDepositAmount * SavingsAccount.LOW_RATE;
+    } else {
+      expectedSavingsInterest = SavingsAccount.TOTAL_LOW_INTEREST
+                                  + (savingsDepositAmount - SavingsAccount.LOW_HIGH_BOUNDARY) * SavingsAccount.HIGH_RATE;
+    }
+
+    if(maxiDepositAmount <= MaxiSavingsAccount.LOW_MED_BOUNDARY) {
+      expectedMaxiInterest = maxiDepositAmount * MaxiSavingsAccount.LOW_RATE;
+    } else if(maxiDepositAmount <= MaxiSavingsAccount.MED_HIGH_BOUNDARY) {
+      expectedMaxiInterest = MaxiSavingsAccount.TOTAL_LOW_INTEREST
+                               + (maxiDepositAmount - MaxiSavingsAccount.LOW_MED_BOUNDARY) * MaxiSavingsAccount.MED_RATE;
+    } else {
+      expectedMaxiInterest = MaxiSavingsAccount.TOTAL_LOW_INTEREST + MaxiSavingsAccount.TOTAL_MED_INTEREST
+                               + (maxiDepositAmount - MaxiSavingsAccount.MED_HIGH_BOUNDARY) * MaxiSavingsAccount.HIGH_RATE;
+    }
+
+    expectedTotalInterest = expectedCheckingInterest + expectedSavingsInterest + expectedMaxiInterest;
+  }
 
   @Test
   public void testCustomerSummary() {
@@ -32,9 +65,9 @@ public class BankTest {
     Customer customer = new Customer("Customer Name").openAccount(checkingAccount);
     bank.addCustomer(customer);
 
-    checkingAccount.deposit(100.0);
+    checkingAccount.deposit(checkingDepositAmount);
 
-    assertEquals(0.1, bank.totalInterestPaid(), DOUBLE_DELTA);
+    assertEquals(expectedCheckingInterest, bank.totalInterestPaid(), DOUBLE_DELTA);
   }
 
   @Test
@@ -43,9 +76,9 @@ public class BankTest {
     Account savingsAccount = new SavingsAccount();
     bank.addCustomer(new Customer("Customer Name").openAccount(savingsAccount));
 
-    savingsAccount.deposit(1500.0);
+    savingsAccount.deposit(savingsDepositAmount);
 
-    assertEquals(2.0, bank.totalInterestPaid(), DOUBLE_DELTA);
+    assertEquals(expectedSavingsInterest, bank.totalInterestPaid(), DOUBLE_DELTA);
   }
 
   @Test
@@ -54,9 +87,25 @@ public class BankTest {
     Account maxiSavingsAccount = new MaxiSavingsAccount();
     bank.addCustomer(new Customer("Customer Name").openAccount(maxiSavingsAccount));
 
-    maxiSavingsAccount.deposit(3000.0);
+    maxiSavingsAccount.deposit(maxiDepositAmount);
 
-    assertEquals(170.0, bank.totalInterestPaid(), DOUBLE_DELTA);
+    assertEquals(expectedMaxiInterest, bank.totalInterestPaid(), DOUBLE_DELTA);
   }
 
+  @Test
+  public void testCombinedInterestPaid() {
+    Bank bank = new Bank();
+    Account savingsAccount = new SavingsAccount();
+    Account checkingAccount = new CheckingAccount();
+    Account maxiSavingsAccount = new MaxiSavingsAccount();
+    bank.addCustomer(new Customer("Customer Name").openAccount(savingsAccount)
+                       .openAccount(checkingAccount)
+                       .openAccount(maxiSavingsAccount));
+
+    checkingAccount.deposit(checkingDepositAmount);
+    savingsAccount.deposit(savingsDepositAmount);
+    maxiSavingsAccount.deposit(maxiDepositAmount);
+
+    assertEquals(expectedTotalInterest, bank.totalInterestPaid(), DOUBLE_DELTA);
+  }
 }
