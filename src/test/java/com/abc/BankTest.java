@@ -22,7 +22,7 @@ public class BankTest {
 
     assertEquals("Customer Summary\n" +
                    " - Customer1 Name (1 account)\n" +
-                   " - Customer2 Name (2 accounts)", bank.customerSummary());
+                   " - Customer2 Name (2 accounts)\n", bank.customerSummary());
   }
 
   @Test

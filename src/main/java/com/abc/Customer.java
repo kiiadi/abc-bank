@@ -33,13 +33,13 @@ public class Customer {
   }
 
   public String getStatement() {
-    StringBuilder statement = new StringBuilder().append("Statement for ").append(name).append("\n");
+    StringBuilder statement = new StringBuilder().append("Statement for ").append(name).append("\n\n");
     double total = 0.0;
     for(Account account : accounts) {
-      statement.append("\n").append(account.getStatementText()).append("\n");
+      statement.append(account.getStatementText()).append("\n");
       total += account.sumTransactions();
     }
-    return statement.append("\nTotal In All Accounts ").append(Util.toDollars(total)).toString();
+    return statement.append("Total In All Accounts ").append(Util.toDollars(total)).toString();
   }
 
   /***

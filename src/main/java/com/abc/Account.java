@@ -31,6 +31,6 @@ public abstract class Account {
     StringBuilder statement = new StringBuilder().append(this.getName()).append("\n");
     for(Transaction transaction : transactions)
       statement.append(transaction.getStatementLine());
-    return statement.append("Total ").append(Util.toDollars(this.sumTransactions())).toString();
+    return statement.append("Total ").append(Util.toDollars(this.sumTransactions())).append("\n").toString();
   }
 }

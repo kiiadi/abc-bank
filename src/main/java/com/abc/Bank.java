@@ -10,9 +10,9 @@ public class Bank {
   }
 
   public String customerSummary() {
-    StringBuilder summary = new StringBuilder().append("Customer Summary");
+    StringBuilder summary = new StringBuilder().append("Customer Summary\n");
     for(Customer customer : customers) {
-      summary.append(String.format("\n - %s (%d account%s)",
+      summary.append(String.format(" - %s (%d account%s)\n",
                                     customer.getName(),
                                     customer.getNumberOfAccounts(),
                                     customer.getNumberOfAccounts() > 1 ? "s" : ""));
