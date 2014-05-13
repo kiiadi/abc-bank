@@ -6,15 +6,29 @@ import static org.junit.Assert.assertEquals;
 
 
 public class TransactionTest {
+  private static final double DOUBLE_DELTA = 1e-15;
+
   @Test
-  public void testWithdrawalStatementText() {
-    Withdrawal withdrawal = new Withdrawal(1234567.89);
-    assertEquals("  withdrawal $1,234,567.89\n", withdrawal.getStatementLine());
+  public void testWithdrawalStatementLine() {
+    Transaction transaction = new Withdrawal(1234567.89);
+    assertEquals("  withdrawal $1,234,567.89\n", transaction.getStatementLine());
   }
 
   @Test
-  public void testDepositStatementText() {
-    Deposit deposit = new Deposit(1234567.89);
-    assertEquals("  deposit $1,234,567.89\n", deposit.getStatementLine());
+  public void testDepositStatementLine() {
+    Transaction transaction = new Deposit(1234567.89);
+    assertEquals("  deposit $1,234,567.89\n", transaction.getStatementLine());
+  }
+
+  @Test
+  public void testWithdrawalAmount() {
+    Transaction transaction = new Withdrawal(1234567.89);
+    assertEquals(-1234567.89, transaction.getAmount(), DOUBLE_DELTA);
+  }
+
+  @Test
+  public void testDepositAmount() {
+    Transaction transaction = new Deposit(1234567.89);
+    assertEquals(1234567.89, transaction.getAmount(), DOUBLE_DELTA);
   }
 }
