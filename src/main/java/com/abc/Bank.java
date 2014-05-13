@@ -1,10 +1,9 @@
 package com.abc;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Bank {
-  private List<Customer> customers  = new ArrayList<Customer>();
+  private List<Customer> customers  = Collections.synchronizedList(new ArrayList<Customer>());
 
   public void addCustomer(Customer customer) {
     customers.add(customer);

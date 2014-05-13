@@ -1,11 +1,12 @@
 package com.abc;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Customer {
   private String name;
-  private List<Account> accounts = new ArrayList<Account>();
+  private List<Account> accounts = Collections.synchronizedList(new ArrayList<Account>());
 
   public Customer(String name) {
     this.name = name;

@@ -1,11 +1,12 @@
 package com.abc;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public abstract class Account {
 
-  private List<Transaction> transactions = new ArrayList<Transaction>();
+  private List<Transaction> transactions = Collections.synchronizedList(new ArrayList<Transaction>());
 
   abstract String getName();
 
