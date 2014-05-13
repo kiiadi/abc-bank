@@ -10,14 +10,14 @@ public class Bank {
   }
 
   public String customerSummary() {
-    String summary = "Customer Summary";
+    StringBuilder summary = new StringBuilder().append("Customer Summary");
     for(Customer customer : customers) {
-      summary += String.format("\n - %s (%d account%s)",
-                                customer.getName(),
-                                customer.getNumberOfAccounts(),
-                                customer.getNumberOfAccounts() > 1 ? "s" : "");
+      summary.append(String.format("\n - %s (%d account%s)",
+                                    customer.getName(),
+                                    customer.getNumberOfAccounts(),
+                                    customer.getNumberOfAccounts() > 1 ? "s" : ""));
     }
-    return summary;
+    return summary.toString();
   }
 
   public double totalInterestPaid() {

@@ -11,8 +11,8 @@ public class Withdrawal extends Transaction {
   }
 
   @Override
-  String getStatementText() {
-    return String.format("withdrawal $%,.2f", amount);
+  String getStatementLine() {
+    return String.format("  withdrawal $%,.2f\n", amount);
   }
 
   @Override

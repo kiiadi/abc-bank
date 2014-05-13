@@ -12,7 +12,7 @@ abstract class Transaction {
     this.amount = amount;
   }
 
-  abstract String getStatementText();
+  abstract String getStatementLine();
 
   abstract double getAmount();
 }

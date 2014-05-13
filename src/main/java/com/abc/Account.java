@@ -28,12 +28,9 @@ public abstract class Account {
   }
 
   public String getStatementText() {
-      String statement = String.format("%s\n", getName());
-
-      for(Transaction transaction : transactions)
-        statement += "  " + transaction.getStatementText() + "\n";
-
-      statement += "Total " + Util.toDollars(sumTransactions());
-      return statement;
+    StringBuilder statement = new StringBuilder().append(this.getName()).append("\n");
+    for(Transaction transaction : transactions)
+      statement.append(transaction.getStatementLine());
+    return statement.append("Total ").append(Util.toDollars(this.sumTransactions())).toString();
   }
 }

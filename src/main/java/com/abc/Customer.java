@@ -33,14 +33,12 @@ public class Customer {
   }
 
   public String getStatement() {
-    String statement;
-    statement = "Statement for " + name + "\n";
+    StringBuilder statement = new StringBuilder().append("Statement for ").append(name).append("\n");
     double total = 0.0;
     for(Account account : accounts) {
-      statement += "\n" + account.getStatementText() + "\n";
+      statement.append("\n").append(account.getStatementText()).append("\n");
       total += account.sumTransactions();
     }
-    statement += "\nTotal In All Accounts " + Util.toDollars(total);
-    return statement;
+    return statement.append("\nTotal In All Accounts ").append(Util.toDollars(total)).toString();
   }
 }

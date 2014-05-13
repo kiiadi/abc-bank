@@ -11,8 +11,8 @@ public class Deposit extends Transaction {
   }
 
   @Override
-  String getStatementText() {
-    return String.format("deposit $%,.2f", amount);
+  String getStatementLine() {
+    return String.format("  deposit $%,.2f\n", amount);
   }
 
   @Override
