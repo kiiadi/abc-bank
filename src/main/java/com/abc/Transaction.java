@@ -1,18 +1,18 @@
 package com.abc;
 
-import static java.lang.Math.abs;
+abstract class Transaction {
+  protected final double amount;
 
-public class Transaction {
-  public final double amount;
-
+  /***
+   * @throws IllegalArgumentException if amount is less than or equal to zero
+   */
   public Transaction(double amount) {
+    if(amount <= 0)
+      throw new IllegalArgumentException("amount must be greater than zero");
     this.amount = amount;
   }
 
-  public String getStatementText() {
-    if (amount < 0)
-      return String.format("withdrawal $%,.2f", abs(amount));
-    else
-      return String.format("deposit $%,.2f", abs(amount));
-  }
+  abstract String getStatementText();
+
+  abstract double getAmount();
 }

@@ -5,32 +5,24 @@ import java.util.List;
 
 public abstract class Account {
 
-  public List<Transaction> transactions = new ArrayList<Transaction>();
+  private List<Transaction> transactions = new ArrayList<Transaction>();
 
   abstract String getName();
 
   abstract double interestEarned();
 
   public void deposit(double amount) {
-    if(amount <= 0) {
-      throw new IllegalArgumentException("amount must be greater than zero");
-    } else {
-      transactions.add(new Transaction(amount));
-    }
+    transactions.add(new Deposit(amount));
   }
 
   public void withdraw(double amount) {
-    if(amount <= 0) {
-      throw new IllegalArgumentException("amount must be greater than zero");
-    } else {
-      transactions.add(new Transaction(-amount));
-    }
+    transactions.add(new Withdrawal(amount));
   }
 
   public double sumTransactions() {
     double amount = 0.0;
     for(Transaction transaction : transactions)
-      amount += transaction.amount;
+      amount += transaction.getAmount();
     return amount;
   }
 

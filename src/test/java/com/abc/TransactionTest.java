@@ -8,13 +8,13 @@ import static org.junit.Assert.assertEquals;
 public class TransactionTest {
   @Test
   public void testWithdrawalStatementText() {
-    Transaction transaction = new Transaction(-1234567.89);
-    assertEquals("withdrawal $1,234,567.89", transaction.getStatementText());
+    Withdrawal withdrawal = new Withdrawal(1234567.89);
+    assertEquals("withdrawal $1,234,567.89", withdrawal.getStatementText());
   }
 
   @Test
   public void testDepositStatementText() {
-    Transaction transaction = new Transaction(1234567.89);
-    assertEquals("deposit $1,234,567.89", transaction.getStatementText());
+    Deposit deposit = new Deposit(1234567.89);
+    assertEquals("deposit $1,234,567.89", deposit.getStatementText());
   }
 }
