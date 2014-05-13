@@ -3,7 +3,7 @@ package com.abc;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-
+import static org.junit.Assert.fail;
 
 public class TransactionTest {
   private static final double DOUBLE_DELTA = 1e-15;
@@ -36,8 +36,8 @@ public class TransactionTest {
   public void testNegativeAmount() {
     try {
       new Withdrawal(-1234567.89);
+      fail("Expected IllegalArgumentException");
     } catch(IllegalArgumentException exception) {
-      assertEquals("Transaction amount must be greater than zero.", exception.getMessage());
     }
   }
 }

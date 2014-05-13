@@ -3,6 +3,7 @@ package com.abc;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class CustomerTest {
   private static final double DOUBLE_DELTA = 1e-15;
@@ -114,8 +115,8 @@ public class CustomerTest {
     savingsAccount.deposit(400.0);
     try {
       customer.transfer(-250.0, savingsAccount, checkingAccount);
+      fail("Expected IllegalArgumentException.");
     } catch(IllegalArgumentException exception) {
-      assertEquals("Transfer amount must be greater than zero.", exception.getMessage());
     }
     assertEquals(400.0, savingsAccount.sumTransactions(), DOUBLE_DELTA);
     assertEquals(100.0, checkingAccount.sumTransactions(), DOUBLE_DELTA);
@@ -134,8 +135,8 @@ public class CustomerTest {
     maxiAccount.deposit(8000.0);
     try {
       customer.transfer(250.0, maxiAccount, checkingAccount);
+      fail("Expected IllegalArgumentException.");
     } catch(IllegalArgumentException exception) {
-      assertEquals("Source account not found under customer.", exception.getMessage());
     }
     assertEquals(400.0, savingsAccount.sumTransactions(), DOUBLE_DELTA);
     assertEquals(100.0, checkingAccount.sumTransactions(), DOUBLE_DELTA);
@@ -155,8 +156,8 @@ public class CustomerTest {
     maxiAccount.deposit(8000.0);
     try {
       customer.transfer(250.0, checkingAccount, maxiAccount);
+      fail("Expected IllegalArgumentException.");
     } catch(IllegalArgumentException exception) {
-      assertEquals("Destination account not found under customer.", exception.getMessage());
     }
     assertEquals(400.0, savingsAccount.sumTransactions(), DOUBLE_DELTA);
     assertEquals(100.0, checkingAccount.sumTransactions(), DOUBLE_DELTA);
