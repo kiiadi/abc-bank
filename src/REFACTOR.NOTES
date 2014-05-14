@@ -1,6 +1,38 @@
 Bank Account application refactoring notes
 ==========================================
 
+
+1. 		Still Needed/Did not address
+		============================
+
+		These are enhancements that the developer considers important but because of time constraints, 
+		lack of database persistance or data, should be revisited with the user to confirm that these
+		are or should be required.
+
+1.1 	Currency reporting
+		==================
+		1. 	Accounts should have associated country where the account is domiciled
+		2. 	Customer should have preference as to base currency to report on
+		3. 	Bank should have preference as to base currency to report on
+
+1.2		New/Hidden requirements
+		=======================
+
+		These are features that were not specified, but that the developer considered 
+		important enough to create a well rounded application.
+
+		1. 	Interest earned should be a transaction in itself
+
+2.		Assumptions
+		===========
+		
+2.1		It is assumed that all reporting content/structure has already been defined by the user and 
+		should not be changed. As such, we are assuming that the tests, since the comparisons are 
+		string based ( NOT IDEAL ) are valid. 
+		
+2.2		Any changes to the class design should conform to the EXISTING tests.
+		
+
 TODO's
 ======
 1. 	Check and throw exceptions for any object when passed into method: 
@@ -8,7 +40,7 @@ TODO's
 	Customer::statementForAccount
 
 2. 	Create a AccountStatement object to enable specific settings for all
-	Account statement
+	Account statements
 	
 3. 	Create a CustomerStatement class to encapsulate specific settings for 
 	individual customer accounts
@@ -16,9 +48,32 @@ TODO's
 4. 	Move utility methods into a more general class: 
 	
 	Customer::toDollars - should this be specific to the customers currency?
+
+5. 	Transaction class should conform to transaction types: 
+
+	Customer deposit
+	Customer withdrawal
+	Interest earned
+	Transfer between accounts
+
+6. 	Add settings/preferences loading for the following classes: 
+
+	Customer:		Currency format
+	
+	Account:
+	
+	Bank:
+	
+	Application:	
+	
+7. 	Should transaction have a transaction factory that creates the transaction 
+	and does not commit the transaction unti the user either issues a commit or 
+	abort. Should it have states? ( i.e. what the user intended vs. what was done.
 	
 
-	
+Customer class
+==============
+
 
 Account class 
 =============
@@ -33,4 +88,16 @@ Account class
  	
  	
  	
+Bank class
+==========
+
+1.	Created Javadoc comments for all class/methods
+
+2. 	Removed unused/superfluous methods:
+	
+	Bank::getFirstCustomer **UNUSED**
+	
+
  	
+Transaction
+===========
