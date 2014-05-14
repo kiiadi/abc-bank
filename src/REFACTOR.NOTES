@@ -70,6 +70,12 @@ TODO's
 	and does not commit the transaction unti the user either issues a commit or 
 	abort. Should it have states? ( i.e. what the user intended vs. what was done.
 	
+8.	Bank::format() method needs to be looked at .. its a cluge.
+
+9.	Make a junit test for the Account class
+
+10.	Make a Junit suite to test all classes for streamlined continuous build
+	
 
 Customer class
 ==============
