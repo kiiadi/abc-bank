@@ -1,6 +1,5 @@
-Bank Account application refactoring notes
-==========================================
-
+Bank Account application study and refactoring notes
+====================================================
 
 1. 		Still Needed/Did not address
 		============================
@@ -23,16 +22,20 @@ Bank Account application refactoring notes
 
 		1. 	Interest earned should be a transaction in itself
 
-2.		Assumptions
+1.3		Assumptions
 		===========
 		
-2.1		It is assumed that all reporting content/structure has already been defined by the user and 
+1.3.1	It is assumed that all reporting content/structure has already been defined by the user and 
 		should not be changed. As such, we are assuming that the tests, since the comparisons are 
 		string based ( NOT IDEAL ) are valid. 
 		
-2.2		Any changes to the class design should conform to the EXISTING tests.
-		
+1.3.2	Any changes to the class design should conform to the EXISTING tests.
 
+1.3.3	We are not addressing Latency or performance - this is not a criteria for this study
+
+1.3.4	Will not factor in monthly closing periods and creating interest payments at month close or 
+		misc adjustments to accounts
+		
 TODO's
 ======
 1. 	Check and throw exceptions for any object when passed into method: 
@@ -59,15 +62,16 @@ TODO's
 6. 	Add settings/preferences loading for the following classes: 
 
 	Customer:		Currency format
+					Statement class to use 
 	
-	Account:
+	Account:		Statement class to use
 	
 	Bank:
 	
 	Application:	
 	
-7. 	Should transaction have a transaction factory that creates the transaction 
-	and does not commit the transaction unti the user either issues a commit or 
+7. 		Should transaction have a transaction factory that creates the transaction 
+		and does not commit the transaction unti the user either issues a commit or 
 	abort. Should it have states? ( i.e. what the user intended vs. what was done.
 	
 8.	Bank::format() method needs to be looked at .. its a cluge.
@@ -75,7 +79,10 @@ TODO's
 9.	Make a junit test for the Account class
 
 10.	Make a Junit suite to test all classes for streamlined continuous build
-	
+
+11. Dynamic loading of the Statement class to use when generating a statement for both
+	Customer and Account classes	
+
 
 Customer class
 ==============
