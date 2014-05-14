@@ -1,6 +1,25 @@
 Bank Account application refactoring notes
 ==========================================
 
+TODO's
+======
+1. 	Check and throw exceptions for any object when passed into method: 
+	
+	Customer::statementForAccount
+
+2. 	Create a AccountStatement object to enable specific settings for all
+	Account statement
+	
+3. 	Create a CustomerStatement class to encapsulate specific settings for 
+	individual customer accounts
+
+4. 	Move utility methods into a more general class: 
+	
+	Customer::toDollars - should this be specific to the customers currency?
+	
+
+	
+
 Account class 
 =============
 
@@ -9,6 +28,8 @@ Account class
 
 2. 	Replaced the static final account types with an AccountType
  	enum.
+
+3. 	Documented/Analyzed customer class.
  	
  	
  	
