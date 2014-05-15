@@ -4,9 +4,19 @@ Bank Account application study and refactoring notes
 1. 		Still Needed/Did not address
 		============================
 
-		These are enhancements that the developer considers important but because of time constraints, 
-		lack of database persistance or data, should be revisited with the user to confirm that these
-		are or should be required.
+		These are enhancements that the analyst found important but because of: 
+		
+			- time constraints, 
+			- lack of database persistance 
+			
+				or 
+				
+			- data necessary 
+			
+		the developer could not implement. 
+		
+		Items in this list should be revisited with the user to confirm that 
+		these are either important to implement or should be ignored.
 
 1.1 	Currency reporting
 		==================
@@ -65,8 +75,6 @@ TODO's
 	
 8.	Bank::format() method needs to be looked at .. its a cluge.
 
-9.	Make a junit test for the Account class
-
 11. Dynamic loading of the Statement class to use when generating a statement for both
 	Customer and Account classes	
 
@@ -86,6 +94,9 @@ Account class
  	enum.
 
 3. 	Documented/Analyzed customer class.
+
+4.	Moved the management of the transaction list to a TransactionList class in order
+	to keep the Account and Transaction list logic separate and consolidated.
  	 	
 Bank class
 ==========

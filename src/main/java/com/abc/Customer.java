@@ -121,7 +121,7 @@ public class Customer
 
 				// Now total up all the transactions
 				double total = 0.0;
-				for (Transaction t : a.transactions)
+				for (Transaction t : a.getTransactionList() )
 					{
 						s += "  " + (t.amount < 0 ? "withdrawal" : "deposit")
 										+ " " + Utils.toDollars(t.amount) + "\n";

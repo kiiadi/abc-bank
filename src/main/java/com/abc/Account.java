@@ -9,11 +9,12 @@ import java.util.List;
  * @author Jeff
  * 
  */
+
 public class Account
 	{
 
 		private final AccountType	accountType;
-		public List<Transaction>	transactions;
+		private TransactionList transactions;
 
 		/**
 		 * Create an Account object
@@ -24,7 +25,7 @@ public class Account
 		public Account(com.abc.AccountType _type)
 			{
 				this.accountType = _type;
-				this.transactions = new ArrayList<Transaction>();
+				this.transactions = new TransactionList(this);
 			}
 
 		/**
@@ -122,5 +123,11 @@ public class Account
 			{
 				return accountType;
 			}
+		
+		public TransactionList getTransactionList()
+		{
+			return transactions;
+		}
 
+		
 	}
