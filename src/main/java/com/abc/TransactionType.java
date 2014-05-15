@@ -12,22 +12,29 @@ package com.abc;
  */
 public enum TransactionType {
 
-	CUSTOMER_DEPOSIT(0, "CUSTOMER_DEPOSIT"), 			// customer initiated deposit
-	CUSTOMER_WITHDRAWAL(1,"CUSTOMER_WITHDRAWAL"), 		// customer initiated withdrawal
-	ACCOUNT_TRANSFER(2, "ACCOUNT_TRANSFER" ),			// an account transfer
-	INTEREST_ACCRUED(3, "INTEREST_ACCRUED" );			// interest accrued
+	UNKNOWN(-1,"UNKNOWN", false),			// the unknown soldier
+	DEPOSIT(0, "DEPOSIT", true), 			// customer initiated deposit
+	WITHDRAWAL(1,"WITHDRAWAL", false), 		// customer initiated withdrawal
+	TRANSFER_IN(2, "TRANSFER_IN", true ),	// an account transfer coming in
+	TRANSFER_OUT(3,"TRANSFER_OUT", false ),	// an account transfer going out
+	INTEREST(4, "INTEREST", true ),			// interest accrued
+	MULTI_LEG(5, "MULTI_LEG",false);		// multi-legged transaction (used only for transfers
 	
 	private int code;
 	private String name;
+	private boolean debit;
 	
 	/**
 	 * Create an TransactionType enum
-	 * @param _value
-	 * @param _name
+	 * @param _value - the value of the enum 
+	 * @param _name - the name of the enum
+	 * @param _debit - whether or not the transaction amount should debit or credit the
+	 * customers balance
 	 */
-	private TransactionType( int _value, String _name ) {
+	private TransactionType( int _value, String _name, boolean _debit ) {
 		code = _value;
 		name = _name;
+		debit = _debit;
 	}
 	
 	/**
@@ -55,5 +62,13 @@ public enum TransactionType {
         return sb.toString();
     }
 
-	
+    /**
+     * get the value of the debit flag
+     * 
+     * @return the value of the debit flag
+     */
+    public boolean isDebit() 
+    	{
+    		return this.debit;
+    	}
 }

@@ -127,9 +127,9 @@ public class Customer
 										+ " " + Utils.toDollars(t.amount) + "\n";
 						total += t.amount;
 					}
+				
 				s += "Total " + Utils.toDollars(total);
 				return s;
 			}
-
 
 	}

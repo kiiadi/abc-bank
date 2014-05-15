@@ -48,17 +48,6 @@ TODO's
 3. 	Create a CustomerStatement class to encapsulate specific settings for 
 	individual customer accounts
 
-4. 	Move utility methods into a more general class: 
-	
-	Customer::toDollars - should this be specific to the customers currency?
-
-5. 	Transaction class should conform to transaction types: 
-
-	Customer deposit
-	Customer withdrawal
-	Interest earned
-	Transfer between accounts
-
 6. 	Add settings/preferences loading for the following classes: 
 
 	Customer:		Currency format
@@ -77,8 +66,6 @@ TODO's
 8.	Bank::format() method needs to be looked at .. its a cluge.
 
 9.	Make a junit test for the Account class
-
-10.	Make a Junit suite to test all classes for streamlined continuous build
 
 11. Dynamic loading of the Statement class to use when generating a statement for both
 	Customer and Account classes	
@@ -99,9 +86,7 @@ Account class
  	enum.
 
 3. 	Documented/Analyzed customer class.
- 	
- 	
- 	
+ 	 	
 Bank class
 ==========
 
@@ -116,7 +101,23 @@ Bank class
 Transaction class
 =================
 
+1. Changed constructor to force a TransactionType when creating a new transaction.
 
+TramsactionType class
+=====================
+
+1. 	Created a new transaction type class to force strongly typed transactions in 
+	order to have constant behavior across all transactions.
+	
+2. 	Transaction types are the following: 
+
+	WITHDRAWAL 		- a customer withdrawal from the account
+	DEPOSIT			- a customer deposit into the account
+	INTEREST		- an interest payment into the account
+	TRANSFER_IN		- a transfer into the account from another account
+	TRANSFER_OUT	- a transfer out of the account from another account
+	MULTI_LEG 		- a multi-legged transaction (for transfers )
+	
 Date Provider class
 ===================
 Although this is a singleton, there is no compelling reason that this should be a class by itself as
