@@ -8,6 +8,10 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
+ * A class to encapsulate managing the transaction list for a particular account. 
+ * This class uses a proxy pattern to hide the actual list and add additional 
+ * functionalities for managing lists of transactions.
+ * 
  * @author Jeff
  * 
  */
@@ -17,17 +21,31 @@ public class TransactionList implements Iterable<Transaction>
 		Account				account;
 		List<Transaction>	list;
 
+		/**
+		 * privatize the default constructor so that derived classes 
+		 * can not implement/call.
+		 */
 		private TransactionList()
 			{
 				this.list = new ArrayList<Transaction>();
 			}
 
+		/**
+		 * Create a new transaction list
+		 * @param _acct - the account that this list represents.
+		 */
 		public TransactionList(Account _acct)
 			{
 				this();
 				account = _acct;
 			}
 
+		/**
+		 * internal iterator for the list.
+		 * 
+		 * @author Jeff
+		 *
+		 */
 		class __iterator__ implements Iterator<Transaction>
 			{
 
@@ -35,7 +53,8 @@ public class TransactionList implements Iterable<Transaction>
 				int	last	= list.size();
 
 				/*
-				 * (non-Javadoc)
+				 * Iterator::hasNext() method implementation
+				 * 
 				 * @see java.util.Iterator#hasNext()
 				 */
 				@Override
@@ -44,8 +63,9 @@ public class TransactionList implements Iterable<Transaction>
 						return (current < last ? true : false);
 					}
 
-				/*
-				 * (non-Javadoc)
+				/**
+				 * Iterator::next method implementation
+				 * 
 				 * @see java.util.Iterator#next()
 				 */
 				@Override
@@ -54,8 +74,9 @@ public class TransactionList implements Iterable<Transaction>
 						return list.get(current++);
 					}
 
-				/*
-				 * (non-Javadoc)
+				/**
+				 * Iterator::remove() method implementation
+				 * 
 				 * @see java.util.Iterator#remove()
 				 */
 				@Override
@@ -86,7 +107,7 @@ public class TransactionList implements Iterable<Transaction>
 		 * Add a new transaction to the list
 		 * @param _t - a transaction to add
 		 */
-		public void add(Transaction _t)
+		public void add(Transaction _t )
 			{
 				if( !isValid(_t) )
 					throw new IllegalArgumentException( "The transaction is not valid.");
@@ -94,7 +115,10 @@ public class TransactionList implements Iterable<Transaction>
 			}
 		
 		/**
-		 * Test to see that the transaction is valid before adding to the list
+		 * Validate a transaction. This is called before trying to add a transaction
+		 * to the list. This is defined as public so that transactions can be validated
+		 * prior to trying to add them to the list.
+		 * 
 		 * @param _t - the transaction
 		 * @return true - if the transaction could be added to the list or false if 
 		 * it cannot
@@ -102,5 +126,5 @@ public class TransactionList implements Iterable<Transaction>
 		public boolean isValid(Transaction _t )
 			{
 				return true;
-			}
+			}		
 	}
