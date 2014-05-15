@@ -14,12 +14,12 @@ public class Account
 
 		private final AccountType	accountType;
 		public List<Transaction>	transactions;
-		private double				balance	= 0.00;
 
 		/**
 		 * Create an Account object
 		 * 
-		 * @param _type - the account type to create
+		 * @param _type
+		 *            - the account type to create
 		 */
 		public Account(com.abc.AccountType _type)
 			{
@@ -30,7 +30,8 @@ public class Account
 		/**
 		 * Deposit funds into an existing account
 		 * 
-		 * @param amount - the amount to deposit into the account
+		 * @param amount
+		 *            - the amount to deposit into the account
 		 */
 		public void deposit(double amount)
 			{
@@ -52,7 +53,8 @@ public class Account
 		/**
 		 * Withdraw funds from an existing account
 		 * 
-		 * @param amount - the amount to withdraw from the account
+		 * @param amount
+		 *            - the amount to withdraw from the account
 		 */
 		public void withdraw(double amount)
 			{
@@ -67,8 +69,7 @@ public class Account
 					// create a new transaction to record the amount of the
 					// withdrawal
 					{
-						transactions.add(new WithdrawalTransaction(this,
-										-amount));
+						transactions.add(new WithdrawalTransaction(this, -amount));
 					}
 			}
 
@@ -109,8 +110,7 @@ public class Account
 				double amount = 0.0;
 				for (Transaction t : transactions)
 					amount += t.amount;
-				return amount;
-			}
+				return amount;			}
 
 		/**
 		 * Return the account type of this account
@@ -123,12 +123,4 @@ public class Account
 				return accountType;
 			}
 
-		/**
-		 * @return the balance
-		 */
-		public double getBalance()
-			{
-				return balance;
-			}
-		
 	}
