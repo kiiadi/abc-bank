@@ -46,7 +46,7 @@ public class Account
 				else
 					{
 
-						transactions.add(new Transaction(amount));
+						transactions.add(new Transaction(amount, TransactionType.CUSTOMER_DEPOSIT));
 					}
 			}
 
@@ -69,7 +69,7 @@ public class Account
 					// create a new transaction to record the amount of the
 					// withdrawal
 					{
-						transactions.add(new Transaction(-amount));
+						transactions.add(new Transaction(-amount, TransactionType.CUSTOMER_WITHDRAWAL));
 					}
 			}
 
@@ -107,8 +107,10 @@ public class Account
 		 */
 		public double sumTransactions()
 			{
-				return checkIfTransactionsExist(true);
-			}
+				double amount = 0.0;
+				for (Transaction t : transactions)
+					amount += t.amount;
+				return amount;			}
 
 		/**
 		 * Check to see if transactions exist

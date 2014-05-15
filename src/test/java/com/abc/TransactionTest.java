@@ -5,9 +5,11 @@ import org.junit.Test;
 import static org.junit.Assert.assertTrue;
 
 public class TransactionTest {
-    @Test
+
+	@Test
     public void transaction() {
-        Transaction t = new Transaction(5);
+        Transaction t = new Transaction(5, TransactionType.CUSTOMER_DEPOSIT);
         assertTrue(t instanceof Transaction);
     }
+	
 }

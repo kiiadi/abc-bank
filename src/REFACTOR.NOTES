@@ -113,5 +113,16 @@ Bank class
 	
 3.	Moved Bank::makePlural to the Utils class and define as static so that its more generic.
  	
-Transaction
-===========
+Transaction class
+=================
+
+
+Date Provider class
+===================
+Although this is a singleton, there is no compelling reason that this should be a class by itself as
+there is only one method and it does not use and class level variables or objects. It will be simpler
+to move to a Utils class as make static.
+
+1. Moved now() method to the Utils class and made static
+
+2. Removed the DateProvider class as it is no longer necessary.
