@@ -87,6 +87,7 @@ TODO's
 Customer class
 ==============
 
+1.	Moved Customer::toDollars to the Utils class and defined as static so that its more generic.
 
 Account class 
 =============
@@ -110,7 +111,7 @@ Bank class
 	
 	Bank::getFirstCustomer **UNUSED**
 	
-
+3.	Moved Bank::makePlural to the Utils class and define as static so that its more generic.
  	
 Transaction
 ===========

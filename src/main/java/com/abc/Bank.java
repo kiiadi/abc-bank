@@ -44,25 +44,9 @@ public class Bank
 					summary += "\n - "
 									+ c.getName()
 									+ " ("
-									+ makePlural(c.getNumberOfAccounts(), "account")
-									+ ")";
+									+ Utils.makePlural(c.getNumberOfAccounts(),
+													"account") + ")";
 				return summary;
-			}
-
-		/**
-		 * Make sure correct plural of word is created based on the number
-		 * passed in.
-		 * 
-		 * @param number - the number to analyze
-		 * @param word - the word to add a plural to..oy!
-		 * @returns - a string representing the number with an 's' at the end if
-		 *          	it is greater than zero.
-		 */
-		private String makePlural(int number, String word)
-			{
-				// If the number passed in is 1 just return the word otherwise
-				// add an 's' at the end
-				return number + " " + (number == 1 ? word : word + "s");
 			}
 
 		/**
@@ -75,7 +59,7 @@ public class Bank
 				double total = 0;
 				for (Customer c : customers)
 					total += c.totalInterestEarned();
-				
+
 				return total;
 			}
 

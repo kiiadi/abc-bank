@@ -90,7 +90,7 @@ public class Customer
 						total += a.sumTransactions();	// keep running total for
 														// all accounts
 					}
-				statement += "\nTotal In All Accounts " + toDollars(total);
+				statement += "\nTotal In All Accounts " + Utils.toDollars(total);
 				return statement;
 			}
 
@@ -124,20 +124,12 @@ public class Customer
 				for (Transaction t : a.transactions)
 					{
 						s += "  " + (t.amount < 0 ? "withdrawal" : "deposit")
-										+ " " + toDollars(t.amount) + "\n";
+										+ " " + Utils.toDollars(t.amount) + "\n";
 						total += t.amount;
 					}
-				s += "Total " + toDollars(total);
+				s += "Total " + Utils.toDollars(total);
 				return s;
 			}
 
-		/**
-		 * format a double to a string
-		 * @param d - the number to format
-		 * @return a string representing the formatted number
-		 */
-		private String toDollars(double d)
-			{
-				return String.format("$%,.2f", abs(d));
-			}
+
 	}

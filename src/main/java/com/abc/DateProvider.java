@@ -17,7 +17,5 @@ public class DateProvider {
         return instance;
     }
 
-    public Date now() {
-        return Calendar.getInstance().getTime();
-    }
+
 }
