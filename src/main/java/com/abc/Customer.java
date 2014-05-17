@@ -95,14 +95,19 @@ public class Customer
 			}
 
 		/**
-		 * Create a statement for an account
+		 * Create a statement for an individual account
 		 * 
 		 * @param a the account to create the statement for an account
 		 * @return a string representing the statement for the account passed
 		 *         in.
 		 */
-		private String statementForAccount(Account a)
+		private String statementForAccount(Account a) throws IllegalArgumentException
 			{
+				if( a == null )
+					throw new IllegalArgumentException(
+								"account cannot be null.");
+
+				
 				String s = "";
 
 				// Translate to pretty account type

@@ -7,7 +7,7 @@ Bank Account application study and refactoring notes
 		These are enhancements that the analyst found important but because of: 
 		
 			- time constraints, 
-			- lack of database persistance 
+			- lack of database persistence 
 			
 				or 
 				
@@ -46,17 +46,16 @@ Bank Account application study and refactoring notes
 1.3.4	Will not factor in monthly closing periods and creating interest payments at month close or 
 		misc adjustments to accounts
 		
-TODO's
+TODO's - Given more Time
 ======
-1. 	Check and throw exceptions for any object when passed into method: 
-	
-	Customer::statementForAccount
 
 2. 	Create a AccountStatement object to enable specific settings for all
 	Account statements
 	
 3. 	Create a CustomerStatement class to encapsulate specific settings for 
 	individual customer accounts
+	
+4. 	TransactionManager class - Manages creation and commiting of transactions. Factory patter.	
 
 6. 	Add settings/preferences loading for the following classes: 
 
@@ -69,9 +68,9 @@ TODO's
 	
 	Application:	
 	
-7. 		Should transaction have a transaction factory that creates the transaction 
+7. 		Should be a transaction factory that creates the transaction 
 		and does not commit the transaction unti the user either issues a commit or 
-	abort. Should it have states? ( i.e. what the user intended vs. what was done.
+		abort. Should it have states? ( i.e. what the user intended vs. what was done.
 	
 8.	Bank::format() method needs to be looked at .. its a cluge.
 
@@ -82,11 +81,35 @@ TODO's
 Customer class
 ==============
 
+TODO
+----
+
+
+COMPLETED
+---------
 1.	Moved Customer::toDollars to the Utils class and defined as static so that its more generic.
 
 Account class 
 =============
 
+TODO: 
+-----
+
+ - 	Create an AccountManager class that is responsible for creating all the accounts
+ 	and keeping track of properties for each account. 
+ 
+	Customer::openAccount - Should call AccountManager::openAccount()  which will 
+	return the account that was opened.
+	
+- 	Specific classes for each account type
+
+- 	Create account properties
+
+- 	integrate new properties driven rates into test harness	
+
+ 	
+COMPLETED:
+----------
 1. 	Moved the static final account types into an AccountType enum 
 	in the AccountType.java file. Provides for type safety.
 
@@ -114,8 +137,8 @@ Transaction class
 
 1. Changed constructor to force a TransactionType when creating a new transaction.
 
-TramsactionType class
-=====================
+TramsactionType class (NEW)
+===========================
 
 1. 	Created a new transaction type class to force strongly typed transactions in 
 	order to have constant behavior across all transactions.
@@ -129,7 +152,7 @@ TramsactionType class
 	TRANSFER_OUT	- a transfer out of the account from another account
 	MULTI_LEG 		- a multi-legged transaction (for transfers )
 	
-Date Provider class
+Date Provider class (REMOVED)
 ===================
 Although this is a singleton, there is no compelling reason that this should be a class by itself as
 there is only one method and it does not use and class level variables or objects. It will be simpler

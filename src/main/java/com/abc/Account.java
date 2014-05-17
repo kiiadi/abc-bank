@@ -1,8 +1,5 @@
 package com.abc;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * a class representing a customer bank account.
  * 
@@ -34,7 +31,7 @@ public class Account
 		 * @param amount
 		 *            - the amount to deposit into the account
 		 */
-		public void deposit(double amount)
+		public void deposit(double amount) throws IllegalArgumentException
 			{
 				// if the amount is LE zero, then this should throw
 				// an exception
@@ -57,7 +54,7 @@ public class Account
 		 * @param amount
 		 *            - the amount to withdraw from the account
 		 */
-		public void withdraw(double amount)
+		public void withdraw(double amount) throws IllegalArgumentException
 			{
 				// if the amount of the withdrawal is LE zero, throw an
 				// exception.
