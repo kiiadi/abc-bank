@@ -50,9 +50,9 @@ public class Customer
 			}
 
 		/**
-		 * Get the number of accounts that this customer has.
+		 * The number of accounts that this customer has.
 		 * 
-		 * @return
+		 * @return the number of accounts for this customer
 		 */
 		public int getNumberOfAccounts()
 			{

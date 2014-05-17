@@ -19,18 +19,19 @@ public class Utils
 		/**
 		 * format a double to a string
 		 * 
-		 * @param d - the number to format
+		 * @param _d  the number to format
 		 * @return a string representing the formatted number
 		 */
-		public static String toDollars(double d)
+		public static String toDollars(double _d)
 			{
-				return String.format("$%,.2f", abs(d));
+				return String.format("$%,.2f", abs(_d));
 			}
 
 		/**
 		 * format a double to a string
 		 * 
-		 * @param d - the number to format
+		 * @param _d the number to format
+		 * @param _fmt the format of the string to use
 		 * @return a string representing the formatted number
 		 */
 		public static String toDollars(double _d, String _fmt )
@@ -42,16 +43,16 @@ public class Utils
 		 * Make sure correct plural of word is created based on the number
 		 * passed in.
 		 * 
-		 * @param number - the number to analyze
-		 * @param word - the word to add a plural to..oy!
-		 * @returns - a string representing the number with an 's' at the end if
+		 * @param _number the number to analyze
+		 * @param _word the word to add a plural to..oy!
+		 * @return a string representing the number with an 's' at the end if
 		 *          it is greater than zero.
 		 */
-		public static String makePlural(int number, String word)
+		public static String makePlural(int _number, String _word)
 			{
 				// If the number passed in is 1 just return the word otherwise
 				// add an 's' at the end
-				return number + " " + (number == 1 ? word : word + "s");
+				return _number + " " + (_number == 1 ? _word : _word + "s");
 			}
 
 	    public static Date now() {
