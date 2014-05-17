@@ -1,57 +1,169 @@
 package com.abc;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class CustomerTest {
+  private static final double DOUBLE_DELTA = 1e-15;
 
-    @Test //Test customer statement generation
-    public void testApp(){
+  @Test
+  public void testStatement() {
 
-        Account checkingAccount = new Account(Account.CHECKING);
-        Account savingsAccount = new Account(Account.SAVINGS);
+    Account checkingAccount = new CheckingAccount();
+    Account savingsAccount = new SavingsAccount();
+    Account maxiAccount = new MaxiSavingsAccount();
 
-        Customer henry = new Customer("Henry").openAccount(checkingAccount).openAccount(savingsAccount);
+    Customer customer = new Customer("Customer Name").openAccount(checkingAccount)
+                          .openAccount(savingsAccount).openAccount(maxiAccount);
 
-        checkingAccount.deposit(100.0);
-        savingsAccount.deposit(4000.0);
-        savingsAccount.withdraw(200.0);
+    checkingAccount.deposit(100.0);
+    savingsAccount.deposit(4000.0);
+    savingsAccount.withdraw(200.0);
+    maxiAccount.deposit(9000.0);
 
-        assertEquals("Statement for Henry\n" +
-                "\n" +
-                "Checking Account\n" +
-                "  deposit $100.00\n" +
-                "Total $100.00\n" +
-                "\n" +
-                "Savings Account\n" +
-                "  deposit $4,000.00\n" +
-                "  withdrawal $200.00\n" +
-                "Total $3,800.00\n" +
-                "\n" +
-                "Total In All Accounts $3,900.00", henry.getStatement());
+    assertEquals("Statement for Customer Name\n" +
+                   "\n" +
+                   "Checking Account\n" +
+                   "  deposit $100.00\n" +
+                   "Total $100.00\n" +
+                   "\n" +
+                   "Savings Account\n" +
+                   "  deposit $4,000.00\n" +
+                   "  withdrawal $200.00\n" +
+                   "Total $3,800.00\n" +
+                   "\n" +
+                   "Maxi Savings Account\n" +
+                   "  deposit $9,000.00\n" +
+                   "Total $9,000.00\n" +
+                   "\n" +
+                   "Total In All Accounts $12,900.00", customer.getStatement());
+  }
+
+  @Test
+  public void testNegativeStatement() {
+
+    Account checkingAccount = new CheckingAccount();
+    Account savingsAccount = new SavingsAccount();
+
+    Customer customer = new Customer("Customer Name").openAccount(checkingAccount).openAccount(savingsAccount);
+
+    checkingAccount.deposit(100.0);
+    savingsAccount.deposit(400.0);
+    savingsAccount.withdraw(2000.0);
+
+    assertEquals("Statement for Customer Name\n" +
+                   "\n" +
+                   "Checking Account\n" +
+                   "  deposit $100.00\n" +
+                   "Total $100.00\n" +
+                   "\n" +
+                   "Savings Account\n" +
+                   "  deposit $400.00\n" +
+                   "  withdrawal $2,000.00\n" +
+                   "Total -$1,600.00\n" +
+                   "\n" +
+                   "Total In All Accounts -$1,500.00", customer.getStatement());
+  }
+
+  @Test
+  public void testOneAccount() {
+    Customer customer = new Customer("Customer Name").openAccount(new SavingsAccount());
+    assertEquals(1, customer.getNumberOfAccounts());
+  }
+
+  @Test
+  public void testTwoAccounts() {
+    Customer customer = new Customer("Customer Name");
+    customer.openAccount(new SavingsAccount());
+    customer.openAccount(new CheckingAccount());
+    assertEquals(2, customer.getNumberOfAccounts());
+  }
+
+  @Test
+  public void testThreeAccounts() {
+    Customer customer = new Customer("Customer Name");
+    customer.openAccount(new SavingsAccount());
+    customer.openAccount(new CheckingAccount());
+    customer.openAccount(new MaxiSavingsAccount());
+    assertEquals(3, customer.getNumberOfAccounts());
+  }
+
+  @Test
+  public void testAccountTransfer() {
+    Account checkingAccount = new CheckingAccount();
+    Account savingsAccount = new SavingsAccount();
+
+    Customer customer = new Customer("Customer Name").openAccount(checkingAccount).openAccount(savingsAccount);
+
+    checkingAccount.deposit(100.0);
+    savingsAccount.deposit(400.0);
+    customer.transfer(250.0, savingsAccount, checkingAccount);
+    assertEquals(400.0 - 250.0, savingsAccount.sumTransactions(), DOUBLE_DELTA);
+    assertEquals(100.0 + 250.0, checkingAccount.sumTransactions(), DOUBLE_DELTA);
+  }
+
+  @Test
+  public void testNegativeAmountTransfer() {
+    Account checkingAccount = new CheckingAccount();
+    Account savingsAccount = new SavingsAccount();
+
+    Customer customer = new Customer("Customer Name").openAccount(checkingAccount).openAccount(savingsAccount);
+
+    checkingAccount.deposit(100.0);
+    savingsAccount.deposit(400.0);
+    try {
+      customer.transfer(-250.0, savingsAccount, checkingAccount);
+      fail("Expected IllegalArgumentException.");
+    } catch(IllegalArgumentException exception) {
     }
+    assertEquals(400.0, savingsAccount.sumTransactions(), DOUBLE_DELTA);
+    assertEquals(100.0, checkingAccount.sumTransactions(), DOUBLE_DELTA);
+  }
 
-    @Test
-    public void testOneAccount(){
-        Customer oscar = new Customer("Oscar").openAccount(new Account(Account.SAVINGS));
-        assertEquals(1, oscar.getNumberOfAccounts());
-    }
+  @Test
+  public void testSourceAccountNotFoundTransfer() {
+    Account checkingAccount = new CheckingAccount();
+    Account savingsAccount = new SavingsAccount();
+    Account maxiAccount = new MaxiSavingsAccount();
 
-    @Test
-    public void testTwoAccount(){
-        Customer oscar = new Customer("Oscar")
-                .openAccount(new Account(Account.SAVINGS));
-        oscar.openAccount(new Account(Account.CHECKING));
-        assertEquals(2, oscar.getNumberOfAccounts());
-    }
+    Customer customer = new Customer("Customer Name").openAccount(checkingAccount).openAccount(savingsAccount);
 
-    @Ignore
-    public void testThreeAcounts() {
-        Customer oscar = new Customer("Oscar")
-                .openAccount(new Account(Account.SAVINGS));
-        oscar.openAccount(new Account(Account.CHECKING));
-        assertEquals(3, oscar.getNumberOfAccounts());
+    checkingAccount.deposit(100.0);
+    savingsAccount.deposit(400.0);
+    maxiAccount.deposit(8000.0);
+    try {
+      customer.transfer(250.0, maxiAccount, checkingAccount);
+      fail("Expected IllegalArgumentException.");
+    } catch(IllegalArgumentException exception) {
     }
+    assertEquals(400.0, savingsAccount.sumTransactions(), DOUBLE_DELTA);
+    assertEquals(100.0, checkingAccount.sumTransactions(), DOUBLE_DELTA);
+    assertEquals(8000.0, maxiAccount.sumTransactions(), DOUBLE_DELTA);
+  }
+
+  @Test
+  public void testDestinationAccountNotFoundTransfer() {
+    Account checkingAccount = new CheckingAccount();
+    Account savingsAccount = new SavingsAccount();
+    Account maxiAccount = new MaxiSavingsAccount();
+
+    Customer customer = new Customer("Customer Name").openAccount(checkingAccount).openAccount(savingsAccount);
+
+    checkingAccount.deposit(100.0);
+    savingsAccount.deposit(400.0);
+    maxiAccount.deposit(8000.0);
+    try {
+      customer.transfer(250.0, checkingAccount, maxiAccount);
+      fail("Expected IllegalArgumentException.");
+    } catch(IllegalArgumentException exception) {
+    }
+    assertEquals(400.0, savingsAccount.sumTransactions(), DOUBLE_DELTA);
+    assertEquals(100.0, checkingAccount.sumTransactions(), DOUBLE_DELTA);
+    assertEquals(8000.0, maxiAccount.sumTransactions(), DOUBLE_DELTA);
+  }
+
 }
+
+

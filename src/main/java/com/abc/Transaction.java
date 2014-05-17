@@ -1,16 +1,30 @@
 package com.abc;
 
-import java.util.Calendar;
-import java.util.Date;
+import org.joda.time.DateTime;
 
-public class Transaction {
-    public final double amount;
+abstract class Transaction {
+  protected final double amount;
+  private DateTime transactionDate;
 
-    private Date transactionDate;
+  /**
+   * @throws IllegalArgumentException if amount is less than or equal to zero
+   */
+  public Transaction(double amount) {
+    this(amount, DateTime.now());
+  }
 
-    public Transaction(double amount) {
-        this.amount = amount;
-        this.transactionDate = DateProvider.getInstance().now();
-    }
+  public Transaction(double amount, DateTime transactionTime) {
+    if(amount <= 0.0)
+      throw new IllegalArgumentException("Transaction amount must be greater than zero.");
+    this.amount = amount;
+    this.transactionDate = transactionTime;
+  }
 
+  public DateTime getTransactionDate() {
+    return transactionDate;
+  }
+
+  abstract String getStatementLine();
+
+  abstract double getAmount();
 }

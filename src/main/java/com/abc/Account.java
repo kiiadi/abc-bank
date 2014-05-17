@@ -1,73 +1,48 @@
 package com.abc;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-public class Account {
+import org.joda.time.DateTime;
 
-    public static final int CHECKING = 0;
-    public static final int SAVINGS = 1;
-    public static final int MAXI_SAVINGS = 2;
+public abstract class Account {
 
-    private final int accountType;
-    public List<Transaction> transactions;
+  private List<Transaction> transactions = Collections.synchronizedList(new ArrayList<Transaction>());
 
-    public Account(int accountType) {
-        this.accountType = accountType;
-        this.transactions = new ArrayList<Transaction>();
-    }
+  abstract String getName();
 
-    public void deposit(double amount) {
-        if (amount <= 0) {
-            throw new IllegalArgumentException("amount must be greater than zero");
-        } else {
-            transactions.add(new Transaction(amount));
-        }
-    }
+  abstract double interestEarned();
 
-public void withdraw(double amount) {
-    if (amount <= 0) {
-        throw new IllegalArgumentException("amount must be greater than zero");
-    } else {
-        transactions.add(new Transaction(-amount));
-    }
-}
+  public void deposit(double amount) {
+    transactions.add(new Deposit(amount));
+  }
 
-    public double interestEarned() {
-        double amount = sumTransactions();
-        switch(accountType){
-            case SAVINGS:
-                if (amount <= 1000)
-                    return amount * 0.001;
-                else
-                    return 1 + (amount-1000) * 0.002;
-//            case SUPER_SAVINGS:
-//                if (amount <= 4000)
-//                    return 20;
-            case MAXI_SAVINGS:
-                if (amount <= 1000)
-                    return amount * 0.02;
-                if (amount <= 2000)
-                    return 20 + (amount-1000) * 0.05;
-                return 70 + (amount-2000) * 0.1;
-            default:
-                return amount * 0.001;
-        }
-    }
+  public void deposit(double amount, DateTime transactionTime) {
+    transactions.add(new Deposit(amount, transactionTime));
+  }
 
-    public double sumTransactions() {
-       return checkIfTransactionsExist(true);
-    }
+  public void withdraw(double amount) {
+    transactions.add(new Withdrawal(amount));
+  }
 
-    private double checkIfTransactionsExist(boolean checkAll) {
-        double amount = 0.0;
-        for (Transaction t: transactions)
-            amount += t.amount;
-        return amount;
-    }
+  public double sumTransactions() {
+    double amount = 0.0;
+    for(Transaction transaction : transactions)
+      amount += transaction.getAmount();
+    return amount;
+  }
 
-    public int getAccountType() {
-        return accountType;
-    }
+  public String getStatementText() {
+    StringBuilder statement = new StringBuilder().append(this.getName()).append("\n");
+    for(Transaction transaction : transactions)
+      statement.append(transaction.getStatementLine());
+    return statement.append("Total ").append(Util.toDollars(this.sumTransactions())).append("\n").toString();
+  }
 
+  public DateTime getLatestTransactionDate() {
+    DateTime latestTransactionDate = null;
+    for(Transaction transaction : transactions)
+      if(latestTransactionDate == null || transaction.getTransactionDate().isAfter(latestTransactionDate))
+        latestTransactionDate = transaction.getTransactionDate();
+    return latestTransactionDate;
+  }
 }
