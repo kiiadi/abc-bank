@@ -1,8 +1,8 @@
 package com.abc;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+
+import org.joda.time.DateTime;
 
 public abstract class Account {
 
@@ -14,6 +14,10 @@ public abstract class Account {
 
   public void deposit(double amount) {
     transactions.add(new Deposit(amount));
+  }
+
+  public void deposit(double amount, DateTime transactionTime) {
+    transactions.add(new Deposit(amount, transactionTime));
   }
 
   public void withdraw(double amount) {
@@ -32,5 +36,13 @@ public abstract class Account {
     for(Transaction transaction : transactions)
       statement.append(transaction.getStatementLine());
     return statement.append("Total ").append(Util.toDollars(this.sumTransactions())).append("\n").toString();
+  }
+
+  public DateTime getLatestTransactionDate() {
+    DateTime latestTransactionDate = null;
+    for(Transaction transaction : transactions)
+      if(latestTransactionDate == null || transaction.getTransactionDate().isAfter(latestTransactionDate))
+        latestTransactionDate = transaction.getTransactionDate();
+    return latestTransactionDate;
   }
 }

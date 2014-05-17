@@ -1,5 +1,6 @@
 package com.abc;
 
+import org.joda.time.DateTime;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -27,6 +28,18 @@ public class BankTest {
 
   @Test
   public void testCheckingAccountInterestPaid() {
+    Bank bank = new Bank();
+    Account checkingAccount = new CheckingAccount();
+    Customer customer = new Customer("Customer Name").openAccount(checkingAccount);
+    bank.addCustomer(customer);
+
+    checkingAccount.deposit(1234567.89);
+
+    assertEquals(getExpectedCheckingInterest(1234567.89), bank.totalInterestPaid(), DOUBLE_DELTA);
+  }
+
+  @Test
+  public void testCheckingAccountDailyInterestPaid() {
     Bank bank = new Bank();
     Account checkingAccount = new CheckingAccount();
     Customer customer = new Customer("Customer Name").openAccount(checkingAccount);
@@ -67,24 +80,13 @@ public class BankTest {
     Account maxiSavingsAccount = new MaxiSavingsAccount();
     bank.addCustomer(new Customer("Customer Name").openAccount(maxiSavingsAccount));
 
-    double lowMaxiDeposit = MaxiSavingsAccount.LOW_MED_BOUNDARY / 2;
-    maxiSavingsAccount.deposit(lowMaxiDeposit);
+    double maxiDeposit = 1234567.89;
+    DateTime startOfToday = DateTime.now().withMillisOfDay(0);
+    DateTime middayTodayMinus10DaysPlus5Minutes = startOfToday.minusDays(10).plusMinutes(5);
+    maxiSavingsAccount.deposit(maxiDeposit, middayTodayMinus10DaysPlus5Minutes);
 
-    assertEquals(getExpectedMaxiInterest(lowMaxiDeposit), bank.totalInterestPaid(), DOUBLE_DELTA);
+    assertEquals(getExpectedMaxiInterest(maxiDeposit, middayTodayMinus10DaysPlus5Minutes), bank.totalInterestPaid(), DOUBLE_DELTA);
   }
-
-  @Test
-  public void testMaxiSavingsAccountMedInterestPaid() {
-    Bank bank = new Bank();
-    Account maxiSavingsAccount = new MaxiSavingsAccount();
-    bank.addCustomer(new Customer("Customer Name").openAccount(maxiSavingsAccount));
-
-    double medMaxiDeposit = (MaxiSavingsAccount.LOW_MED_BOUNDARY + MaxiSavingsAccount.MED_HIGH_BOUNDARY) / 2;
-    maxiSavingsAccount.deposit(medMaxiDeposit);
-
-    assertEquals(getExpectedMaxiInterest(medMaxiDeposit), bank.totalInterestPaid(), DOUBLE_DELTA);
-  }
-
 
   @Test
   public void testMaxiSavingsAccountHighInterestPaid() {
@@ -92,10 +94,12 @@ public class BankTest {
     Account maxiSavingsAccount = new MaxiSavingsAccount();
     bank.addCustomer(new Customer("Customer Name").openAccount(maxiSavingsAccount));
 
-    double highMaxiDeposit = MaxiSavingsAccount.MED_HIGH_BOUNDARY * 2;
-    maxiSavingsAccount.deposit(highMaxiDeposit);
+    double maxiDeposit = 1234567.89;
+    DateTime startOfToday = DateTime.now().withMillisOfDay(0);
+    DateTime middayTodayMinus10Days5Minutes = startOfToday.minusDays(10).minusMinutes(5);
+    maxiSavingsAccount.deposit(maxiDeposit, middayTodayMinus10Days5Minutes);
 
-    assertEquals(getExpectedMaxiInterest(highMaxiDeposit), bank.totalInterestPaid(), DOUBLE_DELTA);
+    assertEquals(getExpectedMaxiInterest(maxiDeposit, middayTodayMinus10Days5Minutes), bank.totalInterestPaid(), DOUBLE_DELTA);
   }
 
   private double getExpectedCheckingInterest(double amount) {
@@ -110,15 +114,10 @@ public class BankTest {
     }
   }
 
-  private double getExpectedMaxiInterest(double amount) {
-    if(amount <= MaxiSavingsAccount.LOW_MED_BOUNDARY) {
-      return amount * MaxiSavingsAccount.LOW_RATE;
-    } else if(amount <= MaxiSavingsAccount.MED_HIGH_BOUNDARY) {
-      return MaxiSavingsAccount.TOTAL_LOW_INTEREST
-               + (amount - MaxiSavingsAccount.LOW_MED_BOUNDARY) * MaxiSavingsAccount.MED_RATE;
-    } else {
-      return MaxiSavingsAccount.TOTAL_LOW_INTEREST + MaxiSavingsAccount.TOTAL_MED_INTEREST
-               + (amount - MaxiSavingsAccount.MED_HIGH_BOUNDARY) * MaxiSavingsAccount.HIGH_RATE;
-    }
+  private double getExpectedMaxiInterest(double amount, DateTime latestTransactionDate) {
+    if (latestTransactionDate.plusDays(MaxiSavingsAccount.LOW_MED_BOUNDARY_DAYS)
+          .isBefore(DateTime.now().withMillisOfDay(0)))
+      return amount * MaxiSavingsAccount.HIGH_RATE;
+    return amount * MaxiSavingsAccount.LOW_RATE;
   }
 }
