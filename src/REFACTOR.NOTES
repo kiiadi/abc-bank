@@ -1,22 +1,42 @@
 Bank Account application study and refactoring notes
 ====================================================
 
+1		Assumptions
+		===========
+		
+1.1		Report Formatting
+
+		It is assumed that all reporting content/structure has already been defined by the user and 
+		should not be changed. As such, we are assuming that the tests, since the comparisons are 
+		string based ( NOT IDEAL ) are valid. 
+		
+1.2		Existing Tests 
+		
+		Except where errors have been found, no existing tests will be removed, but corrected to
+		conform to the EXISTING requirements as they are user driven.
+
+1.3		Latency
+		-------
+		
+		We are not addressing Latency or performance - this is not a criteria for this study
+
+1.4		Interest Posting 
+		----------------
+		
+		Will not factor in monthly closing periods and posting interest payments at month close or 
+		misc adjustments to accounts
+
+
 1. 		Still Needed/Did not address
 		============================
 
-		These are enhancements that the analyst found important but because of: 
+		These are enhancements, issues, known problems that were either not completed, ignored or
+		simplified due to: 
 		
-			- time constraints, 
-			- lack of database persistence 
-			
-				or 
-				
-			- data necessary 
-			
-		the developer could not implement. 
+		 	- time constraints, 
+			- lack of an RDBMS or similar
 		
-		Items in this list should be revisited with the user to confirm that 
-		these are either important to implement or should be ignored.
+		These issues would need to be revisited if the applications was to be considered to be complete. 
 
 1.1 	Currency reporting
 		==================
@@ -24,27 +44,15 @@ Bank Account application study and refactoring notes
 		2. 	Customer should have preference as to base currency to report on
 		3. 	Bank should have preference as to base currency to report on
 
-1.2		New/Hidden requirements
-		=======================
+1.2		Error correction/logging
 
-		These are features that were not specified, but that the developer considered 
-		important enough to create a well rounded application.
-
-		1. 	Interest earned should be a transaction in itself
-
-1.3		Assumptions
-		===========
+		Currently, the logger, is a no-op logger. Meaning, that for the purposes of illustration, different classes
+		call the logger, but nothing is done.
 		
-1.3.1	It is assumed that all reporting content/structure has already been defined by the user and 
-		should not be changed. As such, we are assuming that the tests, since the comparisons are 
-		string based ( NOT IDEAL ) are valid. 
-		
-1.3.2	Any changes to the class design should conform to the EXISTING tests.
+		Adding either the default logger or log4j, would be considered overly complex for this excersize.
 
-1.3.3	We are not addressing Latency or performance - this is not a criteria for this study
 
-1.3.4	Will not factor in monthly closing periods and creating interest payments at month close or 
-		misc adjustments to accounts
+
 		
 TODO's - Given more Time
 ======
@@ -57,16 +65,7 @@ TODO's - Given more Time
 	
 4. 	TransactionManager class - Manages creation and commiting of transactions. Factory patter.	
 
-6. 	Add settings/preferences loading for the following classes: 
-
-	Customer:		Currency format
-					Statement class to use 
-	
-	Account:		Statement class to use
-	
-	Bank:
-	
-	Application:	
+6. 	Add settings/preferences loading for account types
 	
 7. 		Should be a transaction factory that creates the transaction 
 		and does not commit the transaction unti the user either issues a commit or 
@@ -135,11 +134,29 @@ Bank class
 Transaction class
 =================
 
-1. Changed constructor to force a TransactionType when creating a new transaction.
+TODO
+----
+1. 	Interest earned should be a transaction in itself
+
+COMPLETED
+---------
+1. 	Changed constructor to force a TransactionType when creating a new transaction.
+
+2. 	Changed the Transaction class to be abstract and defined specific implementations for 
+	each type of transaction. 
+	
+	DepositTransaction 
+	WithdrawalTransaction 
+
 
 TramsactionType class (NEW)
 ===========================
 
+TODO
+----
+
+COMPLETED
+---------
 1. 	Created a new transaction type class to force strongly typed transactions in 
 	order to have constant behavior across all transactions.
 	
@@ -151,6 +168,10 @@ TramsactionType class (NEW)
 	TRANSFER_IN		- a transfer into the account from another account
 	TRANSFER_OUT	- a transfer out of the account from another account
 	MULTI_LEG 		- a multi-legged transaction (for transfers )
+	
+3. 	Within TransactionTypes a OpCode enumeration has been created in able to strongly 
+	define what operation each transaction has on the balance.
+	
 	
 Date Provider class (REMOVED)
 ===================

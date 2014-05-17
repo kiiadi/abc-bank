@@ -8,9 +8,11 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * A class to encapsulate managing the transaction list for a particular account. 
- * This class uses a proxy pattern to hide the actual list and add additional 
- * functionalities for managing lists of transactions.
+ * A class for managing transaction lists within an account.
+ * <p> 
+ * This class is a proxy to hide the actual list of transactions to protect the implementation. It
+ * also add additional functionalities such as testing if the transaction is valid and managing the
+ * adding of list items so this is done in a uniform fashion and not directly.
  * 
  * @author Jeff
  * 

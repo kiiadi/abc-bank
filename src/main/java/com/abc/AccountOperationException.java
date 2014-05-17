@@ -5,13 +5,11 @@ package com.abc;
 
 
 /**
- * A class representing a commit exception. These objects are created when transactions are asked to 
- * commit and if any errors occur, the developer can poll for this unique exception.
+ * A class representing a generic exception for a bank account. 
  * 
  * @author Jeff
- *
  */
-public class CommitException extends Exception
+public class AccountOperationException extends Exception
 	{
 
 	/**
@@ -23,7 +21,7 @@ public class CommitException extends Exception
 	 * Create the exception with a message.
 	 * @param _msg - the message to hold
 	 */
-	public CommitException( String _msg ) 
+	public AccountOperationException( String _msg ) 
 		{
 			super( _msg );
 		}

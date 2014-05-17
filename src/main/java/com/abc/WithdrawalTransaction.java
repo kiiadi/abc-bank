@@ -1,7 +1,7 @@
 package com.abc;
 
 /**
- * The Transaction class
+ * A class representing a customer withdrawal from the account.
  * 
  * @author Jeff
  * 
@@ -24,7 +24,7 @@ public class WithdrawalTransaction extends Transaction
 		 * @see com.abc.Transaction#commit()
 		 */
 		@Override
-		public void commit() throws CommitException
+		public void commit() throws AccountOperationException
 			{
 				// TODO Auto-generated method stub
 			}

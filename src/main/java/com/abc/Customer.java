@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The customer class
+ * A class representing a customer of the bank
  * 
  * @author Jeff
  * 

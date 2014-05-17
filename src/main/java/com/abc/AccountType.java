@@ -4,8 +4,8 @@
 package com.abc;
 
 /**
- * An enumeration of all the possible account types. It creates type safety for
- * account types within the banking app.
+ * An enumeration of all the possible account types. This allows for type safety when creating
+ * accounts or distinguishing between accounts.
  * 
  * @author Jeff
  * 

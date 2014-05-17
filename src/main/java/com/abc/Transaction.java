@@ -6,6 +6,8 @@ package com.abc;
 import java.util.Date;
 
 /**
+ * An abstract class representing an account transaction.
+ * 
  * @author Jeff
  * 
  */

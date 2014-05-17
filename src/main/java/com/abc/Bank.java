@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The Bank class
+ * A class representing the bank.
  * 
  * @author Jeff
  * 

@@ -1,7 +1,7 @@
 package com.abc;
 
 /**
- * A class representing a deposit transaction class
+ * A class representing a customer deposit type of transaction.
  * 
  * @author Jeff
  * 
@@ -26,7 +26,7 @@ public class DepositTransaction extends Transaction
 		 * @see com.abc.Transaction#commit()
 		 */
 		@Override
-		public void commit() throws CommitException
+		public void commit() throws AccountOperationException
 			{
 				// TODO Auto-generated method stub
 			}
