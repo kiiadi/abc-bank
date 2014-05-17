@@ -9,7 +9,7 @@ public class TransactionTest {
 	@Test
     public void testCreate() {
     	
-    	Account acct = new Account(AccountType.CHECKING);
+    	Account acct = new CheckingAccount();
         Transaction t = new DepositTransaction(acct, 5);
         assertTrue(t instanceof Transaction);
     }

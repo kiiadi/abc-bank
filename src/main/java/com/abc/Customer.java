@@ -2,7 +2,6 @@ package com.abc;
 
 import java.util.ArrayList;
 import java.util.List;
-import static java.lang.Math.abs;
 
 /**
  * The customer class
@@ -68,7 +67,7 @@ public class Customer
 			{
 				double total = 0;
 				for (Account a : accounts)
-					total += a.interestEarned();
+					total += a.calculateInterest();
 				return total;
 			}
 

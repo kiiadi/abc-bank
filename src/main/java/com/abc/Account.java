@@ -7,19 +7,18 @@ package com.abc;
  * 
  */
 
-public class Account
+public abstract class Account
 	{
 
 		private final AccountType	accountType;
-		private TransactionList transactions;
+		private TransactionList		transactions;
 
 		/**
 		 * Create an Account object
 		 * 
-		 * @param _type
-		 *            - the account type to create
+		 * @param _type - the account type to create
 		 */
-		public Account(com.abc.AccountType _type)
+		Account(com.abc.AccountType _type)
 			{
 				this.accountType = _type;
 				this.transactions = new TransactionList(this);
@@ -28,8 +27,7 @@ public class Account
 		/**
 		 * Deposit funds into an existing account
 		 * 
-		 * @param amount
-		 *            - the amount to deposit into the account
+		 * @param amount - the amount to deposit into the account
 		 */
 		public void deposit(double amount) throws IllegalArgumentException
 			{
@@ -51,8 +49,7 @@ public class Account
 		/**
 		 * Withdraw funds from an existing account
 		 * 
-		 * @param amount
-		 *            - the amount to withdraw from the account
+		 * @param amount - the amount to withdraw from the account
 		 */
 		public void withdraw(double amount) throws IllegalArgumentException
 			{
@@ -67,37 +64,21 @@ public class Account
 					// create a new transaction to record the amount of the
 					// withdrawal
 					{
-						transactions.add(new WithdrawalTransaction(this, -amount));
+						transactions.add(new WithdrawalTransaction(this,
+										-amount));
 					}
 			}
 
+		
 		/**
-		 * calculate interest on the existing balance in the account
+		 * Calculate interest on the account. Each subclass is responsible for creating a method of
+		 * calculating interest.
 		 * 
-		 * @return the amount of interest earned
+		 * @return the interest on the current balance
+		 * 
 		 */
-		public double interestEarned()
-			{
-				double amount = sumTransactions();
-				switch (this.accountType)
-					{
-					case SAVINGS:
-						if (amount <= 1000)
-							return amount * 0.001;
-						else
-							return 1 + (amount - 1000) * 0.002;
-
-					case MAXISAVINGS:
-						if (amount <= 1000)
-							return amount * 0.02;
-						if (amount <= 2000)
-							return 20 + (amount - 1000) * 0.05;
-						return 70 + (amount - 2000) * 0.1;
-					default:
-						return amount * 0.001;
-					}
-			}
-
+		public abstract double calculateInterest();
+		
 		/**
 		 * sum the transactions for this account
 		 * 
@@ -108,7 +89,8 @@ public class Account
 				double amount = 0.0;
 				for (Transaction t : transactions)
 					amount += t.amount;
-				return amount;			}
+				return amount;
+			}
 
 		/**
 		 * Return the account type of this account
@@ -120,11 +102,10 @@ public class Account
 			{
 				return accountType;
 			}
-		
-		public TransactionList getTransactionList()
-		{
-			return transactions;
-		}
 
-		
+		public TransactionList getTransactionList()
+			{
+				return transactions;
+			}
+
 	}
