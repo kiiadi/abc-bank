@@ -34,17 +34,19 @@ public class SavingsAccount extends Account
 				String base_rate_str = this.getProperty("base_rate");
 				String ext_rate_str = this.getProperty("ext_rate");
 				
-				double amount = sumTransactions();
+				double amount = getBalance(true);
 				double rate = Double.valueOf(base_rate_str);
 				double ext_rate = Double.valueOf(ext_rate_str);
 				
 				double interest = 0.00;
 				
+				// if the amount is greater than 1000 apply the base rate to
+				// the first $1000 and then the extended rate to the remainder
 				if (amount > 1000)
 					{
 					interest = 1000 * rate + (amount - 1000 ) * ext_rate;
 					}
-				else
+				else // otherwise just use the base rate
 					interest = amount * rate;
 				
 				return interest;

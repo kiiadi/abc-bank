@@ -35,10 +35,11 @@ public class CheckingAccount extends Account
 		public double calculateInterest()
 			{
 				String rate_str = this.getProperty("base_rate");
-				
-				double amount = sumTransactions();
 				double rate = Double.valueOf(rate_str);
 				
+				// Refresh and get the balance. 
+				double amount = this.getBalance(true);
+
 				return amount * rate;
 			}
 
