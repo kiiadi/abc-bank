@@ -1,10 +1,7 @@
 /**
- * 
- */
-/**
  * A dummy application for a bank; should provide various functions of a retail bank.
  * <p>
- * <h1>Current Features</h1>
+ * <h2>Current Features</h2>
  * <p>
  * <li>A customer can open an account
  * <li>A customer can deposit / withdraw funds from an account
@@ -16,7 +13,7 @@
  * <li>A bank manager can get a report showing the list of customers and how many accounts they have
  * <li>A bank manager can get a report showing the total interest paid by the bank on all account
  * <p>
- * <h1>Additional Features</h1>
+ * <h2>Additional Features</h2>
  * <p>
  * <li>A customer can transfer between their account
  * <li>Change Maxi-Savings accounts to have an interest rate of 5% assuming no withdrawals 

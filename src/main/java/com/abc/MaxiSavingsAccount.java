@@ -7,7 +7,8 @@ import java.util.Date;
 import java.util.Properties;
 
 /**
- * A class representing a customer's maxi-savings account (<i>Account</i> subclass)
+ * A class representing a customer's maxi-savings account (<i>Account</i>
+ * subclass)
  * 
  * @author Jeff
  * 
@@ -15,8 +16,8 @@ import java.util.Properties;
 public class MaxiSavingsAccount extends Account
 	{
 
-		private Date last_withdraw_dt = null;
-		
+		private Date	last_withdraw_dt	= null;
+
 		/**
 		 * Create a new maxi savings account
 		 */
@@ -35,13 +36,45 @@ public class MaxiSavingsAccount extends Account
 		@Override
 		public double calculateInterest()
 			{
-				double amount = getBalance(true);
+				String base_rate_str = this.getProperty("base_rate");
+				String ext_rate_str = this.getProperty("ext_rate");
+				String enh_rate_str = this.getProperty("enh_rate");
+
+				// convert strings to actual rates
+				double base_rate = Double.valueOf(base_rate_str);
+				double ext_rate = Double.valueOf(ext_rate_str);
+				double enh_rate = Double.valueOf(enh_rate_str);
+
+				double interest = 0.00;
+
+				// get the current balance
+				double balance = getBalance(true);
+
+				// first: if the amount is greater than 1000 apply the base rate to
+				// the first 1000
+				if (balance >= 1000)
+					{
+						interest = 1000 * base_rate;
+					}
 				
-				if (amount <= 1000)
-					return amount * 0.02;
-				if (amount <= 2000)
-					return 20 + (amount - 1000) * 0.05;
-				return 70 + (amount - 2000) * 0.1;
+				if ( balance >= 2000 )
+					{
+						// apply the extended rate to the 2nd 1000
+						interest += 1000 * ext_rate;
+						
+						// if the amount exceeds 3000, then apply the enhanced rate to the amount
+						// over 2000
+						interest += (balance - 2000) * enh_rate;	
+
+					}
+				else// we have in between 1000 and 2000, apply the extended rate on the amount
+					 // over 1000
+					{
+						interest += (balance - 1000 ) * ext_rate; 
+					}
+				
+				// return the interest
+				return interest;
 			}
 
 		/**
@@ -54,10 +87,10 @@ public class MaxiSavingsAccount extends Account
 			{
 				// make sure we call the super classes <i>withdraw</i> method
 				Transaction t = super.withdraw(_amount);
-				
+
 				// update the last withdrawal date so we don't need to look it up
 				this.last_withdraw_dt = t.getTransactionDate();
-				
+
 				// return the transaction 
 				return t;
 			}
@@ -68,13 +101,18 @@ public class MaxiSavingsAccount extends Account
 		 * @see com.abc.Account#resetProperties()
 		 */
 		@Override
-		protected void resetProperties(Properties _p )
+		protected void resetProperties(Properties _p)
 			{
 				// clear all the current property entries
 				_p.clear();
-				
+
 				// set the base rate
-				_p.setProperty("base_rate", "0.001");				
+				_p.setProperty("base_rate", "0.02");
+				// set the extended rate
+				_p.setProperty("ext_rate", "0.05");
+				// set the base rate
+				_p.setProperty("enh_rate", "0.1");
+
 			}
 
 		/**
@@ -87,5 +125,4 @@ public class MaxiSavingsAccount extends Account
 			{
 				return "maxisavings.properties";
 			}
-
 	}

@@ -29,19 +29,19 @@ public class BankTest
 
 				checkingAccount.deposit(100.0);
 
-				assertEquals(0.1, bank.totalInterestPaid(), DOUBLE_DELTA);
+				assertEquals(1.00, bank.totalInterestPaid(), DOUBLE_DELTA);
 			}
 
 		@Test
 		public void savings_interest_test()
 			{
 				Bank bank = new Bank();
-				Account checkingAccount = new SavingsAccount();
-				bank.addCustomer(new Customer("Bill").openAccount(checkingAccount));
+				Account savingsAccount = new SavingsAccount();
+				bank.addCustomer(new Customer("Bill").openAccount(savingsAccount));
 
-				checkingAccount.deposit(1500.0);
+				savingsAccount.deposit(1500.0);
 
-				assertEquals(2.0, bank.totalInterestPaid(), DOUBLE_DELTA);
+				assertEquals(20.00, bank.totalInterestPaid(), DOUBLE_DELTA);
 			}
 
 		@Test

@@ -42,7 +42,7 @@ public class SavingsAccount extends Account
 				
 				// if the amount is greater than 1000 apply the base rate to
 				// the first $1000 and then the extended rate to the remainder
-				if (amount > 1000)
+				if (amount >= 1000)
 					{
 					interest = 1000 * rate + (amount - 1000 ) * ext_rate;
 					}
