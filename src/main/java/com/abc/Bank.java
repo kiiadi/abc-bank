@@ -3,44 +3,64 @@ package com.abc;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Bank {
-    private List<Customer> customers;
+/**
+ * A class representing the bank.
+ * 
+ * @author Jeff
+ * 
+ */
+public class Bank
+	{
 
-    public Bank() {
-        customers = new ArrayList<Customer>();
-    }
+		private List<Customer>	customers;
 
-    public void addCustomer(Customer customer) {
-        customers.add(customer);
-    }
+		/**
+		 * Create a new bank object
+		 */
+		public Bank()
+			{
+				customers = new ArrayList<Customer>();
+			}
 
-    public String customerSummary() {
-        String summary = "Customer Summary";
-        for (Customer c : customers)
-            summary += "\n - " + c.getName() + " (" + format(c.getNumberOfAccounts(), "account") + ")";
-        return summary;
-    }
+		/**
+		 * Add a new customer to the bank
+		 * 
+		 * @param customer the customer to add
+		 */
+		public void addCustomer(Customer customer)
+			{
+				customers.add(customer);
+			}
 
-    //Make sure correct plural of word is created based on the number passed in:
-    //If number passed in is 1 just return the word otherwise add an 's' at the end
-    private String format(int number, String word) {
-        return number + " " + (number == 1 ? word : word + "s");
-    }
+		/**
+		 * Run the customer summary report
+		 * 
+		 * @return a string representing the customer summary report.
+		 */
+		public String customerSummary()
+			{
+				String summary = "Customer Summary";
+				for (Customer c : customers)
+					summary += "\n - "
+									+ c.getName()
+									+ " ("
+									+ Utils.makePlural(c.getNumberOfAccounts(),
+													"account") + ")";
+				return summary;
+			}
 
-    public double totalInterestPaid() {
-        double total = 0;
-        for(Customer c: customers)
-            total += c.totalInterestEarned();
-        return total;
-    }
+		/**
+		 * calculate the total interest paid
+		 * 
+		 * @return the interest paid.
+		 */
+		public double totalInterestPaid()
+			{
+				double total = 0;
+				for (Customer c : customers)
+					total += c.totalInterestEarned();
 
-    public String getFirstCustomer() {
-        try {
-            customers = null;
-            return customers.get(0).getName();
-        } catch (Exception e){
-            e.printStackTrace();
-            return "Error";
-        }
-    }
-}
+				return total;
+			}
+
+	}

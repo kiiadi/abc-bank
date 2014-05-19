@@ -1,0 +1,204 @@
+Bank Account application study and refactoring notes
+====================================================
+
+1		Assumptions
+		===========
+		
+1.1		Report Formatting
+
+		It is assumed that all reporting content/structure has already been 
+		defined by the user and should not be changed. As such, we are assuming 
+		that the tests, since the comparisons are string based ( NOT IDEAL ) are valid. 
+		
+1.2		Existing Tests 
+		
+		Except where errors have been found, no existing tests will be removed, but 
+		corrected to conform to the EXISTING requirements as they are user driven.
+
+1.3		Latency
+		-------
+		
+		We are not addressing Latency or performance - this is not a criteria for
+		this study
+
+1.4		Posting of interest 
+		-------------------
+		
+		Will not factor in monthly closing periods and posting interest payments at 
+		month close or misc adjustments to accounts
+
+2. 		Still Needed/Did not address
+		============================
+
+		These are enhancements, issues, known problems that were either not completed,
+		ignored or simplified due to: 
+		
+		 	- time constraints, 
+			- lack of an RDBMS or similar
+		
+		These issues would need to be revisited if the applications was to be considered 
+		to be complete. 
+
+2.1 	Transfers
+	
+		- 	Transfers do not currently check to make sure that the accounts belong to 
+			one customer only - Not enough time to implement.
+			
+		- 	No notion of committing transactions - This is mostly needed for multi-leg 
+			transactions such as transfers - To complex for this example. Would need more 
+			time to implement.
+
+2.2		Error correction/logging
+
+		- 	Currently, the logger, is a no-op logger. Meaning, that for the purposes of 
+			illustration, different classes call the logger, but nothing is done.
+		
+			Adding either the default logger or log4j, would be considered overly complex 
+			for this exercise.
+
+2.3		Interest Rate
+
+		-  	As developed, the application only calculates interest, it does not post to the 
+			account. The transaction type for an interest posting was added as well as the 
+			last interest posting date, but no application logic was added to realize this 
+			feature. 
+		 
+		- 	Did not implement periodic interest rate calc. As the wording "..interest rates 
+			for the above are per annum." was unclear as to the rates in the existing requirement 
+			or the new requirements to add. 
+			
+			Therefore, chose to leave the rates as they were given and performed interest rate 
+			calculations as given. However, periodic interest rate logic was added and tested. 
+			The implementation, would allow for the calculation of a daily rate from the annual 
+			given.
+			
+			As there are many ways to calculate the periodic rate ( 30/365, 30/360, etc...). 
+			My assumption was that for this example, this is not what you had intended. That said, 
+			if this is the case, the application can be easily adjusted for calculating and 
+			using a daily rate by just using the Utils::getPeriodicRate() method to calculate 
+			the daily rate and use this prior to looping through the transactions. 
+			
+		-	In a more robust application, the balances would be kept on a daily basis so that 
+			interest could be calculated and accrued for each day. 
+
+		- 	Used a simple periodic rate calculator. In an more robust application, each account 
+			could be defined as 30/360, 30/365, etc... and more exact interest rate could be 
+			applied to the account.
+	
+3.	TODO's - Given more Time
+	========================
+
+	
+3.1. 	Create a CustomerStatement class with the ability to load .properties options to enable 
+		specific settings for individual customer accounts
+	
+3.2. 	TransactionManager class - Manages creation and committing of transactions. Should be a 
+		transaction factory that creates the transaction  and does not commit the transaction 
+		until the user either issues a commit or abort. Should it have states? ( i.e. what the 
+		user intended vs. what was done.	
+
+3.3. 	Add settings/preferences for account types to enable default settings for accounts
+
+3.4.	Bank::format() method needs to be looked at .. its a cluge.
+
+3.5. 	Dynamic loading of the Statement class to use when generating a statement for both
+		Customer and Account classes. Should be part of customer settings.
+	
+3.6. 	Add functionality to re-run interest rate calculation - will need different data 
+		structures to accommodate.
+
+4.	Implemented 
+	===========
+	4.1 Customer class
+		--------------
+
+		- 	Moved Customer::toDollars to the Utils class and defined as static so that its 
+			more generic.
+
+	4.2	Account class 
+		-------------
+		-  	Moved the static final account types into an AccountType enum 
+			in the AccountType.java file. Provides for type safety.
+
+		- 	Replaced the static final account types with an AccountType
+		 	enum.
+
+		- 	Documented/Analyzed customer class.
+		
+		-	Moved the management of the transaction list to a TransactionList class in order
+			to keep the Account and Transaction list logic separate and consolidated.
+				TODO: 
+
+		TODO:
+		
+		_ 	Create an AccountManager class that is responsible for creating all the accounts
+		 	and keeping track of properties for each account. 
+		 
+		_	Customer::openAccount - Should call AccountManager::openAccount()  which will 
+			return the account that was opened.
+			
+		- 	Specific classes for each account type
+		
+		- 	Create account properties
+		
+		- 	integrate new properties driven rates into test harness	
+
+
+
+ 	 	
+4.3 	Bank class
+		----------
+		
+	-	Created Javadoc comments for all class/methods
+	
+	
+	-  	Removed unused/superfluous methods:
+		
+		Bank::getFirstCustomer **UNUSED**
+	
+	-	Moved Bank::makePlural to the Utils class and define as static so that its more 
+		generic.
+ 	
+4.4 	Transaction class
+		-----------------
+	- 	Changed constructor to force a TransactionType when creating a new transaction.
+	
+	- 	Changed the Transaction class to be abstract and defined specific implementations 
+		for each type of transaction. 
+		
+		DepositTransaction 
+		WithdrawalTransaction 
+
+	- TODO
+		-	Interest earned should be a transaction in itself
+
+
+4.5		TransactionType class (NEW)
+		---------------------------
+		
+	- 	Created a new transaction type class to force strongly typed transactions in 
+		order to have constant behavior across all transactions.
+		
+	- 	Transaction types are the following: 
+	
+		WITHDRAWAL 		- a customer withdrawal from the account
+		DEPOSIT			- a customer deposit into the account
+		INTEREST		- an interest payment into the account
+		TRANSFER_IN		- a transfer into the account from another account
+		TRANSFER_OUT	- a transfer out of the account from another account
+		MULTI_LEG 		- a multi-legged transaction (for transfers )
+		
+	- 	Within TransactionTypes a OpCode enumeration has been created in able to strongly 
+		define what operation each transaction has on the balance.
+	
+	
+4.6		Date Provider class (REMOVED)
+		----------------------------- 
+		Although this is a singleton, there is no compelling reason that this should be
+	 	a class by itself as there is only one method and it does not use and class level 
+	 	variables or objects. It will be simpler to move to a Utils class as make static.
+		
+		- Moved now() method to the Utils class and made static
+		
+		- Removed the DateProvider class as it is no longer necessary.
+		
