@@ -20,7 +20,7 @@ public class BankTest
 			}
 
 		@Test
-		public void checking_interest_test()
+		public void checking_interest_calc_test()
 			{
 				Bank bank = new Bank();
 				Account checkingAccount = new CheckingAccount();
@@ -33,7 +33,7 @@ public class BankTest
 			}
 
 		@Test
-		public void savings_interest_test()
+		public void savings_interest_calc_test()
 			{
 				Bank bank = new Bank();
 				Account savingsAccount = new SavingsAccount();
@@ -45,7 +45,7 @@ public class BankTest
 			}
 
 		@Test
-		public void maxi_interest_test()
+		public void maxi_interest_calc_test()
 			{
 				Bank bank = new Bank();
 				Account maxiAccount = new MaxiSavingsAccount();
@@ -77,24 +77,5 @@ public class BankTest
 				assertEquals( 1001.9742, fv, DOUBLE_DELTA );				
 			}
 		
-		@Test
-		public	void transer_test()
-			{
-				Bank bank = new Bank();
-				Account checkingAccount = new CheckingAccount();
-				Account savingsAccount = new SavingsAccount();
-				Customer bill = new Customer("Bill").openAccount(checkingAccount);
-				bill.openAccount(savingsAccount);
-				
-				bank.addCustomer(bill);
-				
-				savingsAccount.deposit(3000.0);
-				
-				savingsAccount.transfer(checkingAccount, 1000 );
-				
-				assertEquals(2000, savingsAccount.getBalance(true), DOUBLE_DELTA );
-				assertEquals(1000, checkingAccount.getBalance(true), DOUBLE_DELTA);
-				
-			}
 
 	}

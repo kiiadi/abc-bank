@@ -125,4 +125,14 @@ public class MaxiSavingsAccount extends Account
 			{
 				return "maxisavings.properties";
 			}
+
+		
+		/**
+		 * Gets the date of the last withdrawal
+		 * @return the last_withdraw_dt
+		 */
+		public Date getLastWithdrawDate()
+			{
+				return last_withdraw_dt;
+			}
 	}

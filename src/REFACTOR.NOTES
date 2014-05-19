@@ -56,8 +56,9 @@ Bank Account application study and refactoring notes
 
 2.3		Interest Rate
 
-		-  	As developed, the application does not allow to post interest once already posted for a given day.
-			The application should allow for the re-running of interest rate calculations.
+		-  	As developed, the application only calculates interest, it does not post to the account. The transaction 
+			type for an interest posting was added as well as the last interest posting date, but no application
+			logic was added to realize this feature. 
 		 
 		- 	The calculation implemented for this release is an extremely oversimplified periodic interest calculation based on the 
 			current balance and the last time the rate was applied. THIS IS NOT CORRECT.
