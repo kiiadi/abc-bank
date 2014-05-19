@@ -23,11 +23,12 @@ Bank Account application study and refactoring notes
 1.4		Posting interest 
 		----------------
 		
+		
 		Will not factor in monthly closing periods and posting interest payments at month close or 
 		misc adjustments to accounts
 
 
-1. 		Still Needed/Did not address
+2. 		Still Needed/Did not address
 		============================
 
 		These are enhancements, issues, known problems that were either not completed, ignored or
@@ -38,7 +39,7 @@ Bank Account application study and refactoring notes
 		
 		These issues would need to be revisited if the applications was to be considered to be complete. 
 
-1.1 	Transfers
+2.1 	Transfers
 	
 		- 	Transfers do not currently check to make sure that the accounts belong to one customer only - Not 
 			enough time to implement.
@@ -46,26 +47,27 @@ Bank Account application study and refactoring notes
 		- 	No notion of committing transactions - This is mostly needed for multi-leg transactions such
 			as transfers - To complex for this example. Would need more time to implement.
 
-1.2		Error correction/logging
+2.2		Error correction/logging
 
 		- 	Currently, the logger, is a no-op logger. Meaning, that for the purposes of illustration, different classes
 			call the logger, but nothing is done.
 		
 			Adding either the default logger or log4j, would be considered overly complex for this exercise.
 
-1.3		Interest Rate
+2.3		Interest Rate
 
-		- 	The calculation used here, is an extremely oversimplified periodic interest calculation based on the 
+		-  	As developed, the application does not allow to post interest once already posted for a given day.
+			The application should allow for the re-running of interest rate calculations.
+		 
+		- 	The calculation implemented for this release is an extremely oversimplified periodic interest calculation based on the 
 			current balance and the last time the rate was applied. THIS IS NOT CORRECT.
 			
 			In a more robust application, the balances would be kept on a daily basis so that interest could be
 			calculated and applied to each day, individually. 
-			
 
 		- 	Used a simple periodic rate calculator. In an more robust application, each account could be defined
 			as 30/360, 30/365, etc... and more exact interest rate could be applied to the account.
-
-		
+	
 TODO's - Given more Time
 ======
 
@@ -87,6 +89,9 @@ TODO's - Given more Time
 
 11. Dynamic loading of the Statement class to use when generating a statement for both
 	Customer and Account classes	
+	
+12. Add functionality to re-run interest rate calculation - will need different data structures to 
+	accomodate.
 
 
 Customer class

@@ -76,5 +76,25 @@ public class BankTest
 				double fv = Utils.futureValue(1000.00, periodic_rate, 6);
 				assertEquals( 1001.9742, fv, DOUBLE_DELTA );				
 			}
+		
+		@Test
+		public	void transer_test()
+			{
+				Bank bank = new Bank();
+				Account checkingAccount = new CheckingAccount();
+				Account savingsAccount = new SavingsAccount();
+				Customer bill = new Customer("Bill").openAccount(checkingAccount);
+				bill.openAccount(savingsAccount);
+				
+				bank.addCustomer(bill);
+				
+				savingsAccount.deposit(3000.0);
+				
+				savingsAccount.transfer(checkingAccount, 1000 );
+				
+				assertEquals(2000, savingsAccount.getBalance(true), DOUBLE_DELTA );
+				assertEquals(1000, checkingAccount.getBalance(true), DOUBLE_DELTA);
+				
+			}
 
 	}
