@@ -86,7 +86,7 @@ public class Customer
 				for (Account a : accounts)
 					{ // each account's balance is on a new line
 						statement += "\n" + statementForAccount(a) + "\n";
-						total += a.sumTransactions();	// keep running total for
+						total += a.getBalance(true);	// keep running total for
 														// all accounts
 					}
 				statement += "\nTotal In All Accounts " + Utils.toDollars(total);
@@ -127,9 +127,30 @@ public class Customer
 				double total = 0.0;
 				for (Transaction t : a.getTransactionList() )
 					{
-						s += "  " + (t.amount < 0 ? "withdrawal" : "deposit")
-										+ " " + Utils.toDollars(t.amount) + "\n";
-						total += t.amount;
+						s+="  ";
+						switch( t.getTransType() )
+						{
+							case WITHDRAWAL:
+								s+="withdrawal";
+								break;
+							case DEPOSIT:
+								s+="deposit";
+								break;
+							case INTEREST:
+								s+="interest";
+								break;
+							case TRANSFER_FROM:
+								s+="transfer from: ";
+								break;
+							case TRANSFER_TO:
+								s+="transfer to:";
+								break;	
+						default:
+							break;
+						}
+						s += " " + Utils.toDollars(t.amount) + "\n";
+						
+						total = a.sumTransaction( t, total );
 					}
 				
 				s += "Total " + Utils.toDollars(total);
