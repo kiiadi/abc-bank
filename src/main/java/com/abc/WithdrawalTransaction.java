@@ -16,17 +16,6 @@ public class WithdrawalTransaction extends Transaction
 		 */
 		public WithdrawalTransaction(Account _acct, double _amount )
 			{
-				super(_acct, _amount, TransactionType.WITHDRAWAL);
+				super(_amount, TransactionType.WITHDRAWAL);
 			}
-
-		/**
-		 * Commit the withdrawal
-		 * @see com.abc.Transaction#commit()
-		 */
-		@Override
-		public void commit() throws AccountOperationException
-			{
-				// TODO Auto-generated method stub
-			}
-
 	}

@@ -15,20 +15,9 @@ public class DepositTransaction extends Transaction
 		 * @param _acct the account that this transaction refers to
 		 * @param _amount the amount of this transaction
 		 */
-		public DepositTransaction(Account _acct, double _amount)
+		public DepositTransaction( double _amount)
 			{
-				super(_acct, _amount, TransactionType.DEPOSIT);
-			}
-
-		/**
-		 * Commit the the deposit
-		 * 
-		 * @see com.abc.Transaction#commit()
-		 */
-		@Override
-		public void commit() throws AccountOperationException
-			{
-				// TODO Auto-generated method stub
+				super( _amount, TransactionType.DEPOSIT);
 			}
 
 	}

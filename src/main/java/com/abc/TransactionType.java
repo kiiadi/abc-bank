@@ -15,14 +15,12 @@ package com.abc;
  */
 public enum TransactionType
 	{
-
 		UNKNOWN(-1, "UNKNOWN", OpCode.NONE),				// the unknown soldier
 		DEPOSIT(0, "DEPOSIT", OpCode.DEBIT), 				// customer initiated deposit
 		WITHDRAWAL(1, "WITHDRAWAL", OpCode.CREDIT), 		// customer initiated withdrawal
-		TRANSFER_IN(2, "TRANSFER_IN", OpCode.DEBIT),		// an account transfer coming in
-		TRANSFER_OUT(3, "TRANSFER_OUT", OpCode.CREDIT),		// an account transfer going out
-		INTEREST(4, "INTEREST", OpCode.DEBIT),				// interest accrued
-		MULTI_LEG(5, "MULTI_LEG", OpCode.NONE);				// multi-legged transaction (used only for transfers )
+		TRANSFER_FROM(2, "TRANSFER_FROM", OpCode.DEBIT),		// an account transfer coming in
+		TRANSFER_TO(3, "TRANSFER_TO", OpCode.CREDIT),		// an account transfer going out
+		INTEREST(4, "INTEREST", OpCode.DEBIT);				// interest accrued
 
 		public enum OpCode
 			{
