@@ -82,13 +82,15 @@ public class CustomerTest
 
 				Customer henry = new Customer("Henry").openAccount(account);
 
-				account.deposit(1000.0);
-				account.deposit(4000.0);
-				account.withdraw(200);
+				account.deposit(500.0);
+				account.deposit(500.0);
 				
-				assertEquals(4800.00, account.getBalance(true), DOUBLE_DELTA);
-				assertEquals(350.00, account.calculateInterest(), DOUBLE_DELTA);
+				assertEquals(1000.00, account.getBalance(true), DOUBLE_DELTA);
+				assertEquals(50.00, account.calculateInterest(), DOUBLE_DELTA);
 
+				account.withdraw(200);
+				assertEquals(800.00, account.getBalance(true), DOUBLE_DELTA);
+				assertEquals(0.80, account.calculateInterest(), DOUBLE_DELTA);
 				
 				
 			}
