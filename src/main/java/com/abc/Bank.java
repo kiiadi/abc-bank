@@ -1,22 +1,29 @@
 package com.abc;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-public class Bank {
-    private List<Customer> customers;
+import com.abc.interfaces.BankDetail;
+
+public class Bank implements BankDetail{
+	private String m_code;
+    private Map<String, Customer> m_customers;
 
     public Bank() {
-        customers = new ArrayList<Customer>();
+        m_customers = new LinkedHashMap<String, Customer>();
+    }
+    
+    public Map<String, Customer> getCustomers(){
+    	return m_customers;
     }
 
     public void addCustomer(Customer customer) {
-        customers.add(customer);
+        m_customers.put(customer.getName(), customer);
     }
 
     public String customerSummary() {
         String summary = "Customer Summary";
-        for (Customer c : customers)
+        for (Customer c : m_customers.values())
             summary += "\n - " + c.getName() + " (" + format(c.getNumberOfAccounts(), "account") + ")";
         return summary;
     }
@@ -29,18 +36,26 @@ public class Bank {
 
     public double totalInterestPaid() {
         double total = 0;
-        for(Customer c: customers)
+        for(Customer c: m_customers.values())
             total += c.totalInterestEarned();
         return total;
     }
 
     public String getFirstCustomer() {
         try {
-            customers = null;
-            return customers.get(0).getName();
+            m_customers = null;
+            return m_customers.get(0).getName();
         } catch (Exception e){
             e.printStackTrace();
             return "Error";
         }
     }
+	 
+	public String getCode() {
+		return m_code;
+	}
+
+	public void setCode(String code) {
+		m_code = code;
+	}
 }

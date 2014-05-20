@@ -1,17 +1,23 @@
 package com.abc;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static java.lang.Math.abs;
 
-public class Customer {
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import com.abc.interfaces.CustomerDetail;
+
+public class Customer implements CustomerDetail{
     private String name;
-    private List<Account> accounts;
+    private Map<Object, Account> m_accounts;
 
     public Customer(String name) {
         this.name = name;
-        this.accounts = new ArrayList<Account>();
+        this.m_accounts = new LinkedHashMap<Object, Account>();
+    }
+    
+    public Map<Object, Account>getAccounts(){
+    	return m_accounts;
     }
 
     public String getName() {
@@ -19,17 +25,17 @@ public class Customer {
     }
 
     public Customer openAccount(Account account) {
-        accounts.add(account);
+        m_accounts.put(account.getAccountType()+"", account);
         return this;
     }
 
     public int getNumberOfAccounts() {
-        return accounts.size();
+        return m_accounts.size();
     }
 
     public double totalInterestEarned() {
         double total = 0;
-        for (Account a : accounts)
+        for (Account a : m_accounts.values())
             total += a.interestEarned();
         return total;
     }
@@ -38,7 +44,7 @@ public class Customer {
         String statement = null;
         statement = "Statement for " + name + "\n";
         double total = 0.0;
-        for (Account a : accounts) {
+        for (Account a : m_accounts.values()) {
             statement += "\n" + statementForAccount(a) + "\n";
             total += a.sumTransactions();
         }

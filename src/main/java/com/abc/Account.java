@@ -3,7 +3,9 @@ package com.abc;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Account {
+import com.abc.interfaces.AccountDetail;
+
+public class Account implements AccountDetail {
 
     public static final int CHECKING = 0;
     public static final int SAVINGS = 1;
@@ -69,5 +71,5 @@ public void withdraw(double amount) {
     public int getAccountType() {
         return accountType;
     }
-
+    
 }
