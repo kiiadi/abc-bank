@@ -7,7 +7,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-
 import com.abc.api.BankingServices;
 import com.abc.exceptions.GLError;
 import com.abc.exceptions.GLErrorCodes;
