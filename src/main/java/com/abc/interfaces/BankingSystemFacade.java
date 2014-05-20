@@ -1,8 +1,8 @@
 package com.abc.interfaces;
 
-public interface BankSystemServices {
-	
-	
+public interface BankingSystemFacade {
+		
 	GeneralLedgerApi getGeneralLedgerApi(String entityCode);
+	 GLReportingApi getGLReportingApi();
 	
 }

@@ -1,6 +1,5 @@
 package com.abc.interfaces;
 
-import java.util.Date;
 import java.util.Map;
 
 public interface CustomerDetail {

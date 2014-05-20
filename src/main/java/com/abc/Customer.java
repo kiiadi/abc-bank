@@ -2,14 +2,12 @@ package com.abc;
 
 import static java.lang.Math.abs;
 
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.abc.interfaces.AccountDetail;
 import com.abc.interfaces.AccountType;
 import com.abc.interfaces.CustomerDetail;
-import com.abc.interfaces.JournalEntry;
 
 public class Customer implements CustomerDetail{
     private String name;
@@ -41,14 +39,12 @@ public class Customer implements CustomerDetail{
         return this;
     }
 
-    public int getNumberOfAccounts() {
-        return m_accounts.size();
-    }
+    
 
     public double totalInterestEarned() {
         double total = 0;
         for (AccountDetail a : m_accounts.values())
-            total += a.interestEarned();
+            total += a.getBalacne();
         return total;
     }
 
@@ -58,7 +54,7 @@ public class Customer implements CustomerDetail{
         double total = 0.0;
         for (AccountDetail a : m_accounts.values()) {
             statement += "\n" + statementForAccount((Account) a) + "\n";
-            total += a.sumTransactions();
+            total += a.getBalacne();
         }
         statement += "\nTotal In All Accounts " + toDollars(total);
         return statement;

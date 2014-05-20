@@ -6,24 +6,24 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.abc.api.IocServiceContainer;
+import com.abc.api.BankingServices;
 import com.abc.exceptions.AccountOpenError;
 import com.abc.exceptions.CustomerNotFound;
 import com.abc.exceptions.InvalidAccount;
 import com.abc.exceptions.TransactionAmountIsLessThanZero;
 import com.abc.interfaces.AccountType;
-import com.abc.interfaces.BankSystemServices;
+import com.abc.interfaces.BankingSystemFacade;
 import com.abc.interfaces.GeneralLedgerApi;
 
 import static org.junit.Assert.assertEquals;
 
 public class CustomerTest {
-	private BankSystemServices m_bankServices;
+	private BankingSystemFacade m_bankServices;
 	private GeneralLedgerApi m_generalLedgerApi;
 
 	@Before
 	public void setup() {
-		m_bankServices = new IocServiceContainer();
+		m_bankServices = new BankingServices();
 		m_generalLedgerApi = m_bankServices.getGeneralLedgerApi("BankOfAmericaPersonalFinance");
 	}
     @Test //Test customer statement generation
@@ -54,7 +54,7 @@ public class CustomerTest {
     @Test
     public void testOneAccount(){
         Customer oscar = new Customer("Oscar").openAccount(new Account(AccountType.SAVINGS));
-        assertEquals(1, oscar.getNumberOfAccounts());
+        assertEquals(1, oscar.getAccounts().size());
     }
 
     @Test
@@ -62,14 +62,8 @@ public class CustomerTest {
         Customer oscar = new Customer("Oscar")
                 .openAccount(new Account(AccountType.SAVINGS));
         oscar.openAccount(new Account(AccountType.CHECKING));
-        assertEquals(2, oscar.getNumberOfAccounts());
+        assertEquals(2, oscar.getAccounts().size());
     }
 
-    @Ignore
-    public void testThreeAcounts() {
-        Customer oscar = new Customer("Oscar")
-                .openAccount(new Account(AccountType.SAVINGS));
-        oscar.openAccount(new Account(AccountType.CHECKING));
-        assertEquals(3, oscar.getNumberOfAccounts());
-    }
+  
 }
