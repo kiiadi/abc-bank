@@ -11,7 +11,7 @@ public class Bank implements BankDetail {
 	private Map<String, CustomerDetail> m_customers;
 
 	public Map<String, CustomerDetail> getCustomers() {
-		if (m_customers==null){
+		if (m_customers == null) {
 			m_customers = new LinkedHashMap<String, CustomerDetail>();
 		}
 		return m_customers;
@@ -21,14 +21,6 @@ public class Bank implements BankDetail {
 		Customer customer = new Customer(accountName);
 		getCustomers().put(accountName, customer);
 		return customer;
-	}
-
-	public double totalInterestPaid() {
-		double total = 0;
-		for (CustomerDetail c : getCustomers().values()) {
-			total += ((Customer)c).totalInterestEarned();
-		}
-		return total;
 	}
 
 	public String getCode() {

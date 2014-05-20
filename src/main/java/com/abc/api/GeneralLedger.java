@@ -3,10 +3,8 @@ package com.abc.api;
 import java.util.Date;
 
 import com.abc.Bank;
-import com.abc.exceptions.AccountOpenError;
-import com.abc.exceptions.CustomerNotFound;
-import com.abc.exceptions.InvalidAccount;
-import com.abc.exceptions.TransactionAmountIsLessThanZero;
+import com.abc.exceptions.GLError;
+import com.abc.exceptions.GLErrorCodes;
 import com.abc.interfaces.AccountDetail;
 import com.abc.interfaces.AccountType;
 import com.abc.interfaces.BankDetail;
@@ -25,36 +23,34 @@ public class GeneralLedger implements GeneralLedgerApi {
 	}
 
 	public JournalEntry createJournalEntry(String accountName, int accountType, Date transactionDate, double amount,
-			int transactionType) throws InvalidAccount, CustomerNotFound, TransactionAmountIsLessThanZero {
+			int transactionType) throws GLError {
 
 		if (amount <= 0) {
-			throw new TransactionAmountIsLessThanZero();
+			throw new GLError(GLErrorCodes.GL_TRANSACTION_AMOUNT_ZERO_OR_LESS);
 		}
 
 		AccountDetail account = getAccountDetail(accountName, accountType);
 		return account.createNewTransaction(transactionDate, amount, transactionType);
 	}
 
-	private AccountDetail getAccountDetail(String accountName, int accountType) throws CustomerNotFound, InvalidAccount {
+	private AccountDetail getAccountDetail(String accountName, int accountType) throws GLError {
 		CustomerDetail customer = getCustomer(accountName);
 		if (customer == null) {
-			throw new CustomerNotFound();
+			throw new GLError(GLErrorCodes.GL_CUSTOMER_NOT_FOUND);
 		}
 
 		AccountDetail account = customer.getAccounts().get(accountType);
 		if (account == null) {
-			throw new InvalidAccount();
+			throw new GLError(GLErrorCodes.GL_INVALID_ACCOUNT);
 		}
 		return account;
 	}
 
-	public JournalEntry deposit(String accountName, int accountType, Date transactionDate, double amount) throws InvalidAccount,
-			CustomerNotFound, TransactionAmountIsLessThanZero {
+	public JournalEntry deposit(String accountName, int accountType, Date transactionDate, double amount) throws GLError {
 		return createJournalEntry(accountName, accountType, transactionDate, amount, TransactionType.CREDIT);
 	}
 
-	public JournalEntry withdraw(String accountName, int accountType, Date transactionDate, double amount) throws InvalidAccount,
-			CustomerNotFound, TransactionAmountIsLessThanZero {
+	public JournalEntry withdraw(String accountName, int accountType, Date transactionDate, double amount) throws GLError {
 		return createJournalEntry(accountName, accountType, transactionDate, amount, TransactionType.DEBIT);
 	}
 
@@ -62,7 +58,7 @@ public class GeneralLedger implements GeneralLedgerApi {
 		return m_bank;
 	}
 
-	public AccountDetail openAccount(String accountName, int accountType) throws AccountOpenError {
+	public AccountDetail openAccount(String accountName, int accountType) throws GLError {
 
 		CustomerDetail customer = getCustomer(accountName);
 		if (customer == null) {
@@ -70,7 +66,7 @@ public class GeneralLedger implements GeneralLedgerApi {
 		}
 		AccountDetail acDetail = customer.getAccounts().get(accountType);
 		if (acDetail != null) {
-			throw new AccountOpenError();
+			throw new GLError(GLErrorCodes.GL_ACCOUNT_OPEN_ERROR);
 		}
 		return customer.createAccount(accountType);
 	}
@@ -78,10 +74,10 @@ public class GeneralLedger implements GeneralLedgerApi {
 	public CustomerDetail getCustomer(String accountName) {
 		return m_bank.getCustomers().get(accountName);
 	}
+	
 
-	public double calculateInterestEarned(String accountName, int accountType) throws CustomerNotFound, InvalidAccount {
+	public double calculateInterestEarned(String accountName, int accountType) throws GLError {
 		AccountDetail account = getAccountDetail(accountName, accountType);
-		
 		double amount = account.getBalacne();
 		switch (account.getAccountType()) {
 		case AccountType.SAVINGS:
@@ -89,7 +85,7 @@ public class GeneralLedger implements GeneralLedgerApi {
 				return amount * 0.001;
 			else
 				return 1 + (amount - 1000) * 0.002;
-			
+
 		case AccountType.MAXI_SAVINGS:
 			if (amount <= 1000)
 				return amount * 0.02;
@@ -101,4 +97,5 @@ public class GeneralLedger implements GeneralLedgerApi {
 		}
 	}
 
+ 
 }

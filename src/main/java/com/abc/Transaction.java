@@ -28,7 +28,7 @@ public class Transaction implements JournalEntry {
 	}
 
 	public double getTransactionAmount() {
-		return getAmount()*getTransactionType();
+		return getAmount() * getTransactionType();
 	}
-	
+
 }

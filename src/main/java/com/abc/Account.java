@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 
 import com.abc.interfaces.AccountDetail;
-import com.abc.interfaces.AccountType;
 import com.abc.interfaces.JournalEntry;
 
 public class Account implements AccountDetail {
@@ -25,11 +24,11 @@ public class Account implements AccountDetail {
 		m_balance += t.getTransactionAmount();
 		return t;
 	}
-	
-	public double getBalacne(){
+
+	public double getBalacne() {
 		return m_balance;
 	}
- 
+
 	public int getAccountType() {
 		return m_accountType;
 	}
