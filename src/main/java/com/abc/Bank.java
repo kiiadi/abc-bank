@@ -4,6 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.abc.interfaces.BankDetail;
+import com.abc.interfaces.CustomerDetail;
 
 public class Bank implements BankDetail{
 	private String m_code;
@@ -17,6 +18,12 @@ public class Bank implements BankDetail{
     	return m_customers;
     }
 
+    public CustomerDetail createNewCustomer(String accountName){
+		Customer customer = new Customer(accountName);
+		getCustomers().put(accountName, customer);
+		return customer;
+	}
+    
     public void addCustomer(Customer customer) {
         m_customers.put(customer.getName(), customer);
     }

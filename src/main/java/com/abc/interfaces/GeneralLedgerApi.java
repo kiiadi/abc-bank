@@ -2,13 +2,14 @@ package com.abc.interfaces;
 
 import java.util.Date;
 
-import com.abc.exceptions.AccountOpenError;
-
+import com.abc.exceptions.*;
+ 
 public interface GeneralLedgerApi {
-
-	BankDetail getInfo();
-	JournalEntry createJournalEntry(String accountId, Date transactionDate, double d, int credit);
+	BankDetail getBankDetail();	
 	AccountDetail openAccount(String accountName, int accountType)throws AccountOpenError;
-	CustomerDetail getCustomerInfo(String accountName);
+	CustomerDetail getCustomer(String accountName);
+	JournalEntry createJournalEntry(String accountName, int accountType, Date transactionDate, double amount, int credit)  throws InvalidAccount, CustomerNotFound, TransactionAmountIsLessThanZero;	
+	JournalEntry deposit(String accountName, int accountType, Date transactionDate, double amount) throws InvalidAccount,CustomerNotFound,TransactionAmountIsLessThanZero;
+	JournalEntry withdraw(String accountName, int accountType, Date transactionDate, double amount)  throws InvalidAccount,CustomerNotFound,TransactionAmountIsLessThanZero;	
 	
 }

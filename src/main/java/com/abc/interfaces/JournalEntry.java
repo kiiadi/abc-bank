@@ -1,11 +1,13 @@
 package com.abc.interfaces;
 
+import java.util.Date;
+
 public interface JournalEntry {
-	String getAccountId();
 
-	String getTransactionDate();
+	Date getTransactionDate();
 
-	String getTransactionType();
+	int getTransactionType();
 
-	String getAmount();
+	double getAmount();
+	double getTransactionAmount();
 }

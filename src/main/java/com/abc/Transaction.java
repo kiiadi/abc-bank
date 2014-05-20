@@ -2,14 +2,33 @@ package com.abc;
 
 import java.util.Date;
 
-public class Transaction {
-    public final double amount;
+import com.abc.interfaces.JournalEntry;
 
-    private Date transactionDate;
+public class Transaction implements JournalEntry {
+	public double m_amount;
+	private Date m_transactionDate;
+	private int m_transactionType;
 
-    public Transaction(double amount) {
-        this.amount = amount;
-        this.transactionDate = DateProvider.getInstance().now();
-    }
+	public Transaction(Date transactionDate, double amount, int transactionType) {
+		m_amount = amount;
+		m_transactionDate = transactionDate;
+		m_transactionType = transactionType;
+	}
 
+	public Date getTransactionDate() {
+		return m_transactionDate;
+	}
+
+	public int getTransactionType() {
+		return m_transactionType;
+	}
+
+	public double getAmount() {
+		return m_amount;
+	}
+
+	public double getTransactionAmount() {
+		return getAmount()*getTransactionType();
+	}
+	
 }

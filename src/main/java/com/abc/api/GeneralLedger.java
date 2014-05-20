@@ -2,15 +2,17 @@ package com.abc.api;
 
 import java.util.Date;
 
-import com.abc.Account;
 import com.abc.Bank;
-import com.abc.Customer;
 import com.abc.exceptions.AccountOpenError;
+import com.abc.exceptions.CustomerNotFound;
+import com.abc.exceptions.InvalidAccount;
+import com.abc.exceptions.TransactionAmountIsLessThanZero;
 import com.abc.interfaces.AccountDetail;
 import com.abc.interfaces.BankDetail;
 import com.abc.interfaces.CustomerDetail;
 import com.abc.interfaces.GeneralLedgerApi;
 import com.abc.interfaces.JournalEntry;
+import com.abc.interfaces.TransactionType;
 
 public class GeneralLedger implements GeneralLedgerApi{
 
@@ -19,45 +21,57 @@ public class GeneralLedger implements GeneralLedgerApi{
 		m_bank = new Bank();
 		m_bank.setCode(entityCode);
 	}
-	
-	public JournalEntry createJournalEntry(String accountId, Date transactionDate, double d, int credit) {
- 
-		return null;
+		 	
+	public JournalEntry createJournalEntry(String accountName, int accountType, Date transactionDate, double amount, int transactionType) throws InvalidAccount,CustomerNotFound,TransactionAmountIsLessThanZero {
+		
+		if (amount <=0){
+			throw new TransactionAmountIsLessThanZero();
+		}
+		
+		CustomerDetail customer = getCustomer(accountName);
+		if (customer == null){
+	 		throw new CustomerNotFound();
+	 	}
+		
+	 	AccountDetail account = customer.getAccounts().get(accountType);
+	 	if (account == null){
+	 		throw new InvalidAccount();
+	 	}	 	
+		return account.createNewTransaction(transactionDate, amount, transactionType);
 	}
 
-	public BankDetail getInfo() {
+	public JournalEntry deposit(String accountName, int accountType, Date transactionDate, double amount)  throws InvalidAccount,CustomerNotFound,TransactionAmountIsLessThanZero{		
+		return createJournalEntry(accountName, accountType, transactionDate, amount, TransactionType.CREDIT);
+	}
+	
+	public JournalEntry withdraw(String accountName, int accountType, Date transactionDate, double amount)  throws InvalidAccount,CustomerNotFound,TransactionAmountIsLessThanZero{		
+		return createJournalEntry(accountName, accountType, transactionDate, amount, TransactionType.DEBIT);
+	}
+	
+	
+	public BankDetail getBankDetail() {
 		return m_bank;
 	}
-	
-	private Customer createNewCustomer(String accountName){
-		Customer customer = new Customer(accountName);
-		m_bank.getCustomers().put(accountName, customer);
-		return customer;
-	}
-
-	private Account createNewAccount(Customer customer, int accountType){
-		Account ac = new Account(accountType);
-		customer.getAccounts().put(accountType, ac);		
-		return ac;
-	}
-	
+		
 	public AccountDetail openAccount(String accountName, int accountType) throws AccountOpenError {
 		 		
-		Customer customer = (Customer) getCustomerInfo(accountName);
+		CustomerDetail customer = getCustomer(accountName);
 		if (customer == null){			 			
-			customer = createNewCustomer(accountName);			
+			customer = m_bank.createNewCustomer(accountName);			
 		}
 		AccountDetail acDetail =customer.getAccounts().get(accountType);
 		if (acDetail != null){
 			throw new AccountOpenError();
-		}
-		
-		return createNewAccount(customer, accountType);
+		}		
+		return customer.createAccount(accountType);
 	}
 	
 	
-	public CustomerDetail getCustomerInfo(String accountName) {			
+	public CustomerDetail getCustomer(String accountName) {			
 		return  m_bank.getCustomers().get(accountName);
 	}
 
+	
+
+ 
 }
