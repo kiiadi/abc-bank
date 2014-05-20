@@ -2,7 +2,6 @@ package com.abc.api;
 
 import java.util.Date;
 
-import com.abc.Bank;
 import com.abc.exceptions.GLError;
 import com.abc.exceptions.GLErrorCodes;
 import com.abc.interfaces.AccountDetail;
@@ -12,6 +11,7 @@ import com.abc.interfaces.CustomerDetail;
 import com.abc.interfaces.GeneralLedgerApi;
 import com.abc.interfaces.JournalEntry;
 import com.abc.interfaces.TransactionType;
+import com.abc.persistance.Bank;
 
 public class GeneralLedger implements GeneralLedgerApi {
 
@@ -78,7 +78,7 @@ public class GeneralLedger implements GeneralLedgerApi {
 
 	public double calculateInterestEarned(String accountName, int accountType) throws GLError {
 		AccountDetail account = getAccountDetail(accountName, accountType);
-		double amount = account.getBalacne();
+		double amount = account.getBalance();
 		switch (account.getAccountType()) {
 		case AccountType.SAVINGS:
 			if (amount <= 1000)

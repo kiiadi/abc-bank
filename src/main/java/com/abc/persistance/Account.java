@@ -1,4 +1,4 @@
-package com.abc;
+package com.abc.persistance;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,7 +25,7 @@ public class Account implements AccountDetail {
 		return t;
 	}
 
-	public double getBalacne() {
+	public double getBalance() {
 		return m_balance;
 	}
 

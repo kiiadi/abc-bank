@@ -1,4 +1,4 @@
-package com.abc;
+package com.abc.persistance;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -27,11 +27,6 @@ public class Customer implements CustomerDetail {
 
 	public String getName() {
 		return name;
-	}
-
-	public Customer openAccount(Account account) {
-		m_accounts.put(account.getAccountType() + "", account);
-		return this;
 	}
 
 }

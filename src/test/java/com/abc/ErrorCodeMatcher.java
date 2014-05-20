@@ -2,7 +2,6 @@ package com.abc;
 
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
- 
 
 import org.junit.Ignore;
 
@@ -16,12 +15,12 @@ public class ErrorCodeMatcher extends BaseMatcher<Throwable> {
 	public ErrorCodeMatcher(int expectedErrorCode) {
 		this.expectedErrorCode = expectedErrorCode;
 	}
- 
+
 	public boolean matches(Object o) {
 		return ((GLError) o).getErrorCode() == expectedErrorCode;
 	}
- 
+
 	public void describeTo(Description d) {
 		d.appendText("Expected error code was" + expectedErrorCode);
-	}	 
+	}
 }

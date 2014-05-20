@@ -1,4 +1,4 @@
-package com.abc;
+package com.abc.persistance;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

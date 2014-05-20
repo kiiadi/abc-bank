@@ -2,13 +2,13 @@ package com.abc.api;
 
 import static java.lang.Math.abs;
 
-import com.abc.Account;
-import com.abc.Transaction;
 import com.abc.interfaces.AccountDetail;
 import com.abc.interfaces.AccountType;
 import com.abc.interfaces.CustomerDetail;
 import com.abc.interfaces.GLReportingApi;
 import com.abc.interfaces.GeneralLedgerApi;
+import com.abc.persistance.Account;
+import com.abc.persistance.Transaction;
 
 public class GLReporting implements GLReportingApi {
 		
@@ -30,7 +30,7 @@ public class GLReporting implements GLReportingApi {
         double total = 0.0;
         for (AccountDetail a : customer.getAccounts().values()) {
             statement += "\n" + statementForAccount((Account) a) + "\n";
-            total += a.getBalacne();
+            total += a.getBalance();
         }
         statement += "\nTotal In All Accounts " + toDollars(total);
         return statement;

@@ -9,5 +9,6 @@ public interface JournalEntry {
 	int getTransactionType();
 
 	double getAmount();
+
 	double getTransactionAmount();
 }
