@@ -1,6 +1,6 @@
 package com.abc;
 
-import org.junit.Ignore;
+import java.math.BigDecimal;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -8,50 +8,69 @@ import static org.junit.Assert.assertEquals;
 public class CustomerTest {
 
     @Test //Test customer statement generation
-    public void testApp(){
+    public void testStatement(){
 
-        Account checkingAccount = new Account(Account.CHECKING);
-        Account savingsAccount = new Account(Account.SAVINGS);
+        BigDecimal startingBalance = new BigDecimal("500");
+        Account checkingAccount = new CheckingAccount(startingBalance);
+        Account savingsAccount = new SavingsAccount(startingBalance);
+        Customer henry = new Customer("Henry");
+        henry.openAccount(checkingAccount);
+        henry.openAccount(savingsAccount);
 
-        Customer henry = new Customer("Henry").openAccount(checkingAccount).openAccount(savingsAccount);
-
-        checkingAccount.deposit(100.0);
-        savingsAccount.deposit(4000.0);
-        savingsAccount.withdraw(200.0);
+        checkingAccount.deposit(new BigDecimal("100.0"));
+        savingsAccount.withdraw(new BigDecimal("200.0"));
 
         assertEquals("Statement for Henry\n" +
                 "\n" +
-                "Checking Account\n" +
+                "CheckingAccount\n" +
+                "  deposit $500.00\n" +
                 "  deposit $100.00\n" +
-                "Total $100.00\n" +
+                "Total $600.00\n" +
                 "\n" +
-                "Savings Account\n" +
-                "  deposit $4,000.00\n" +
+                "SavingsAccount\n" +
+                "  deposit $500.00\n" +
                 "  withdrawal $200.00\n" +
-                "Total $3,800.00\n" +
+                "Total $300.00\n" +
                 "\n" +
-                "Total In All Accounts $3,900.00", henry.getStatement());
+                "Total In All Accounts $900.00", henry.getStatement());
     }
 
     @Test
     public void testOneAccount(){
-        Customer oscar = new Customer("Oscar").openAccount(new Account(Account.SAVINGS));
+        BigDecimal startingBalance = new BigDecimal("500");
+        Account savingsAccount = new SavingsAccount(startingBalance);
+        Customer oscar = new Customer("Oscar");
+        oscar.openAccount(savingsAccount);
         assertEquals(1, oscar.getNumberOfAccounts());
     }
 
     @Test
     public void testTwoAccount(){
-        Customer oscar = new Customer("Oscar")
-                .openAccount(new Account(Account.SAVINGS));
-        oscar.openAccount(new Account(Account.CHECKING));
+        BigDecimal startingBalance = new BigDecimal("500");
+        Account checkingAccount = new CheckingAccount(startingBalance);
+        Account savingsAccount = new SavingsAccount(startingBalance);
+        Customer oscar = new Customer("Oscar");
+        oscar.openAccount(savingsAccount);
+        oscar.openAccount(checkingAccount);
         assertEquals(2, oscar.getNumberOfAccounts());
     }
 
-    @Ignore
+    @Test
     public void testThreeAcounts() {
-        Customer oscar = new Customer("Oscar")
-                .openAccount(new Account(Account.SAVINGS));
-        oscar.openAccount(new Account(Account.CHECKING));
+        BigDecimal startingBalance = new BigDecimal("500");
+        Account checkingAccount = new CheckingAccount(startingBalance);
+        Account savingsAccount = new SavingsAccount(startingBalance);
+        Account maxiSavingsAccount = new MaxiSavingsAccount(startingBalance);
+        Customer oscar = new Customer("Oscar");
+        oscar.openAccount(savingsAccount);
+        oscar.openAccount(checkingAccount);
+        oscar.openAccount(maxiSavingsAccount);
         assertEquals(3, oscar.getNumberOfAccounts());
+    }
+    
+    @Test
+    public void testCustomerName() {
+        Customer oscar = new Customer("Kokou");
+        assertEquals("Kokou", oscar.getName());
     }
 }

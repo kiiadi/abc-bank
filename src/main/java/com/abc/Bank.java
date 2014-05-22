@@ -1,5 +1,6 @@
 package com.abc;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,30 +18,22 @@ public class Bank {
     public String customerSummary() {
         String summary = "Customer Summary";
         for (Customer c : customers)
-            summary += "\n - " + c.getName() + " (" + format(c.getNumberOfAccounts(), "account") + ")";
+            summary += "\n - " + c.getName() + " (" + Utils.format(c.getNumberOfAccounts(), "account") + ")";
         return summary;
     }
 
-    //Make sure correct plural of word is created based on the number passed in:
-    //If number passed in is 1 just return the word otherwise add an 's' at the end
-    private String format(int number, String word) {
-        return number + " " + (number == 1 ? word : word + "s");
-    }
-
-    public double totalInterestPaid() {
-        double total = 0;
+    public BigDecimal totalInterestPaid() {
+    	BigDecimal total = BigDecimal.ZERO;
         for(Customer c: customers)
-            total += c.totalInterestEarned();
+            total = total.add(c.totalInterestEarned());
         return total;
     }
 
-    public String getFirstCustomer() {
-        try {
+    public String getFirstCustomer(){
             customers = null;
+            if(null == customers)
+            	throw new NullPointerException("Customer List not initialized");
             return customers.get(0).getName();
-        } catch (Exception e){
-            e.printStackTrace();
-            return "Error";
-        }
+
     }
 }
