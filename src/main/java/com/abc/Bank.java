@@ -1,46 +1,122 @@
 package com.abc;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;   
+import java.util.TreeMap;
+import java.util.Collections;
 
+/**
+ * The Class Bank.
+ */
 public class Bank {
-    private List<Customer> customers;
+	
+	private static final String CUSTOMER_SUMMARY_TEXT="Customer Summary";
+	private static final String ONE_ACCOUNT_TEXT="account";
+	private static final String ACCOUNTS_TEXT="accounts";
+	
+	
+	/** The bank name */
+	private String bankName = null;
+	
+    /** The customers. */
+    private Map<String, Customer> customers = null;
+    
 
-    public Bank() {
-        customers = new ArrayList<Customer>();
+    /**
+     * Instantiates a new bank.   For Customers use a TreeMap for the natural ordering of the keys, 
+     * so our summaries are alphabetized
+     * 
+     * @param nm the name of the bank
+     */
+    public Bank(String nm) {
+    	bankName = nm;
+        customers = (Map<String, Customer>)Collections.synchronizedMap(new TreeMap<String, Customer>());
+    }
+    
+    
+    /**
+     * 
+     * @return the bankName
+     */
+    public String getBankName() {
+    	return bankName;
     }
 
-    public void addCustomer(Customer customer) {
-        customers.add(customer);
-    }
 
-    public String customerSummary() {
-        String summary = "Customer Summary";
-        for (Customer c : customers)
-            summary += "\n - " + c.getName() + " (" + format(c.getNumberOfAccounts(), "account") + ")";
-        return summary;
-    }
-
-    //Make sure correct plural of word is created based on the number passed in:
-    //If number passed in is 1 just return the word otherwise add an 's' at the end
-    private String format(int number, String word) {
-        return number + " " + (number == 1 ? word : word + "s");
-    }
-
-    public double totalInterestPaid() {
-        double total = 0;
-        for(Customer c: customers)
-            total += c.totalInterestEarned();
-        return total;
-    }
-
-    public String getFirstCustomer() {
-        try {
-            customers = null;
-            return customers.get(0).getName();
-        } catch (Exception e){
-            e.printStackTrace();
-            return "Error";
+    /**
+     * Adds the customer.  
+     *
+     * @param customer the customer
+     * @return 0 on success, else failure
+     */
+    public int addCustomer(Customer c) {
+        if (c != null) {        	
+            String customerIdStr = String.valueOf(c.getCustomerId());
+            customers.put(customerIdStr, c);
+            return 0;
         }
+        else {
+          	return -1;
+        }        
     }
+
+    
+    /**
+      * Format the account text according to the number of accounts for the Customer Summary.
+      *
+      * @param number the number of accounts
+      * @return the appropriate spelling of the account text string
+      */
+     private String getCustomerSummaryAccountText(int number) {
+         return (number == 1) ? ONE_ACCOUNT_TEXT : ACCOUNTS_TEXT;
+     }
+
+          
+    /**
+     * Customer summary.    
+     *
+     * @return the string describing the customer summary of how many accounts they have.     
+     */
+    public String customerSummary() {
+        StringBuffer summaryBuff = new StringBuffer();
+        
+        //Initialize with a header and then populate with customer account info
+        summaryBuff.append(CUSTOMER_SUMMARY_TEXT);
+        
+        for (Map.Entry<String, Customer> entry : customers.entrySet()) {
+    	    Customer c = entry.getValue();
+                
+            summaryBuff.append("\n - ");
+            summaryBuff.append("customerName: ");
+            summaryBuff.append(c.getCustomerName());
+            summaryBuff.append(" : ");
+            summaryBuff.append(c.getCustomerId());
+            summaryBuff.append(" (");
+            summaryBuff.append(c.getNumberOfAccounts());
+            summaryBuff.append(" ");
+            summaryBuff.append(getCustomerSummaryAccountText(c.getNumberOfAccounts())); 
+            summaryBuff.append(")\n");
+            summaryBuff.append("Total Interest earned: ");
+            summaryBuff.append(c.totalCompoundInterestEarned());
+        }
+        
+        return summaryBuff.toString();
+    }
+
+   
+    /**
+     * Total interest paid for all customers.    
+     *
+     * @return the total interest paid for all customers, as a double
+     */
+    public double totalCompoundInterestPaid() {
+        double totalCompoundInterest = 0;
+        
+        for (Map.Entry<String, Customer> entry : customers.entrySet()) {
+    	    Customer c = entry.getValue();
+            totalCompoundInterest += c.totalCompoundInterestEarned();
+        }
+        
+        return totalCompoundInterest;
+    }
+    
 }
