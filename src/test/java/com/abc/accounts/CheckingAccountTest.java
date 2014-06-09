@@ -1,6 +1,5 @@
 package com.abc.accounts;
 
-import com.abc.Account;
 import org.junit.Assert;
 import org.junit.Test;
 

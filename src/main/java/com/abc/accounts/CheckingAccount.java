@@ -1,8 +1,6 @@
 package com.abc.accounts;
 
-import com.abc.Account;
-
-public class CheckingAccount extends Account {
+public class CheckingAccount extends AbstractAccount {
 
     @Override
     public double interestEarned() {

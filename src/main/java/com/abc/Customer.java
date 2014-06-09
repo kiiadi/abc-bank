@@ -1,9 +1,10 @@
 package com.abc;
 
+import com.abc.accounts.Account;
+import com.abc.util.DollarFormatter;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import static java.lang.Math.abs;
 
 public class Customer {
     private String name;
@@ -38,28 +39,12 @@ public class Customer {
         String statement = null;
         statement = "Statement for " + name + "\n";
         double total = 0.0;
-        for (Account a : accounts) {
-            statement += "\n" + statementForAccount(a) + "\n";
-            total += a.sumTransactions();
+        for (Account account : accounts) {
+            statement += "\n" + account.getStatement() + "\n";
+            total += account.sumTransactions();
         }
-        statement += "\nTotal In All Accounts " + toDollars(total);
+        statement += "\nTotal In All Accounts " + DollarFormatter.toDollars(total);
         return statement;
     }
 
-    private String statementForAccount(Account account) {
-        String s = account.getAccountDescription()+"\n";
-
-        //Now total up all the transactions
-        double total = 0.0;
-        for (Transaction t : account.transactions) {
-            s += "  " + (t.amount < 0 ? "withdrawal" : "deposit") + " " + toDollars(t.amount) + "\n";
-            total += t.amount;
-        }
-        s += "Total " + toDollars(total);
-        return s;
-    }
-
-    private String toDollars(double d){
-        return String.format("$%,.2f", abs(d));
-    }
 }

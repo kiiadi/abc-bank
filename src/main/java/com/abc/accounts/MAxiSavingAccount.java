@@ -1,8 +1,6 @@
 package com.abc.accounts;
 
-import com.abc.Account;
-
-public class MaxiSavingAccount extends Account {
+public class MaxiSavingAccount extends AbstractAccount {
 
     public double interestEarned() {
         double amount = sumTransactions();

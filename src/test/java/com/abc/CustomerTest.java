@@ -1,5 +1,6 @@
 package com.abc;
 
+import com.abc.accounts.Account;
 import com.abc.accounts.CheckingAccount;
 import com.abc.accounts.SavingAccount;
 import org.junit.Ignore;
@@ -36,13 +37,13 @@ public class CustomerTest {
     }
 
     @Test
-    public void testOneAccount(){
+    public void shouldOpen1Accounts(){
         Customer oscar = new Customer("Oscar").openAccount(new SavingAccount());
         assertEquals(1, oscar.getNumberOfAccounts());
     }
 
     @Test
-    public void testTwoAccount(){
+    public void shouldOpen2Accounts(){
         Customer oscar = new Customer("Oscar")
                 .openAccount(new SavingAccount());
         oscar.openAccount(new CheckingAccount());
@@ -50,7 +51,7 @@ public class CustomerTest {
     }
 
     @Ignore
-    public void testThreeAcounts() {
+    public void shouldOpen3Accounts() {
         Customer oscar = new Customer("Oscar")
                 .openAccount(new SavingAccount());
         oscar.openAccount(new CheckingAccount());
