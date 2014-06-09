@@ -22,7 +22,7 @@ public class BankTest {
     }
 
     @Test
-    public void checkingAccount() {
+    public void shouldReturnCorrectTotalInterestForallCustomers() {
         Bank bank = new Bank();
         Account checkingAccount = new CheckingAccount();
         Customer bill = new Customer("Bill").openAccount(checkingAccount);
@@ -30,29 +30,19 @@ public class BankTest {
 
         checkingAccount.deposit(100.0);
 
-        assertEquals(0.1, bank.totalInterestPaid(), DOUBLE_DELTA);
+        Account savingAccount = new SavingAccount();
+        bank.addCustomer(new Customer("Alex").openAccount(savingAccount));
+
+        savingAccount.deposit(1500.0);
+
+        Account maxiSavingAccount = new MaxiSavingAccount();
+        bank.addCustomer(new Customer("Bob").openAccount(maxiSavingAccount));
+
+        maxiSavingAccount.deposit(3000.0);
+
+        assertEquals(172.1, bank.totalInterestPaid(), DOUBLE_DELTA);
     }
 
-    @Test
-    public void savings_account() {
-        Bank bank = new Bank();
-        Account checkingAccount = new SavingAccount();
-        bank.addCustomer(new Customer("Bill").openAccount(checkingAccount));
 
-        checkingAccount.deposit(1500.0);
-
-        assertEquals(2.0, bank.totalInterestPaid(), DOUBLE_DELTA);
-    }
-
-    @Test
-    public void maxi_savings_account() {
-        Bank bank = new Bank();
-        Account checkingAccount = new MaxiSavingAccount();
-        bank.addCustomer(new Customer("Bill").openAccount(checkingAccount));
-
-        checkingAccount.deposit(3000.0);
-
-        assertEquals(170.0, bank.totalInterestPaid(), DOUBLE_DELTA);
-    }
 
 }
