@@ -6,7 +6,7 @@ import org.joda.time.DateTime;
 import java.util.Date;
 import java.util.List;
 
-public class MaxiInterestCalculator implements InterestRateCalculator{
+public class MaxiInterestRateCalculator implements InterestRateCalculator{
 
     @Override
     public double calculateInterestRate(List<Transaction> transactions, double totalAmount) {

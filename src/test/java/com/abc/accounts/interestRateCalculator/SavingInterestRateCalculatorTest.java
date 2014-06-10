@@ -4,12 +4,12 @@ import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class SavingInterestCalculatorTest {
+public class SavingInterestRateCalculatorTest {
 
     @Test
     public void shouldReturnPointZeroOneForOneThousandAndLess () throws Exception{
-        SavingInterestCalculator savingInterestCalculator = new SavingInterestCalculator();
-        double interestRate = savingInterestCalculator.calculateInterestRate(null, 1000);
+        SavingInterestRateCalculator savingInterestRateCalculator = new SavingInterestRateCalculator();
+        double interestRate = savingInterestRateCalculator.calculateInterestRate(null, 1000);
 
         Assert.assertThat(interestRate, CoreMatchers.is(0.001));
 
@@ -17,8 +17,8 @@ public class SavingInterestCalculatorTest {
 
     @Test
     public void shouldReturnPointZeroTwoForOverThousand () throws Exception{
-        SavingInterestCalculator savingInterestCalculator = new SavingInterestCalculator();
-        double interestRate = savingInterestCalculator.calculateInterestRate(null, 2000);
+        SavingInterestRateCalculator savingInterestRateCalculator = new SavingInterestRateCalculator();
+        double interestRate = savingInterestRateCalculator.calculateInterestRate(null, 2000);
 
         Assert.assertThat(interestRate, CoreMatchers.is(0.002));
 
