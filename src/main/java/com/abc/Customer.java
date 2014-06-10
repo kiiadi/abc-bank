@@ -1,7 +1,7 @@
 package com.abc;
 
 import com.abc.accounts.Account;
-import com.abc.util.DollarFormatter;
+import com.abc.util.ReportFormatterHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,14 +36,13 @@ public class Customer {
     }
 
     public String getStatement() {
-        String statement = null;
-        statement = "Statement for " + name + "\n";
+        String statement = "Statement for " + name + "\n";
         double total = 0.0;
         for (Account account : accounts) {
             statement += "\n" + account.getStatement() + "\n";
             total += account.sumTransactions();
         }
-        statement += "\nTotal In All Accounts " + DollarFormatter.toDollars(total);
+        statement += "\nTotal In All Accounts " + ReportFormatterHelper.toDollars(total);
         return statement;
     }
 

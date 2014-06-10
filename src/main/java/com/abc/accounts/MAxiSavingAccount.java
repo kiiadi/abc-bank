@@ -2,6 +2,7 @@ package com.abc.accounts;
 
 public class MaxiSavingAccount extends AbstractAccount {
 
+    @Override
     public double interestEarned() {
         double amount = sumTransactions();
         if (amount <= 1000)

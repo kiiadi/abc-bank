@@ -1,6 +1,6 @@
 package com.abc;
 
-import com.abc.util.DollarFormatter;
+import com.abc.util.ReportFormatterHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,7 @@ public class Bank {
         customers.add(customer);
     }
 
-    public double totalInterestPaid() {
+    public double totalInterestPaidAllCustomers() {
         double total = 0;
         for(Customer c: customers)
             total += c.totalInterestEarned();
@@ -26,7 +26,7 @@ public class Bank {
     public String customerSummary() {
         String summary = "Customer Summary";
         for (Customer c : customers)
-            summary += "\n - " + c.getName() + " (" + DollarFormatter.format(c.getNumberOfAccounts(), "account") + ")";
+            summary += "\n - " + c.getName() + " (" + ReportFormatterHelper.format(c.getNumberOfAccounts(), "account") + ")";
         return summary;
     }
 
