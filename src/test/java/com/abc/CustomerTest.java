@@ -3,17 +3,20 @@ package com.abc;
 import com.abc.accounts.Account;
 import com.abc.accounts.CheckingAccount;
 import com.abc.accounts.SavingAccount;
+import com.abc.accounts.interestRateCalculator.StubInterestRateCalculator;
 import org.junit.Test;
+import static org.hamcrest.CoreMatchers.*;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 public class CustomerTest {
 
     @Test
     public void shouldGenerateCustomerStatementIncorrectFormat(){
 
-        Account checkingAccount = new CheckingAccount();
-        Account savingsAccount = new SavingAccount();
+        Account checkingAccount = new CheckingAccount(new StubInterestRateCalculator());
+        Account savingsAccount = new SavingAccount(new StubInterestRateCalculator());
 
         Customer henry = new Customer("Henry").openAccount(checkingAccount).openAccount(savingsAccount);
 
@@ -36,18 +39,35 @@ public class CustomerTest {
     }
 
 
-    @Test
-    public void shouldOpen1Accounts(){
-        Customer oscar = new Customer("Oscar").openAccount(new SavingAccount());
-        assertEquals(1, oscar.getNumberOfAccounts());
-    }
+
 
     @Test
     public void shouldOpen2Accounts(){
         Customer oscar = new Customer("Oscar")
-                .openAccount(new SavingAccount());
-        oscar.openAccount(new CheckingAccount());
+                .openAccount(new SavingAccount(new StubInterestRateCalculator()));
+        oscar.openAccount(new CheckingAccount(new StubInterestRateCalculator()));
         assertEquals(2, oscar.getNumberOfAccounts());
+    }
+
+    @Test
+    public void shouldGetCorrectNameForCustomer(){
+        Customer oscar = new Customer("Oscar")
+                .openAccount(new SavingAccount(new StubInterestRateCalculator()));
+        assertEquals("Oscar", oscar.getName());
+    }
+
+    @Test
+    public void shouldGetCorrectTotalInterestEarned(){
+        SavingAccount savingAccount = new SavingAccount(new StubInterestRateCalculator());
+        savingAccount.deposit(100);
+        Customer oscar = new Customer("Oscar")
+                .openAccount(savingAccount);
+        CheckingAccount checkingAccount = new CheckingAccount(new StubInterestRateCalculator());
+        checkingAccount.deposit(100);
+        oscar.openAccount(checkingAccount);
+
+
+        assertThat(oscar.totalInterestEarned(), is(0.2));
     }
 
 

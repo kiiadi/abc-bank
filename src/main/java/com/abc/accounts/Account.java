@@ -8,8 +8,9 @@ public interface Account {
     double interestEarned();
     String getAccountDescription();
 
-    double sumTransactions();
-
     String getStatement();
 
+    double sumTransactions();
+
+    void transferTo(Account toAccount, double amount);
 }

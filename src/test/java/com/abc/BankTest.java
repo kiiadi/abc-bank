@@ -1,46 +1,51 @@
 package com.abc;
 
-import com.abc.accounts.Account;
-import com.abc.accounts.CheckingAccount;
-import com.abc.accounts.MaxiSavingAccount;
-import com.abc.accounts.SavingAccount;
+import com.abc.accounts.*;
+import com.abc.accounts.interestRateCalculator.StubInterestRateCalculator;
+import org.hamcrest.CoreMatchers;
+import org.junit.Assert;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
 public class BankTest {
-    private static final double DOUBLE_DELTA = 1e-15;
+
 
     @Test
-    public void customerSummary() {
+    public void shouldDisplayCustomerSummary() {
         Bank bank = new Bank();
         Customer john = new Customer("John");
-        john.openAccount(new CheckingAccount());
-        bank.addCustomer(john);
+        john.openAccount(new CheckingAccount(new StubInterestRateCalculator()));
 
-        assertEquals("Customer Summary\n - John (1 account)", bank.customerSummary());
+        Customer bill = new Customer("Bill");
+        bill.openAccount(new CheckingAccount(new StubInterestRateCalculator()));
+        bill.openAccount(new CheckingAccount(new StubInterestRateCalculator()));
+
+        bank.addCustomer(john);
+        bank.addCustomer(bill);
+
+        assertEquals("Customer Summary\n - John (1 account)\n - Bill (2 accounts)", bank.customerSummary());
     }
 
     @Test
     public void shouldReturnCorrectTotalInterestForallCustomers() {
         Bank bank = new Bank();
-        Account checkingAccount = new CheckingAccount();
+        Account checkingAccount = new CheckingAccount(new StubInterestRateCalculator());
         Customer bill = new Customer("Bill").openAccount(checkingAccount);
         bank.addCustomer(bill);
 
         checkingAccount.deposit(100.0);
 
-        Account savingAccount = new SavingAccount();
+        Account savingAccount = new SavingAccount(new StubInterestRateCalculator());
         bank.addCustomer(new Customer("Alex").openAccount(savingAccount));
 
-        savingAccount.deposit(1500.0);
+        savingAccount.deposit(1000.0);
 
-        Account maxiSavingAccount = new MaxiSavingAccount();
+        Account maxiSavingAccount = new MaxiSavingAccount(new StubInterestRateCalculator());
         bank.addCustomer(new Customer("Bob").openAccount(maxiSavingAccount));
 
-        maxiSavingAccount.deposit(3000.0);
-
-        assertEquals(172.1, bank.totalInterestPaidAllCustomers(), DOUBLE_DELTA);
+        maxiSavingAccount.deposit(2000.0);
+        Assert.assertThat(bank.totalInterestPaidAllCustomers(), CoreMatchers.is(3.1));
     }
 
 
