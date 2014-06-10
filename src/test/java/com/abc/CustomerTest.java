@@ -19,7 +19,9 @@ public class CustomerTest {
         Account checkingAccount = new CheckingAccount(new StubInterestRateCalculator());
         Account savingsAccount = new SavingAccount(new StubInterestRateCalculator());
 
-        Customer henry = new Customer("Henry").openAccount(checkingAccount).openAccount(savingsAccount);
+        Customer henry = new Customer("Henry");
+        henry.openAccount(checkingAccount);
+        henry.openAccount(savingsAccount);
 
         checkingAccount.deposit(100.0);
         savingsAccount.deposit(4000.0);
@@ -44,16 +46,16 @@ public class CustomerTest {
 
     @Test
     public void shouldOpen2Accounts(){
-        Customer oscar = new Customer("Oscar")
-                .openAccount(new SavingAccount(new StubInterestRateCalculator()));
+        Customer oscar = new Customer("Oscar");
+        oscar.openAccount(new SavingAccount(new StubInterestRateCalculator()));
         oscar.openAccount(new CheckingAccount(new StubInterestRateCalculator()));
         assertEquals(2, oscar.getNumberOfAccounts());
     }
 
     @Test
     public void shouldGetCorrectNameForCustomer(){
-        Customer oscar = new Customer("Oscar")
-                .openAccount(new SavingAccount(new StubAmountInterestRateCalculator()));
+        Customer oscar = new Customer("Oscar");
+        oscar.openAccount(new SavingAccount(new StubAmountInterestRateCalculator()));
         assertEquals("Oscar", oscar.getName());
     }
 
@@ -61,8 +63,8 @@ public class CustomerTest {
     public void shouldGetCorrectTotalInterestEarned(){
         SavingAccount savingAccount = new SavingAccount(new StubAmountInterestRateCalculator());
         savingAccount.deposit(100);
-        Customer oscar = new Customer("Oscar")
-                .openAccount(savingAccount);
+        Customer oscar = new Customer("Oscar");
+        oscar.openAccount(savingAccount);
         CheckingAccount checkingAccount = new CheckingAccount(new StubInterestRateCalculator());
         checkingAccount.deposit(100);
         oscar.openAccount(checkingAccount);

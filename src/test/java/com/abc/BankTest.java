@@ -32,18 +32,22 @@ public class BankTest {
     public void shouldReturnCorrectTotalInterestForallCustomers() {
         Bank bank = new Bank();
         Account checkingAccount = new CheckingAccount(new StubInterestRateCalculator());
-        Customer bill = new Customer("Bill").openAccount(checkingAccount);
+        Customer bill = new Customer("Bill");
+        bill.openAccount(checkingAccount);
         bank.addCustomer(bill);
-
         checkingAccount.deposit(100.0);
 
-        Account savingAccount = new SavingAccount(new StubAmountInterestRateCalculator());
-        bank.addCustomer(new Customer("Alex").openAccount(savingAccount));
 
+        Account savingAccount = new SavingAccount(new StubAmountInterestRateCalculator());
+        Customer alex = new Customer("Alex");
+        alex.openAccount(savingAccount);
+        bank.addCustomer(alex);
         savingAccount.deposit(1000.0);
 
         Account maxiSavingAccount = new MaxiSavingAccount(new StubInterestRateCalculator());
-        bank.addCustomer(new Customer("Bob").openAccount(maxiSavingAccount));
+        Customer bob = new Customer("Bob");
+        bob.openAccount(maxiSavingAccount);
+        bank.addCustomer(bob);
 
         maxiSavingAccount.deposit(2000.0);
         Assert.assertThat(bank.totalInterestPaidAllCustomers(), CoreMatchers.is(3.1));

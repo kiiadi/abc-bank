@@ -19,9 +19,8 @@ public class Customer {
         return name;
     }
 
-    public Customer openAccount(Account account) {
+    public void openAccount(Account account) {
         accounts.add(account);
-        return this;
     }
 
     public int getNumberOfAccounts() {
@@ -36,14 +35,15 @@ public class Customer {
     }
 
     public String getStatement() {
-        String statement = "Statement for " + name + "\n";
+        StringBuilder statement = new StringBuilder("Statement for ").append(name).append("\n");
+
         double total = 0.0;
         for (Account account : accounts) {
-            statement += "\n" + account.getStatement() + "\n";
+            statement .append("\n").append(account.getStatement()).append("\n");
             total += account.sumTransactions();
         }
-        statement += "\nTotal In All Accounts " + ReportFormatterHelper.toDollars(total);
-        return statement;
+        statement .append("\nTotal In All Accounts ").append(ReportFormatterHelper.toDollars(total));
+        return statement.toString();
     }
 
 }
