@@ -3,8 +3,8 @@ package com.abc;
 import com.abc.accounts.Account;
 import com.abc.accounts.CheckingAccount;
 import com.abc.accounts.SavingAccount;
-import com.abc.accounts.interestRateCalculator.StubAmountInterestRateCalculator;
-import com.abc.accounts.interestRateCalculator.StubInterestRateCalculator;
+import com.abc.interestRateCalculators.StubAmountInterestRateCalculator;
+import com.abc.interestRateCalculators.StubInterestRateCalculator;
 import org.junit.Test;
 import static org.hamcrest.CoreMatchers.*;
 

@@ -1,7 +1,7 @@
 package com.abc.accounts;
 
 import com.abc.Transaction;
-import com.abc.accounts.interestRateCalculator.InterestRateCalculator;
+import com.abc.interestRateCalculators.InterestRateCalculator;
 
 import java.util.List;
 

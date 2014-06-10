@@ -1,9 +1,7 @@
-package com.abc.accounts.interestRateCalculator;
+package com.abc.interestRateCalculators;
 
 import com.abc.Transaction;
-import org.joda.time.DateTime;
 
-import java.util.Date;
 import java.util.List;
 
 public class CheckingInterestRateCalculator implements InterestRateCalculator<List<Transaction>>{

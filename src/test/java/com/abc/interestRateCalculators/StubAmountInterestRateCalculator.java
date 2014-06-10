@@ -1,4 +1,4 @@
-package com.abc.accounts.interestRateCalculator;
+package com.abc.interestRateCalculators;
 
 public class StubAmountInterestRateCalculator implements InterestRateCalculator<Double> {
 

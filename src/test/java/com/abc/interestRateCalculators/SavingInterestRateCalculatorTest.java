@@ -1,4 +1,4 @@
-package com.abc.accounts.interestRateCalculator;
+package com.abc.interestRateCalculators;
 
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;

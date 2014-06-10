@@ -1,4 +1,4 @@
-package com.abc.accounts.interestRateCalculator;
+package com.abc.interestRateCalculators;
 
 public class SavingInterestRateCalculator implements InterestRateCalculator<Double>{
 
@@ -9,9 +9,5 @@ public class SavingInterestRateCalculator implements InterestRateCalculator<Doub
         else
             return 0.002;
     }
-
-
-
-
 
 }

@@ -1,4 +1,4 @@
-package com.abc.accounts.interestRateCalculator;
+package com.abc.interestRateCalculators;
 
 import com.abc.Transaction;
 import org.joda.time.DateTime;

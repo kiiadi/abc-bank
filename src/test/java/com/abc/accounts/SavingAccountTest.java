@@ -1,8 +1,7 @@
 package com.abc.accounts;
 
 
-import com.abc.accounts.interestRateCalculator.StubAmountInterestRateCalculator;
-import com.abc.accounts.interestRateCalculator.StubInterestRateCalculator;
+import com.abc.interestRateCalculators.StubAmountInterestRateCalculator;
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Test;
