@@ -1,54 +1,59 @@
 package com.abc;
 
+import org.hamcrest.CoreMatchers;
+import org.junit.Assert;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class BankTest {
-    private static final double DOUBLE_DELTA = 1e-15;
+
 
     @Test
-    public void customerSummary() {
+    public void shouldDisplayCustomerSummary() {
+
         Bank bank = new Bank();
-        Customer john = new Customer("John");
-        john.openAccount(new Account(Account.CHECKING));
+        Customer john = mock(Customer.class);
+        when(john.getName()).thenReturn("John");
+        when(john.getNumberOfAccounts()).thenReturn(1);
+
+        Customer bill = mock(Customer.class);
+        when(bill.getName()).thenReturn("Bill");
+        when(bill.getNumberOfAccounts()).thenReturn(2);
+
+
         bank.addCustomer(john);
-
-        assertEquals("Customer Summary\n - John (1 account)", bank.customerSummary());
-    }
-
-    @Test
-    public void checkingAccount() {
-        Bank bank = new Bank();
-        Account checkingAccount = new Account(Account.CHECKING);
-        Customer bill = new Customer("Bill").openAccount(checkingAccount);
         bank.addCustomer(bill);
 
-        checkingAccount.deposit(100.0);
-
-        assertEquals(0.1, bank.totalInterestPaid(), DOUBLE_DELTA);
+        assertEquals("Customer Summary\n - John (1 account)\n - Bill (2 accounts)", bank.customerSummary());
     }
 
     @Test
-    public void savings_account() {
+    public void shouldReturnCorrectTotalInterestForallCustomers() {
         Bank bank = new Bank();
-        Account checkingAccount = new Account(Account.SAVINGS);
-        bank.addCustomer(new Customer("Bill").openAccount(checkingAccount));
 
-        checkingAccount.deposit(1500.0);
+        Customer bill = mock(Customer.class);
+        when(bill.getName()).thenReturn("Bill");
+        when(bill.totalInterestEarned()).thenReturn(10.00);
 
-        assertEquals(2.0, bank.totalInterestPaid(), DOUBLE_DELTA);
+
+        Customer alex = mock(Customer.class);
+        when(alex.getName()).thenReturn("Bill");
+        when(alex.totalInterestEarned()).thenReturn(6.00);
+
+        Customer bob = mock(Customer.class);
+        when(bob.getName()).thenReturn("Bill");
+        when(bob.totalInterestEarned()).thenReturn(0.1);
+
+        bank.addCustomer(bill);
+        bank.addCustomer(alex);
+        bank.addCustomer(bob);
+
+        Assert.assertThat(bank.totalInterestPaidAllCustomers(), CoreMatchers.is(16.1));
     }
 
-    @Test
-    public void maxi_savings_account() {
-        Bank bank = new Bank();
-        Account checkingAccount = new Account(Account.MAXI_SAVINGS);
-        bank.addCustomer(new Customer("Bill").openAccount(checkingAccount));
 
-        checkingAccount.deposit(3000.0);
-
-        assertEquals(170.0, bank.totalInterestPaid(), DOUBLE_DELTA);
-    }
 
 }

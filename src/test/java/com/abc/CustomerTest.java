@@ -1,23 +1,38 @@
 package com.abc;
 
-import org.junit.Ignore;
+import com.abc.accounts.Account;
 import org.junit.Test;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class CustomerTest {
 
-    @Test //Test customer statement generation
-    public void testApp(){
+    @Test
+    public void shouldGenerateCustomerStatementIncorrectFormat(){
+        Customer henry = new Customer("Henry");
 
-        Account checkingAccount = new Account(Account.CHECKING);
-        Account savingsAccount = new Account(Account.SAVINGS);
 
-        Customer henry = new Customer("Henry").openAccount(checkingAccount).openAccount(savingsAccount);
+        Account checkingAccount = mock(Account.class);
+        Account savingsAccount = mock(Account.class);
 
-        checkingAccount.deposit(100.0);
-        savingsAccount.deposit(4000.0);
-        savingsAccount.withdraw(200.0);
+
+        henry.openAccount(checkingAccount);
+        henry.openAccount(savingsAccount);
+        when(checkingAccount.getStatement()).thenReturn("Checking Account\n" +
+                "  deposit $100.00\n" +
+                "Total $100.00");
+        when(checkingAccount.sumTransactions()).thenReturn(100.00);
+        when(savingsAccount.getStatement()).thenReturn( "Savings Account\n" +
+                                                        "  deposit $4,000.00\n" +
+                                                        "  withdrawal $200.00\n" +
+                                                        "Total $3,800.00");
+        when(savingsAccount.sumTransactions()).thenReturn(3800.00);
+
+
 
         assertEquals("Statement for Henry\n" +
                 "\n" +
@@ -33,25 +48,41 @@ public class CustomerTest {
                 "Total In All Accounts $3,900.00", henry.getStatement());
     }
 
-    @Test
-    public void testOneAccount(){
-        Customer oscar = new Customer("Oscar").openAccount(new Account(Account.SAVINGS));
-        assertEquals(1, oscar.getNumberOfAccounts());
-    }
+
+
 
     @Test
-    public void testTwoAccount(){
-        Customer oscar = new Customer("Oscar")
-                .openAccount(new Account(Account.SAVINGS));
-        oscar.openAccount(new Account(Account.CHECKING));
+    public void shouldOpen2Accounts(){
+        Customer oscar = new Customer("Oscar");
+        Account checkingAccount = mock(Account.class);
+        Account savingsAccount = mock(Account.class);
+
+        oscar.openAccount(checkingAccount);
+        oscar.openAccount(savingsAccount);
         assertEquals(2, oscar.getNumberOfAccounts());
     }
 
-    @Ignore
-    public void testThreeAcounts() {
-        Customer oscar = new Customer("Oscar")
-                .openAccount(new Account(Account.SAVINGS));
-        oscar.openAccount(new Account(Account.CHECKING));
-        assertEquals(3, oscar.getNumberOfAccounts());
+    @Test
+    public void shouldGetCorrectNameForCustomer(){
+        Customer oscar = new Customer("Oscar");
+        assertEquals("Oscar", oscar.getName());
     }
+
+    @Test
+    public void shouldGetCorrectTotalInterestEarned(){
+        Customer oscar = new Customer("Oscar");
+
+        Account checkingAccount = mock(Account.class);
+        when(checkingAccount.interestEarned()).thenReturn(0.1);
+
+        Account savingsAccount = mock(Account.class);
+        when(savingsAccount.interestEarned()).thenReturn(0.1);
+
+        oscar.openAccount(checkingAccount);
+        oscar.openAccount(savingsAccount);
+
+        assertThat(oscar.totalInterestEarned(), is(0.2));
+    }
+
+
 }
