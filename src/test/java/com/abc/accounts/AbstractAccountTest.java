@@ -1,15 +1,20 @@
 package com.abc.accounts;
 
-import com.abc.interestRateCalculators.StubInterestRateCalculator;
+import com.abc.interestRateCalculators.InterestRateCalculator;
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Test;
+
+import static org.mockito.Mockito.*;
 
 public class AbstractAccountTest {
 
     @Test
     public void shouldDepositCorrectAmountInAccount () throws Exception{
-        Account savingAccount = new SavingAccount(new StubInterestRateCalculator());
+        InterestRateCalculator interestRateCalculator = mock(InterestRateCalculator.class);
+        when(interestRateCalculator.calculateInterestRate(anyObject())).thenReturn(0.01);
+
+        Account savingAccount = new SavingAccount(interestRateCalculator);
 
         savingAccount.deposit(100);
 
@@ -18,8 +23,10 @@ public class AbstractAccountTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowExceptionWhenAmountNegativeOnDeposit () throws Exception{
-        Account savingAccount = new SavingAccount(new StubInterestRateCalculator());
+        InterestRateCalculator interestRateCalculator = mock(InterestRateCalculator.class);
+        when(interestRateCalculator.calculateInterestRate(anyObject())).thenReturn(0.01);
 
+        Account savingAccount = new SavingAccount(interestRateCalculator);
         savingAccount.deposit(-1);
 
         Assert.fail();
@@ -27,7 +34,11 @@ public class AbstractAccountTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowExceptionWhenAmountZeroOnDeposit () throws Exception{
-        Account savingAccount = new SavingAccount(new StubInterestRateCalculator());
+
+        InterestRateCalculator interestRateCalculator = mock(InterestRateCalculator.class);
+        when(interestRateCalculator.calculateInterestRate(anyObject())).thenReturn(0.01);
+
+        Account savingAccount = new SavingAccount(interestRateCalculator);
 
         savingAccount.deposit(0);
 
@@ -36,7 +47,11 @@ public class AbstractAccountTest {
 
     @Test
     public void shouldWithdrawCorrectAmountInAccount () throws Exception{
-        Account savingAccount = new SavingAccount(new StubInterestRateCalculator());
+
+        InterestRateCalculator interestRateCalculator = mock(InterestRateCalculator.class);
+        when(interestRateCalculator.calculateInterestRate(anyObject())).thenReturn(0.01);
+
+        Account savingAccount = new SavingAccount(interestRateCalculator);
 
         savingAccount.withdraw(100);
 
@@ -45,7 +60,10 @@ public class AbstractAccountTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowExceptionWhenAmountNegativeOnWithdraw () throws Exception{
-        Account savingAccount = new SavingAccount(new StubInterestRateCalculator());
+        InterestRateCalculator interestRateCalculator = mock(InterestRateCalculator.class);
+        when(interestRateCalculator.calculateInterestRate(anyObject())).thenReturn(0.01);
+
+        Account savingAccount = new SavingAccount(interestRateCalculator);
 
         savingAccount.withdraw(-1);
 
@@ -54,7 +72,11 @@ public class AbstractAccountTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowExceptionWhenAmountZeroOnWithdraw () throws Exception{
-        Account savingAccount = new SavingAccount(new StubInterestRateCalculator());
+
+        InterestRateCalculator interestRateCalculator = mock(InterestRateCalculator.class);
+        when(interestRateCalculator.calculateInterestRate(anyObject())).thenReturn(0.01);
+
+        Account savingAccount = new SavingAccount(interestRateCalculator);
 
         savingAccount.withdraw(0);
 
@@ -63,7 +85,11 @@ public class AbstractAccountTest {
 
     @Test
     public void shouldSumCorrectAmountInAccount () throws Exception{
-        Account savingAccount = new SavingAccount(new StubInterestRateCalculator());
+
+        InterestRateCalculator interestRateCalculator = mock(InterestRateCalculator.class);
+        when(interestRateCalculator.calculateInterestRate(anyObject())).thenReturn(0.01);
+
+        Account savingAccount = new SavingAccount(interestRateCalculator);
         savingAccount.deposit(100);
         savingAccount.deposit(100);
         savingAccount.withdraw(20);
@@ -74,10 +100,13 @@ public class AbstractAccountTest {
 
     @Test
     public void shouldTransferFromSavingsToCheckingAccount () throws Exception{
-        Account savingAccount = new SavingAccount(new StubInterestRateCalculator());
+        InterestRateCalculator interestRateCalculator = mock(InterestRateCalculator.class);
+        when(interestRateCalculator.calculateInterestRate(anyObject())).thenReturn(0.01);
+
+        Account savingAccount = new SavingAccount(interestRateCalculator);
         savingAccount.deposit(100);
 
-        Account checkingAccount = new CheckingAccount(new StubInterestRateCalculator());
+        Account checkingAccount = new CheckingAccount(interestRateCalculator);
 
         savingAccount.transferTo(checkingAccount, 10);
 
