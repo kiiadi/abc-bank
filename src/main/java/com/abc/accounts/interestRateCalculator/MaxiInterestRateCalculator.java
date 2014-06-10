@@ -6,10 +6,10 @@ import org.joda.time.DateTime;
 import java.util.Date;
 import java.util.List;
 
-public class MaxiInterestRateCalculator implements InterestRateCalculator{
+public class MaxiInterestRateCalculator implements InterestRateCalculator<List<Transaction>>{
 
     @Override
-    public double calculateInterestRate(List<Transaction> transactions, double totalAmount) {
+    public double calculateInterestRate(List<Transaction> transactions) {
         boolean hasWithdrawWithinLast10Days = hasWithdrawWithinLast10Days(transactions);
 
         if(!hasWithdrawWithinLast10Days){

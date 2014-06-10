@@ -1,6 +1,7 @@
 package com.abc;
 
 import com.abc.accounts.*;
+import com.abc.accounts.interestRateCalculator.StubAmountInterestRateCalculator;
 import com.abc.accounts.interestRateCalculator.StubInterestRateCalculator;
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
@@ -36,7 +37,7 @@ public class BankTest {
 
         checkingAccount.deposit(100.0);
 
-        Account savingAccount = new SavingAccount(new StubInterestRateCalculator());
+        Account savingAccount = new SavingAccount(new StubAmountInterestRateCalculator());
         bank.addCustomer(new Customer("Alex").openAccount(savingAccount));
 
         savingAccount.deposit(1000.0);

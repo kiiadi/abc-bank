@@ -3,6 +3,7 @@ package com.abc;
 import com.abc.accounts.Account;
 import com.abc.accounts.CheckingAccount;
 import com.abc.accounts.SavingAccount;
+import com.abc.accounts.interestRateCalculator.StubAmountInterestRateCalculator;
 import com.abc.accounts.interestRateCalculator.StubInterestRateCalculator;
 import org.junit.Test;
 import static org.hamcrest.CoreMatchers.*;
@@ -52,13 +53,13 @@ public class CustomerTest {
     @Test
     public void shouldGetCorrectNameForCustomer(){
         Customer oscar = new Customer("Oscar")
-                .openAccount(new SavingAccount(new StubInterestRateCalculator()));
+                .openAccount(new SavingAccount(new StubAmountInterestRateCalculator()));
         assertEquals("Oscar", oscar.getName());
     }
 
     @Test
     public void shouldGetCorrectTotalInterestEarned(){
-        SavingAccount savingAccount = new SavingAccount(new StubInterestRateCalculator());
+        SavingAccount savingAccount = new SavingAccount(new StubAmountInterestRateCalculator());
         savingAccount.deposit(100);
         Customer oscar = new Customer("Oscar")
                 .openAccount(savingAccount);

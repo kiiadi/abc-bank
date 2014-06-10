@@ -1,10 +1,13 @@
 package com.abc.accounts;
 
+import com.abc.Transaction;
 import com.abc.accounts.interestRateCalculator.InterestRateCalculator;
+
+import java.util.List;
 
 public class CheckingAccount extends AbstractAccount {
 
-    private InterestRateCalculator interestRateCalculator;
+    private InterestRateCalculator<List<Transaction>> interestRateCalculator;
 
     public CheckingAccount(InterestRateCalculator interestRateCalculator) {
         this.interestRateCalculator = interestRateCalculator;
@@ -13,7 +16,7 @@ public class CheckingAccount extends AbstractAccount {
     @Override
     public double interestEarned() {
         double amount = sumTransactions();
-        return amount * interestRateCalculator.calculateInterestRate(getTransactions(), amount);
+        return amount * interestRateCalculator.calculateInterestRate(getTransactions());
     }
 
     @Override

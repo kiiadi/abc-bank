@@ -18,7 +18,7 @@ public class MaxiInterestRateCalculatorTest {
         List<Transaction> transactions = Arrays.asList(
                                                     new Transaction(100, new Date()),
                                                     new Transaction(-100, new DateTime().minusDays(20).toDate()));
-        double interestRate = maxiInterestRateCalculator.calculateInterestRate(transactions,0);
+        double interestRate = maxiInterestRateCalculator.calculateInterestRate(transactions);
 
         Assert.assertThat(interestRate, CoreMatchers.is(0.5));
 
@@ -32,7 +32,7 @@ public class MaxiInterestRateCalculatorTest {
         List<Transaction> transactions = Arrays.asList(
                 new Transaction(100, new Date()),
                 new Transaction(-100, new DateTime().minusDays(9).toDate()));
-        double interestRate = maxiInterestRateCalculator.calculateInterestRate(transactions,0);
+        double interestRate = maxiInterestRateCalculator.calculateInterestRate(transactions);
 
         Assert.assertThat(interestRate, CoreMatchers.is(0.001));
 
@@ -45,7 +45,7 @@ public class MaxiInterestRateCalculatorTest {
         List<Transaction> transactions = Arrays.asList(
                 new Transaction(100, new Date()));
 
-        double interestRate = maxiInterestRateCalculator.calculateInterestRate(transactions, 100);
+        double interestRate = maxiInterestRateCalculator.calculateInterestRate(transactions);
 
         Assert.assertThat(interestRate, CoreMatchers.is(0.5));
 

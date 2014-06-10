@@ -1,15 +1,9 @@
 package com.abc.accounts.interestRateCalculator;
 
-import com.abc.Transaction;
-import org.joda.time.DateTime;
-
-import java.util.Date;
-import java.util.List;
-
-public class SavingInterestRateCalculator implements InterestRateCalculator{
+public class SavingInterestRateCalculator implements InterestRateCalculator<Double>{
 
     @Override
-    public double calculateInterestRate(List<Transaction> transactions, double totalAmount) {
+    public double calculateInterestRate(Double totalAmount) {
         if (totalAmount <= 1000)
             return 0.001;
         else

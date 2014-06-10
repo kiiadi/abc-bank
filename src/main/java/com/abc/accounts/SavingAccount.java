@@ -5,7 +5,7 @@ import com.abc.accounts.interestRateCalculator.InterestRateCalculator;
 public class SavingAccount extends AbstractAccount {
 
 
-    private InterestRateCalculator interestRateCalculator;
+    private InterestRateCalculator<Double> interestRateCalculator;
 
     public SavingAccount(InterestRateCalculator interestRateCalculator) {
         this.interestRateCalculator = interestRateCalculator;
@@ -14,7 +14,7 @@ public class SavingAccount extends AbstractAccount {
     @Override
     public double interestEarned() {
         double amount = sumTransactions();
-        double interestRate = interestRateCalculator.calculateInterestRate(getTransactions(), amount);
+        double interestRate = interestRateCalculator.calculateInterestRate(amount);
 
         if (amount <= 1000)
             return amount * interestRate;
@@ -24,7 +24,7 @@ public class SavingAccount extends AbstractAccount {
     }
 
     private double inerestForFirst1000() {
-        return 1000*interestRateCalculator.calculateInterestRate(getTransactions(), 1000);
+        return 1000*interestRateCalculator.calculateInterestRate(1000.00);
     }
 
     @Override

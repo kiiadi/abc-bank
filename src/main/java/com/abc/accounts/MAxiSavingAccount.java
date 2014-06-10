@@ -1,10 +1,13 @@
 package com.abc.accounts;
 
+import com.abc.Transaction;
 import com.abc.accounts.interestRateCalculator.InterestRateCalculator;
+
+import java.util.List;
 
 public class MaxiSavingAccount extends AbstractAccount {
 
-    private InterestRateCalculator interestRateCalculator;
+    private InterestRateCalculator<List<Transaction>> interestRateCalculator;
 
     public MaxiSavingAccount(InterestRateCalculator interestRateCalculator) {
 
@@ -14,8 +17,18 @@ public class MaxiSavingAccount extends AbstractAccount {
     @Override
     public double interestEarned() {
         double amount = sumTransactions();
-        double interestEarned = amount * interestRateCalculator.calculateInterestRate(getTransactions(), amount);
+        double interestEarned = amount * interestRateCalculator.calculateInterestRate(getTransactions());
         return interestEarned;
+    }
+
+
+    public double interestEarnedDaily() {
+        double amount = sumTransactions();
+        double interestEarnedPerYear = amount * interestRateCalculator.calculateInterestRate( getTransactions());
+
+        double interestPerDay = interestEarnedPerYear / 365;
+
+        return interestEarnedPerYear;
     }
 
     @Override
