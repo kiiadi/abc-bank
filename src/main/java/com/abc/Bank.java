@@ -1,46 +1,43 @@
 package com.abc;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class Bank {
-    private List<Customer> customers;
+/**
+ * A bank, that offers reporting, admin and customer facing services.
+ */
+public class Bank implements CustomerService, ReportingService, AdminService {
 
-    public Bank() {
-        customers = new ArrayList<Customer>();
+    private final Map<String, CustomerImpl> customers = new HashMap<>();
+
+    @Override
+    public Customer getCustomer(final String id) {
+        return customers.get(id);
     }
 
-    public void addCustomer(Customer customer) {
-        customers.add(customer);
+    public void addCustomer(CustomerImpl customer) {
+        if (customers.containsKey(customer.getId())) {
+            throw new IllegalArgumentException("Customer already registered with id " + customer.getId());
+        }
+        customers.put(customer.getId(), customer);
     }
 
-    public String customerSummary() {
-        String summary = "Customer Summary";
-        for (Customer c : customers)
-            summary += "\n - " + c.getName() + " (" + format(c.getNumberOfAccounts(), "account") + ")";
-        return summary;
+    @Override
+    public List<Customer> getCustomers() {
+        return new ArrayList<>(customers.values());
     }
 
-    //Make sure correct plural of word is created based on the number passed in:
-    //If number passed in is 1 just return the word otherwise add an 's' at the end
-    private String format(int number, String word) {
-        return number + " " + (number == 1 ? word : word + "s");
-    }
-
-    public double totalInterestPaid() {
-        double total = 0;
-        for(Customer c: customers)
-            total += c.totalInterestEarned();
+    @Override
+    public BigDecimal getTotalInterestPaid(Date toDate) {
+        BigDecimal total = BigDecimal.ZERO;
+        for (CustomerImpl customer: customers.values()) {
+            total = total.add(customer.getTotalInterestEarned(toDate));
+        }
         return total;
     }
 
-    public String getFirstCustomer() {
-        try {
-            customers = null;
-            return customers.get(0).getName();
-        } catch (Exception e){
-            e.printStackTrace();
-            return "Error";
-        }
-    }
 }

@@ -1,78 +1,46 @@
 package com.abc;
 
-import java.util.ArrayList;
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
-import static java.lang.Math.abs;
+/**
+ * A registered bank customer who can open accounts with the bank.
+ */
+public interface Customer {
 
-public class Customer {
-    private String name;
-    private List<Account> accounts;
+    String getId();
 
-    public Customer(String name) {
-        this.name = name;
-        this.accounts = new ArrayList<Account>();
-    }
+    /** Gets the customer name.
+     */
+    String getName();
 
-    public String getName() {
-        return name;
-    }
+    /**
+     * Adds a new acccount to the customer.
+     * @param account the account to add
+     * @throws java.lang.IllegalArgumentException if the account is already added
+     */
+    void addAccount(Account account);
 
-    public Customer openAccount(Account account) {
-        accounts.add(account);
-        return this;
-    }
+    /**
+     * Gets all accounts for the customer.
+     * @return list of accounts
+     */
+    List<Account> getAccounts();
 
-    public int getNumberOfAccounts() {
-        return accounts.size();
-    }
+    /**
+     * Transfers money between accounts.
+     * @param fromAccount the account to move from
+     * @param toAccount the account to move to
+     * @param amount the amount to move
+     * @param txnDate the transaction date
+     * @throws java.lang.IllegalArgumentException if either account does not belong to this customer
+     */
+    void transfer(Account fromAccount, Account toAccount, BigDecimal amount, Date txnDate);
 
-    public double totalInterestEarned() {
-        double total = 0;
-        for (Account a : accounts)
-            total += a.interestEarned();
-        return total;
-    }
-
-    public String getStatement() {
-        String statement = null;
-        statement = "Statement for " + name + "\n";
-        double total = 0.0;
-        for (Account a : accounts) {
-            statement += "\n" + statementForAccount(a) + "\n";
-            total += a.sumTransactions();
-        }
-        statement += "\nTotal In All Accounts " + toDollars(total);
-        return statement;
-    }
-
-    private String statementForAccount(Account a) {
-        String s = "";
-
-       //Translate to pretty account type
-        switch(a.getAccountType()){
-            case Account.CHECKING:
-                s += "Checking Account\n";
-                break;
-            case Account.SAVINGS:
-                s += "Savings Account\n";
-                break;
-            case Account.MAXI_SAVINGS:
-                s += "Maxi Savings Account\n";
-                break;
-        }
-
-        //Now total up all the transactions
-        double total = 0.0;
-        for (Transaction t : a.transactions) {
-            s += "  " + (t.amount < 0 ? "withdrawal" : "deposit") + " " + toDollars(t.amount) + "\n";
-            total += t.amount;
-        }
-        s += "Total " + toDollars(total);
-        return s;
-    }
-
-    private String toDollars(double d){
-        return String.format("$%,.2f", abs(d));
-    }
+    /**
+     * Creates a statement, using the configured statement creator.
+     * @return the statement
+     */
+    String getStatement();
 }
