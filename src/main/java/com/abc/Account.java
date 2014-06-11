@@ -1,73 +1,62 @@
 package com.abc;
 
-import java.util.ArrayList;
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
-public class Account {
+/**
+ * An account belonging to a customer.
+ */
+public interface Account {
 
-    public static final int CHECKING = 0;
-    public static final int SAVINGS = 1;
-    public static final int MAXI_SAVINGS = 2;
+    /**
+     * Gets the unique id.
+     * @return
+     */
+    String getId();
 
-    private final int accountType;
-    public List<Transaction> transactions;
+    /**
+     * Gets the type.
+     * @return
+     */
+    AccountType getAccountType();
 
-    public Account(int accountType) {
-        this.accountType = accountType;
-        this.transactions = new ArrayList<Transaction>();
-    }
+    /**
+     * Deposits into the account.
+     * @param amount the amount to deposit
+     * @param txnDate the transaction date
+     */
+    void deposit(BigDecimal amount, Date txnDate);
 
-    public void deposit(double amount) {
-        if (amount <= 0) {
-            throw new IllegalArgumentException("amount must be greater than zero");
-        } else {
-            transactions.add(new Transaction(amount));
-        }
-    }
+    /**
+     * Withdraws from the account.
+     * @param amount the amount to deposit
+     * @param txnDate the transaction date
+     */
+    void withdraw(BigDecimal amount, Date txnDate);
 
-public void withdraw(double amount) {
-    if (amount <= 0) {
-        throw new IllegalArgumentException("amount must be greater than zero");
-    } else {
-        transactions.add(new Transaction(-amount));
-    }
-}
+    /**
+     * Gets the amount of interest earned up to the given date.
+     * @param toDate the end date
+     * @return the interest
+     */
+    BigDecimal getInterestEarned(Date toDate);
 
-    public double interestEarned() {
-        double amount = sumTransactions();
-        switch(accountType){
-            case SAVINGS:
-                if (amount <= 1000)
-                    return amount * 0.001;
-                else
-                    return 1 + (amount-1000) * 0.002;
-//            case SUPER_SAVINGS:
-//                if (amount <= 4000)
-//                    return 20;
-            case MAXI_SAVINGS:
-                if (amount <= 1000)
-                    return amount * 0.02;
-                if (amount <= 2000)
-                    return 20 + (amount-1000) * 0.05;
-                return 70 + (amount-2000) * 0.1;
-            default:
-                return amount * 0.001;
-        }
-    }
+    /**
+     * Gets the account balance.
+     * @return
+     */
+    BigDecimal getBalance();
 
-    public double sumTransactions() {
-       return checkIfTransactionsExist(true);
-    }
+    /**
+     * Gets all transactions.
+     * @return the transaction list
+     */
+    List<Transaction> getTransactions();
 
-    private double checkIfTransactionsExist(boolean checkAll) {
-        double amount = 0.0;
-        for (Transaction t: transactions)
-            amount += t.amount;
-        return amount;
-    }
-
-    public int getAccountType() {
-        return accountType;
-    }
-
+    /**
+     * Creates a statement, using the configured statement creator.
+     * @return the statement
+     */
+    String getStatement();
 }
