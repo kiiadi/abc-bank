@@ -1,0 +1,43 @@
+TDD Interview Test
+
+I have refactored the code. Through this process I created a Utils.java class in which I moved the toDollars() method
+which was duplicated in both the Bank and Customer classes, eliminating the duplication of junit test cases.  
+
+Another big issue was the coupling of objects.  The object hierarchy is Transaction->Account->Customer->Bank. 
+Each of these is a one to many relationship. Each class should have its own methods to sum up/print out/etc. 
+It's not good testable design if the customer class is going through all the Transaction objects inside a method
+manually.  Each class should be responsible for adding only one level down. So in this case the Account class has 
+the (public) method of adding all transactions in that account. The Customer class has all the methods for adding all
+the accounts for a customer, and the Bank class has all the methods for adding its customers.  A Customer class does not 
+have any code to add up transactions, it calls the necessary function in the Account class.  The original code had
+methods inside the Bank class that iterated all the way down to individual transactions instead of only writing the iterative method once in the account class and let that method process/print out all the transactions.  Plus, this way only the Account class needs to know about the different types of accounts, different methods of calculating interest, and their printable names.  So if there are more account types to be added at a future date, only the Account class needs to be modified and retested, as everything else will just be calling the methods in it.
+
+From a testing standpoint, this means when you test the Account class, you do not need to retest the methods that
+compute interest when testing the Customer class, as it will just call that method in the Account class instead of
+going down a different method that needs to be tested.
+
+I have not played with the test classes, because this took me 3 hours and I hope it's enough to convince that I do
+understand about writing clean code and testability.  But just like the main classes, there needs to be one test class per method, with the Transaction, Account, Customer, and Bank classes testing all the methods of that class only and without 
+encroaching on testing the methods of other classes.
+
+Account.java
+-No safety check for AccountType in constructor, it can have a non 0,1,2 value.  It’s best to use enum for this purpose.
+-No need for both sumTransactions and checkifTransactionExists method. the checkAll boolean isn’t even being used.
+-MAXI_SAVINGS if statement is wrong both if statements will be executed if amount>1000
+
+Customer.java
+-Account type logic and account names are included inside the statementForAccount method. 
+ This couples the Customer to Account.  Account names (i.e. Checking, Savings, Maxi Savings) 
+ should be contained inside the account class.
+-There is no need for statementForAccount method inside a customer class. 
+ The Account class should contain the logic for determining how much money is in an account.
+-toDollars(double D) method is a generic, stateless, string formatting method.  
+ Does not belong in Customer class. Moved to Utils class.
+
+Bank.java
+-Format method does not belong in this class. It's a generic utility method. Moved to Utils class.
+-getFirstCustomer is returning a string instead of a customer object. It should return the customer object instead.
+
+Transaction.java
+-make both amount and Date private and use getter methods to access them
+-Logic to only set them once through the constructor is good design
