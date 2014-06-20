@@ -1,3 +1,12 @@
+/**********
+ * Customer.java
+ * 
+ * A customer is an object that contains
+ * a list of accounts
+ * 
+ * @author Martin Aydin
+ */
+
 package com.abc;
 
 import java.util.ArrayList;
@@ -34,45 +43,39 @@ public class Customer {
         return total;
     }
 
+    // Extra method to facilitate transfer between two accounts
+    // Since there is no unique ID that determines an account
+    // I've implemented it by the array position of the accounts
+    // Not very user friendly, but it works for the purposes of
+    // This exercise.  It will return true for successful transfer
+    // And false for failed transfer.
+    public boolean transferFunds(int from, int to, int amount) {
+    	
+    	// Make sure the from/to id's are valid, as well as the amount
+    	if (from < getNumberOfAccounts() && to < getNumberOfAccounts() && amount > 0) {
+    		
+    		// There is no requirement for a positive account balance
+    		// So no checks are being performed
+    		accounts[from].withdraw(amount);
+    		accounts[to].deposit(amount);
+    		return true;
+    	}
+    	else return false;
+    }
+    
+    // Returns a string containing the statement for all accounts
+    // This method replaces two of the old methods used together 
+    // To create the statement.
     public String getStatement() {
-        String statement = null;
+        String statement = "";
         statement = "Statement for " + name + "\n";
         double total = 0.0;
         for (Account a : accounts) {
-            statement += "\n" + statementForAccount(a) + "\n";
+            statement += a.getAccountName() + a.listTransactions() + 
+            		"Account total: " + Utils.toDollars(a.sumTransactions) + "\n";
             total += a.sumTransactions();
         }
-        statement += "\nTotal In All Accounts " + toDollars(total);
+        statement += "\nTotal In All Accounts " + Utils.toDollars(total);
         return statement;
-    }
-
-    private String statementForAccount(Account a) {
-        String s = "";
-
-       //Translate to pretty account type
-        switch(a.getAccountType()){
-            case Account.CHECKING:
-                s += "Checking Account\n";
-                break;
-            case Account.SAVINGS:
-                s += "Savings Account\n";
-                break;
-            case Account.MAXI_SAVINGS:
-                s += "Maxi Savings Account\n";
-                break;
-        }
-
-        //Now total up all the transactions
-        double total = 0.0;
-        for (Transaction t : a.transactions) {
-            s += "  " + (t.amount < 0 ? "withdrawal" : "deposit") + " " + toDollars(t.amount) + "\n";
-            total += t.amount;
-        }
-        s += "Total " + toDollars(total);
-        return s;
-    }
-
-    private String toDollars(double d){
-        return String.format("$%,.2f", abs(d));
     }
 }
