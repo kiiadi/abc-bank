@@ -4,11 +4,16 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class DateProvider {
-    private static DateProvider instance = null;
 
+    private static DateProvider instance = null;
+    
+    // Singleton
+    private DateProvider(){}
+    
     public static DateProvider getInstance() {
-        if (instance == null)
+        if (instance == null) {
             instance = new DateProvider();
+        }
         return instance;
     }
 

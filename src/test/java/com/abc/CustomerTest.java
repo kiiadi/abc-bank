@@ -106,7 +106,7 @@ public class CustomerTest {
         checkingAccount.deposit(100.0);
         checkingAccount.withdraw(50.00);
                 
-        assertEquals(true,oscar.getAccount(Account.CHECKING).isWithdrawDayWithinTenDays());
+        assertEquals(true,oscar.getAccount(Account.CHECKING).isWithdrawnRecent(10));
     }
 
     @Test // Test most recent withdrawal in days
@@ -116,7 +116,7 @@ public class CustomerTest {
         Customer oscar = new Customer("Oscar").openAccount(checkingAccount);
 
         checkingAccount.deposit(100.0);
-        assertEquals(false,oscar.getAccount(Account.CHECKING).isWithdrawDayWithinTenDays());
+        assertEquals(false,oscar.getAccount(Account.CHECKING).isWithdrawnRecent(10));
     }
 
 }

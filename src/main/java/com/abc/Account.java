@@ -1,7 +1,6 @@
 package com.abc;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class Account {
@@ -38,54 +37,40 @@ public class Account {
         }
     }
 
-       private Long dateDifference(Date firstDate, Date lastDate) {
-
-        Long diff = null;
-        final long ONE_HOUR = 60 * 60 * 1000L;
-
-        if (firstDate != null && lastDate != null) {
-            diff = (lastDate.getTime() - firstDate.getTime() + ONE_HOUR)
-                    / (ONE_HOUR * 24);
-        }
-
-        return diff;
-    }
-       
-    public boolean isWithdrawnRecently(int dayLimit){
-        
+    public boolean isWithdrawnRecent(int dayLimit) {
         boolean recentWithdraw = false;
-        
-        Long days = null;
-        Date now = DateProvider.getInstance().now();
-        for(Transaction transaction : transactions){
-            if(transaction.getAmount() < 0){
-                days = dateDifference(transaction.getTransactionDate(), now);
+
+        // check if last withdrawal occurred within dayLimit
+        for (Transaction transaction : transactions) {
+
+            if (!transaction.isDeposit()) {
+                long days = transaction.getWithdrawAge();
+                if (days > 0 && days <= dayLimit) {
+                    recentWithdraw = true;
+                }
             }
-            if(days != null && days <= dayLimit)
-                recentWithdraw = true;
         }
         return recentWithdraw;
     }
+
     public double interestEarned() {
         double amount = sumTransactions();
         switch (accountType) {
             case SAVINGS:
                 if (amount <= 1000) {
-                    return amount * 0.001;
+                    return amount * getDailyAccrueRate(0.001);
                 } else {
-                    return 1 + (amount - 1000) * 0.002;
+                    return 1 + (amount - 1000) * getDailyAccrueRate(0.002);
                 }
 
             case MAXI_SAVINGS:
-                if (amount <= 1000) {
-                    return amount * 0.02;
+                if (isWithdrawnRecent(10)) {
+                    return amount * getDailyAccrueRate(0.001);
+                } else {
+                    return amount * getDailyAccrueRate(0.05);
                 }
-                if (amount <= 2000) {
-                    return 20 + (amount - 1000) * 0.05;
-                }
-                return 70 + (amount - 2000) * 0.1;
             default:
-                return amount * 0.001;
+                return amount * getDailyAccrueRate(0.001);
         }
     }
 
@@ -99,6 +84,20 @@ public class Account {
             amount += t.getAmount();
         }
         return amount;
+    }
+
+    private double getDailyAccrueRate(double rate) {
+        double interest = 0.00;
+        for (Transaction t : transactions) {
+            if (t.isDeposit()) {
+                long depositAge = t.getDepositAge();
+                interest += Math.pow(1 + rate / 365, depositAge);
+                System.out.println(String.format("interest: %.5f%n, rate: %.5f%n", interest, rate));
+            }
+        }
+
+        interest = Double.parseDouble(String.format("%.5f%n", interest - 1));
+        return interest;
     }
 
     public int getAccountType() {
