@@ -51,7 +51,7 @@ public class Account {
         return diff;
     }
        
-    public boolean isWithdrawDayWithinTenDays(){
+    public boolean isWithdrawnRecently(int dayLimit){
         
         boolean recentWithdraw = false;
         
@@ -61,7 +61,7 @@ public class Account {
             if(transaction.getAmount() < 0){
                 days = dateDifference(transaction.getTransactionDate(), now);
             }
-            if(days != null && days <= 10)
+            if(days != null && days <= dayLimit)
                 recentWithdraw = true;
         }
         return recentWithdraw;
