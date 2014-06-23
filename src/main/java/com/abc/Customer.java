@@ -23,6 +23,15 @@ public class Customer {
         return this;
     }
 
+    public Account getAccount(int accountType){
+        for(Account account : accounts){
+            if(account.getAccountType() == accountType)
+                return account;
+        }
+        
+        return null;
+    }
+            
     public int getNumberOfAccounts() {
         return accounts.size();
     }
@@ -43,6 +52,7 @@ public class Customer {
             total += a.sumTransactions();
         }
         statement += "\nTotal In All Accounts " + toDollars(total);
+        System.out.println(statement);
         return statement;
     }
 
@@ -64,9 +74,9 @@ public class Customer {
 
         //Now total up all the transactions
         double total = 0.0;
-        for (Transaction t : a.transactions) {
-            s += "  " + (t.amount < 0 ? "withdrawal" : "deposit") + " " + toDollars(t.amount) + "\n";
-            total += t.amount;
+        for (Transaction t : a.getTransactions()) {
+            s += "  " + (t.getAmount() < 0 ? "withdrawal" : "deposit") + " " + toDollars(t.getAmount()) + "\n";
+            total += t.getAmount();
         }
         s += "Total " + toDollars(total);
         return s;
@@ -74,5 +84,23 @@ public class Customer {
 
     private String toDollars(double d){
         return String.format("$%,.2f", abs(d));
+    }
+    
+    public void accountTransfer(Account fromAccount, Account toAccount, double amount){
+        
+        if(this.getNumberOfAccounts() > 1 && 
+                accounts.contains(fromAccount) && accounts.contains(toAccount)){
+
+            double withdrawTotal = fromAccount.sumTransactions();
+            if(amount <= withdrawTotal){
+                fromAccount.withdraw(amount);
+                toAccount.deposit(amount);
+            }else{
+                throw new IllegalArgumentException("insufficient funds for transfer");                
+            }
+            
+        }else{
+            throw new IllegalArgumentException("cannot transfer between account");                       
+        }
     }
 }
