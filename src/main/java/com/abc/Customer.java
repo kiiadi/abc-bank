@@ -26,6 +26,10 @@ public class Customer {
     public int getNumberOfAccounts() {
         return accounts.size();
     }
+    
+    public List<Account> getAccounts() {
+    	return accounts;
+    }
 
     public double totalInterestEarned() {
         double total = 0;
@@ -40,39 +44,72 @@ public class Customer {
         double total = 0.0;
         for (Account a : accounts) {
             statement += "\n" + statementForAccount(a) + "\n";
-            total += a.sumTransactions();
+            total += a.sumTransactions() + a.interestEarned();
         }
         statement += "\nTotal In All Accounts " + toDollars(total);
         return statement;
     }
 
     private String statementForAccount(Account a) {
-        String s = "";
+        StringBuilder s = new StringBuilder();
 
        //Translate to pretty account type
         switch(a.getAccountType()){
             case Account.CHECKING:
-                s += "Checking Account\n";
+                s.append("Checking Account\n");
                 break;
             case Account.SAVINGS:
-                s += "Savings Account\n";
+                s.append("Savings Account\n");
                 break;
             case Account.MAXI_SAVINGS:
-                s += "Maxi Savings Account\n";
+                s.append("Maxi Savings Account\n");
                 break;
         }
 
         //Now total up all the transactions
         double total = 0.0;
         for (Transaction t : a.transactions) {
-            s += "  " + (t.amount < 0 ? "withdrawal" : "deposit") + " " + toDollars(t.amount) + "\n";
+			s.append("  ").append(t.amount < 0 ? "withdrawal" : "deposit")
+					.append(" ").append(toDollars(t.amount)).append("\n");
             total += t.amount;
         }
-        s += "Total " + toDollars(total);
-        return s;
+        
+        Double interest = a.interestEarned();
+        s.append("  Interest Earned ").append(toDollars(interest)).append("\n");
+        	
+        s.append("Total Balance ").append(toDollars(total + interest));
+        
+        return s.toString();
     }
 
     private String toDollars(double d){
         return String.format("$%,.2f", abs(d));
+    }
+    
+    /**Transfer Money from Account a to Account b
+     * This should be ideally wrapped in a transaction (like DB transaction) to make sure
+     * Integrity
+     * @param a
+     * @param b
+     * @param Amount
+     */
+    public void Transfer(Account a, Account b, double amount) {
+    	if (!isValidAccount(a) || !isValidAccount(b))
+    		throw new IllegalArgumentException("customer transfer invalid account");
+    	try {
+    		a.withdraw(amount, null);
+    		b.deposit(amount, null);
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    		throw new IllegalArgumentException("Transfer failed", e);
+    	}
+    }
+    
+    private boolean isValidAccount(Account account) {
+    	for (Account userAccount : this.accounts) {
+    		if (account.equals(userAccount))
+    			return true;
+    	}
+    	return false;
     }
 }
