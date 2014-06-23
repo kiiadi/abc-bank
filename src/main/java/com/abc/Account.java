@@ -92,7 +92,6 @@ public class Account {
             if (t.isDeposit()) {
                 long depositAge = t.getDepositAge();
                 interest += Math.pow(1 + rate / 365, depositAge);
-                System.out.println(String.format("interest: %.5f%n, rate: %.5f%n", interest, rate));
             }
         }
 

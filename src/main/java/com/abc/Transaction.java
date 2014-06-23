@@ -32,6 +32,7 @@ public class Transaction {
     }
 
     public long getDepositAge() {
+        depositAge = 0;
         if (amount > 0) {
             Date today = DateProvider.getInstance().now();
             depositAge = 1 + (today.getTime() 
@@ -42,6 +43,7 @@ public class Transaction {
     }
     
     public long getWithdrawAge(){
+        withdrawAge = 0;
         if (amount < 0) {
             Date today = DateProvider.getInstance().now();
             withdrawAge = 1 + (today.getTime() 
