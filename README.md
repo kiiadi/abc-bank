@@ -38,3 +38,30 @@ A dummy application for a bank; should provide various functions of a retail ban
 * A customer can transfer between their accounts
 * Change **Maxi-Savings accounts** to have an interest rate of 5% assuming no withdrawals in the past 10 days otherwise 0.1%
 * Interest rates should accrue daily (incl. weekends), rates above are per-annum
+
+
+--------------------------
+Major change list
+
+1) AccountTest.java: Added test case for deposite/withdraw negative amount;
+   Added test case with Overwithdraw and found a bug and fixed the issue (Can't withdraw more than balance)
+
+2) CustomerTest.java: Added check for customers opening 3 accounts. Fixed the balancesheet to include interest paid.
+
+3) Changed summary(statement/customer) to use StringBuilder
+
+4) Added more checks for interest paid scenarios
+
+5) Added test case for getFirstCustomer, found NullPointer exception, fixed the issue
+
+6) Changed caluation of Maxi-Savings accounts, changed test cases 
+
+7) Changed interest rate calculation, added date to transaction and changed test cases
+
+8) Transfer should be wrapped in transaction(like DB) with atomic operation around withdraw/deposite
+
+9) Found issue with displaying customer summary (having no account should show 0 account)
+
+10) Added test case for DateProvider
+
+11) ran coverage test, to make sure coverage is 99%
