@@ -14,8 +14,8 @@ public class CustomerTest {
     @Test() //Test customer statement generation
     public void testApp(){
 
-        Account checkingAccount = new Account(AccountType.CHECKING);
-        Account savingsAccount = new Account(AccountType.SAVINGS);
+        Account checkingAccount = new Account(AccountType.CHECKING, 1);
+        Account savingsAccount = new Account(AccountType.SAVINGS, 2);
 
         Customer henry = new Customer("Henry").openAccount(checkingAccount).openAccount(savingsAccount);
 
@@ -39,22 +39,22 @@ public class CustomerTest {
 
     @Test
     public void testOneAccount(){
-        Customer oscar = new Customer("Oscar").openAccount(new Account(AccountType.SAVINGS));
+        Customer oscar = new Customer("Oscar").openAccount(new Account(AccountType.SAVINGS, 1));
         assertEquals(1, oscar.getNumberOfAccounts());
     }
 
     @Test
     public void testTwoAccount(){
         Customer oscar = new Customer("Oscar")
-                .openAccount(new Account(AccountType.SAVINGS));
-        oscar.openAccount(new Account(AccountType.CHECKING));
+                .openAccount(new Account(AccountType.SAVINGS, 1));
+        oscar.openAccount(new Account(AccountType.CHECKING, 2));
         assertEquals(2, oscar.getNumberOfAccounts());
     }
 
     @Test
     public void testTransferBalance() {
-        Account savingsAccount = new Account(AccountType.SAVINGS);
-        Account checkingAccount = new Account(AccountType.CHECKING);
+        Account savingsAccount = new Account(AccountType.SAVINGS, 1);
+        Account checkingAccount = new Account(AccountType.CHECKING, 2);
 
         Customer joe = new Customer("Joe");
 
@@ -80,8 +80,8 @@ public class CustomerTest {
     @Ignore
     public void testThreeAcounts() {
         Customer oscar = new Customer("Oscar")
-                .openAccount(new Account(AccountType.SAVINGS));
-        oscar.openAccount(new Account(AccountType.CHECKING));
+                .openAccount(new Account(AccountType.SAVINGS, 1));
+        oscar.openAccount(new Account(AccountType.CHECKING, 2));
         assertEquals(3, oscar.getNumberOfAccounts());
     }
 }

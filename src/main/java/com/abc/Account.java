@@ -14,11 +14,11 @@ public class Account {
     private Random random = new Random();
 
 
-    public Account(AccountType accountType) {
+    public Account(AccountType accountType, Integer accountNo) {
         this.accountType = accountType;
         this.transactions = new ArrayList<Transaction>();
         this.currentBalance = BigDecimal.ZERO;
-        this.accountNumber = randomAccountNo();
+        this.accountNumber = accountNo;
     }
 
     public void deposit(BigDecimal amount) {
@@ -43,10 +43,6 @@ public class Account {
 
     public Integer getAccountNumber() {
         return this.accountNumber;
-    }
-
-    private int randomAccountNo() {
-        return random.nextInt(Integer.MAX_VALUE);
     }
 
     public BigDecimal interestEarned() {

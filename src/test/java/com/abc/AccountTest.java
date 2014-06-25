@@ -17,23 +17,23 @@ public class AccountTest {
 
     @Test
      public void testDeposits() {
-        Account account = new Account(AccountType.CHECKING);
-        account.deposit(BigDecimal.valueOf(2.00));
-        account.withdraw(BigDecimal.valueOf(1.00));
-        account.deposit(BigDecimal.valueOf(4.00));
+        Account account = new Account(AccountType.CHECKING, 1);
+        account.deposit(new BigDecimal("2.00"));
+        account.withdraw(new BigDecimal("1.00"));
+        account.deposit(new BigDecimal("4.00"));
 
-        assertEquals(BigDecimal.valueOf(5.00), account.getCurrentBalance());
+        assertEquals(new BigDecimal("5.00"), account.getCurrentBalance());
 
     }
 
     @Test
     public void testOverdraw() {
-        Account account = new Account(AccountType.CHECKING);
-        account.deposit(BigDecimal.valueOf(2.00));
-        account.withdraw(BigDecimal.valueOf(2.00));
-        account.withdraw(BigDecimal.valueOf(3.00));
+        Account account = new Account(AccountType.CHECKING, 1);
+        account.deposit(new BigDecimal("2.00"));
+        account.withdraw(new BigDecimal("2.00"));
+        account.withdraw(new BigDecimal("3.00"));
 
-        assertEquals(BigDecimal.valueOf(-3.00), account.getCurrentBalance());
+        assertEquals(new BigDecimal("-3.00"), account.getCurrentBalance());
 
     }
 }
