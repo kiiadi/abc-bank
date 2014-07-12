@@ -4,11 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Bank {
-    private List<Customer> customers;
-
-    public Bank() {
-        customers = new ArrayList<Customer>();
-    }
+    private final List<Customer> customers = new ArrayList<Customer>();
 
     public void addCustomer(Customer customer) {
         customers.add(customer);
@@ -34,13 +30,4 @@ public class Bank {
         return total;
     }
 
-    public String getFirstCustomer() {
-        try {
-            customers = null;
-            return customers.get(0).getName();
-        } catch (Exception e){
-            e.printStackTrace();
-            return "Error";
-        }
-    }
 }
