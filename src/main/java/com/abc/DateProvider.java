@@ -1,18 +1,20 @@
 package com.abc;
 
-import java.util.Calendar;
-import java.util.Date;
-
 public class DateProvider {
-    private static DateProvider instance = null;
+
+    protected static final long DAY = 24 * 3600 * 1000;
+
+    private static final DateProvider instance = new DateProvider();
 
     public static DateProvider getInstance() {
-        if (instance == null)
-            instance = new DateProvider();
         return instance;
     }
 
-    public Date now() {
-        return Calendar.getInstance().getTime();
+    public long now() {
+        return System.currentTimeMillis();
+    }
+
+    public long periodInDays(int days) {
+        return DAY * days;
     }
 }

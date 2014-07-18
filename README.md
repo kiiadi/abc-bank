@@ -38,3 +38,17 @@ A dummy application for a bank; should provide various functions of a retail ban
 * A customer can transfer between their accounts
 * Change **Maxi-Savings accounts** to have an interest rate of 5% assuming no withdrawals in the past 10 days otherwise 0.1%
 * Interest rates should accrue daily (incl. weekends), rates above are per-annum
+
+
+### Comments
+
+I have deliberately left all String concatenations intact as Java compiler correctly replaces them with the appropriate StringBuilder implementations (checked for javac 1.6-1.8).
+
+### Completed
+
+* A customer can transfer between their accounts
+* Change **Maxi-Savings accounts** to have an interest rate of 5% assuming no withdrawals in the past 10 days otherwise 0.1%
+* Many refactorings of the code
+* Added several tests
+
+
