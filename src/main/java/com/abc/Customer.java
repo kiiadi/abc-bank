@@ -38,10 +38,31 @@ public class Customer {
     }
 
     /**
-     * Transfers funds.
-     * <p>If parameter <tt>from</tt> is null, the funds are deposited.
-     * <p>If parameter <tt>to</tt> is null, the funds are withdrawn.
-     * <p>Otherwise the funds are transferred between accounts.
+     * Deposits funds.
+     *
+     * @param to     account that will be deposited
+     * @param amount funds
+     */
+    public void depositFunds(Account to, double amount) {
+        synchronized (transferLock) {
+            to.deposit(amount);
+        }
+    }
+
+    /**
+     * Withdraws funds.
+     *
+     * @param from   account, funds from which will be withdrawn
+     * @param amount funds
+     */
+    public void withdrawFunds(Account from, double amount) {
+        synchronized (transferLock) {
+            from.withdraw(amount);
+        }
+    }
+
+    /**
+     * Transfers funds between accounts.
      *
      * @param from   the account from which the funds will be withdrawn
      * @param to     the account that the funds will be deposited to
@@ -49,28 +70,13 @@ public class Customer {
      * @throws IllegalArgumentException if incorrect accounts are used
      */
     public void transferFunds(Account from, Account to, double amount) {
-        if (from == null && to == null) {
-            throw new IllegalArgumentException("At least one account should not be null");
+        if (!accounts.contains(from) || !accounts.contains(to)) {
+            throw new IllegalArgumentException("Customer does not have such accounts");
         }
-        if (from == null) {
-            // deposit
-            synchronized (transferLock) {
-                to.deposit(amount);
-            }
-        } else if (to == null) {
-            // withdraw
-            synchronized (transferLock) {
-                from.withdraw(amount);
-            }
-        } else {
-            if (!accounts.contains(from) || !accounts.contains(to)) {
-                throw new IllegalArgumentException("Customer does not have such accounts");
-            }
-            // transfer funds between accounts
-            synchronized (transferLock) {
-                from.withdraw(amount);
-                to.deposit(amount);
-            }
+        // transfer funds between accounts
+        synchronized (transferLock) {
+            from.withdraw(amount);
+            to.deposit(amount);
         }
     }
 

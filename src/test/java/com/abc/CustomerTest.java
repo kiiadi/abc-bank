@@ -17,9 +17,9 @@ public class CustomerTest {
 
         Customer henry = new Customer("Henry").openAccount(checkingAccount).openAccount(savingsAccount);
 
-        henry.transferFunds(null, checkingAccount, 100.0);
-        henry.transferFunds(null, savingsAccount, 4000.0);
-        henry.transferFunds(savingsAccount, null, 200.0);
+        henry.depositFunds(checkingAccount, 100.0);
+        henry.depositFunds(savingsAccount, 4000.0);
+        henry.withdrawFunds(savingsAccount, 200.0);
 
         assertEquals("Statement for Henry\n" +
                 "\n" +
@@ -68,7 +68,7 @@ public class CustomerTest {
         oscar.openAccount(maxiSavingsAccount);
 
         // deposit to checking account
-        oscar.transferFunds(null, checkingAccount, 1000.0);
+        oscar.depositFunds(checkingAccount, 1000.0);
         // transfer some funds to maxi-savings account
         oscar.transferFunds(checkingAccount, maxiSavingsAccount, 500.0);
         oscar.transferFunds(checkingAccount, savingsAccount, 200.0);
@@ -89,7 +89,7 @@ public class CustomerTest {
         oscar.openAccount(savingsAccount);
 
         // deposit to checking account
-        oscar.transferFunds(null, checkingAccount, 1000.0);
+        oscar.depositFunds(checkingAccount, 1000.0);
         oscar.transferFunds(checkingAccount, maxiSavingsAccount, 200.0);
         fail();
     }

@@ -25,7 +25,7 @@ public class BankTest {
         Customer bill = new Customer("Bill").openAccount(checkingAccount);
         bank.addCustomer(bill);
 
-        bill.transferFunds(null, checkingAccount, 100.0);
+        bill.depositFunds(checkingAccount, 100.0);
 
         assertEquals(0.1, bank.totalInterestPaid(), DOUBLE_DELTA);
     }
@@ -37,7 +37,7 @@ public class BankTest {
         Customer bill = new Customer("Bill").openAccount(savingsAccount);
         bank.addCustomer(bill);
 
-        bill.transferFunds(null, savingsAccount, 1500.0);
+        bill.depositFunds(savingsAccount, 1500.0);
 
         assertEquals(2.0, bank.totalInterestPaid(), DOUBLE_DELTA);
     }
@@ -49,7 +49,7 @@ public class BankTest {
         Customer bill = new Customer("Bill").openAccount(maxiSavingsAccount);
         bank.addCustomer(bill);
 
-        bill.transferFunds(null, maxiSavingsAccount, 3000.0);
+        bill.depositFunds(maxiSavingsAccount, 3000.0);
 
         assertEquals(150.0, bank.totalInterestPaid(), DOUBLE_DELTA);
     }
@@ -61,8 +61,8 @@ public class BankTest {
         Customer bill = new Customer("Bill").openAccount(maxiSavingsAccount);
         bank.addCustomer(bill);
 
-        bill.transferFunds(null, maxiSavingsAccount, 3000.0);
-        bill.transferFunds(maxiSavingsAccount, null, 2000.0);
+        bill.depositFunds(maxiSavingsAccount, 3000.0);
+        bill.withdrawFunds(maxiSavingsAccount, 2000.0);
 
         assertEquals(1.0, bank.totalInterestPaid(), DOUBLE_DELTA);
     }
