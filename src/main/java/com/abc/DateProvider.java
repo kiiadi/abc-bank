@@ -1,18 +1,18 @@
 package com.abc;
 
-import java.util.Calendar;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+
 import java.util.Date;
 
 public class DateProvider {
-    private static DateProvider instance = null;
+    private static DateProvider instance = new DateProvider();
 
     public static DateProvider getInstance() {
-        if (instance == null)
-            instance = new DateProvider();
         return instance;
     }
 
     public Date now() {
-        return Calendar.getInstance().getTime();
+        return DateTime.now(DateTimeZone.UTC).toDate();
     }
 }

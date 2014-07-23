@@ -1,49 +1,50 @@
 package com.abc;
 
+import org.hamcrest.Matchers;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.*;
 
 public class CustomerTest {
 
     @Test
-    public void testApp(){
+    public void shouldKnowTheTotalNumberOfAccounts() {
+        final Customer oscar = new Customer("Oscar");
+        for (int i = 1; i < 4; i++) {
+            oscar.open(AccountType.Savings);
+            assertThat(oscar.getNumberOfAccounts(), is(i));
+        }
 
-        Account checkingAccount = new Account(Account.CHECKING);
-        Account savingsAccount = new Account(Account.SAVINGS);
-
-        Customer henry = new Customer("Henry").openAccount(checkingAccount).openAccount(savingsAccount);
-
-        checkingAccount.deposit(100.0);
-        savingsAccount.deposit(4000.0);
-        savingsAccount.withdraw(200.0);
-
-        assertEquals("Statement for Henry\n" +
-                "\n" +
-                "Checking Account\n" +
-                "  deposit $100.00\n" +
-                "Total $100.00\n" +
-                "\n" +
-                "Savings Account\n" +
-                "  deposit $4,000.00\n" +
-                "  withdrawal $200.00\n" +
-                "Total $3,800.00\n" +
-                "\n" +
-                "Total In All Accounts $3,900.00", henry.getStatement());
     }
 
     @Test
-    public void testOneAccount(){
-        Customer oscar = new Customer("Oscar").openAccount(new Account(Account.SAVINGS));
-        assertEquals(1, oscar.getNumberOfAccounts());
+    public void shouldAllowTransfersBetweenAccounts() throws Exception {
+        final Customer customer = new Customer("Kyle Gas");
+        final Account from = customer.open(AccountType.Checking);
+        from.deposit(1000.00);
+
+        final Account to = customer.open(AccountType.Savings);
+
+        customer.transfer(from, to, 200.00);
+
+        assertThat(from.currentBalance(), Matchers.is(800.00));
+        assertThat(to.currentBalance(), Matchers.is(200.00));
+        assertThat(customer.totalBalance(), Matchers.is(1000.00));
     }
 
     @Test
-    public void testTwoAccount(){
-        Customer oscar = new Customer("Oscar")
-                .openAccount(new Account(Account.SAVINGS));
-        oscar.openAccount(new Account(Account.CHECKING));
-        assertEquals(2, oscar.getNumberOfAccounts());
+    public void shouldAllowTransfersEvenWhenAccountsAreOverdrawn() throws Exception {
+        final Customer customer = new Customer("Kyle Gas");
+        final Account from = customer.open(AccountType.Checking);
+
+        final Account to = customer.open(AccountType.Savings);
+
+        customer.transfer(from, to, 200.00);
+
+        assertThat(from.currentBalance(), Matchers.is(-200.00));
+        assertThat(to.currentBalance(), Matchers.is(200.00));
+        assertThat(customer.totalBalance(), Matchers.is(0.00));
     }
 
 }
