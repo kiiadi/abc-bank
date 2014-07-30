@@ -1,16 +1,32 @@
 package com.abc;
 
-import java.util.Calendar;
 import java.util.Date;
 
 public class Transaction {
-    public final double amount;
+    enum Type {
+        deposit,
+        withdrawal
+    }
 
-    private Date transactionDate;
+    private final double amount;
 
-    public Transaction(double amount) {
+    private final Date transactionDate;
+
+    public Transaction(final double amount) {
         this.amount = amount;
         this.transactionDate = DateProvider.getInstance().now();
     }
 
+    public double getAmount() {
+        return amount;
+    }
+
+    public Type getTransactionType() {
+        if (getAmount() < 0) return Type.withdrawal;
+        return Type.deposit;
+    }
+    @SuppressWarnings("UnusedDeclaration")
+    public Date getTransactionDate() {
+        return transactionDate;
+    }
 }
