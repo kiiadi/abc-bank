@@ -43,7 +43,6 @@ public class Transaction {
     
     @Override
     public String toString() {
-    	//StringBuilder sb = new StringBuilder(new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(transactionDate));
     	StringBuilder sb = new StringBuilder(Account.getStringFromDateFromDate(transactionDate));
     	sb.append(" ");
     	sb.append(amount < 0 ? "withdrawal " : "deposit ");
