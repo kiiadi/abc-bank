@@ -1,9 +1,7 @@
 package com.abc;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 /**
  * The class keeps information about transaction.<br>
@@ -45,7 +43,12 @@ public class Transaction {
     
     @Override
     public String toString() {
-    	return String.valueOf(amount) + " " + new SimpleDateFormat("dd/MM/yyyy",Locale.getDefault()).format(transactionDate);
+    	//StringBuilder sb = new StringBuilder(new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(transactionDate));
+    	StringBuilder sb = new StringBuilder(Account.getStringFromDateFromDate(transactionDate));
+    	sb.append(" ");
+    	sb.append(amount < 0 ? "withdrawal " : "deposit ");
+    	sb.append(Account.toDollars(amount));
+    	return sb.toString() ;
     }
 
 }
