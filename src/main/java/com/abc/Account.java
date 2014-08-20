@@ -1,20 +1,72 @@
 package com.abc;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-public class Account {
+public abstract class Account {
 
-    public static final int CHECKING = 0;
-    public static final int SAVINGS = 1;
-    public static final int MAXI_SAVINGS = 2;
+    public abstract double interestEarned();
 
-    private final int accountType;
-    public List<Transaction> transactions;
+    static enum AccountType {
+        CHECKING(0, "Checking"),
+        SAVINGS(1, "Savings"),
+        MAXI_SAVINGS(2, "Maxi-Savings"),
+        UNKNOWN(-1, "Unknown");
 
-    public Account(int accountType) {
+        private int value;
+        private String desc;
+
+        AccountType(final int value, final String desc) {
+            this.value = value;
+            this.desc = desc;
+        }
+
+        int getValue() {
+            return value;
+        }
+
+        String getDesc() {
+            return desc;
+        }
+
+        public static AccountType fromValue(final int value) {
+            for (final AccountType accountType : AccountType.values()) {
+                if (accountType.getValue() == value) {
+                    return accountType;
+                }
+            }
+            return AccountType.UNKNOWN;
+        }
+
+    }
+
+    private final AccountType accountType;
+    private List<Transaction> transactions;
+    private Date openDate;
+
+    public Account() {
+        accountType = AccountType.UNKNOWN;
+    }
+
+    public Account(AccountType accountType) {
         this.accountType = accountType;
         this.transactions = new ArrayList<Transaction>();
+    }
+
+    public Account(AccountType accountType, double initialDeposit) {
+        this.accountType = accountType;
+        this.transactions = new ArrayList<Transaction>();
+
+        deposit(initialDeposit);
+    }
+
+    public Account(AccountType accountType, double initialDeposit, Date openDate) {
+        this.accountType = accountType;
+        this.transactions = new ArrayList<Transaction>();
+        this.openDate = openDate;
+
+        deposit(initialDeposit);
     }
 
     public void deposit(double amount) {
@@ -25,49 +77,72 @@ public class Account {
         }
     }
 
-public void withdraw(double amount) {
-    if (amount <= 0) {
-        throw new IllegalArgumentException("amount must be greater than zero");
-    } else {
-        transactions.add(new Transaction(-amount));
-    }
-}
-
-    public double interestEarned() {
-        double amount = sumTransactions();
-        switch(accountType){
-            case SAVINGS:
-                if (amount <= 1000)
-                    return amount * 0.001;
-                else
-                    return 1 + (amount-1000) * 0.002;
-//            case SUPER_SAVINGS:
-//                if (amount <= 4000)
-//                    return 20;
-            case MAXI_SAVINGS:
-                if (amount <= 1000)
-                    return amount * 0.02;
-                if (amount <= 2000)
-                    return 20 + (amount-1000) * 0.05;
-                return 70 + (amount-2000) * 0.1;
-            default:
-                return amount * 0.001;
+    public void withdraw(double amount) {
+        if (amount <= 0) {
+            throw new IllegalArgumentException("amount must be greater than zero");
+        } else if (amount > this.balance()){
+            throw new InsufficientFundsException("amount exceeds available balance");
+        } else {
+            transactions.add(new Transaction(-amount));
         }
     }
 
-    public double sumTransactions() {
-       return checkIfTransactionsExist(true);
+    public void transferFrom(Account fromAccount, double amount){
+        fromAccount.withdraw(amount);
+        deposit(amount);
     }
 
-    private double checkIfTransactionsExist(boolean checkAll) {
+
+
+    public double balance() {
         double amount = 0.0;
-        for (Transaction t: transactions)
-            amount += t.amount;
+        if (transactions != null) {
+            for (Transaction t : transactions)
+                amount += t.amount;
+        }
         return amount;
     }
 
-    public int getAccountType() {
+    public Transaction latestTransaction(){
+        Transaction latest = null;
+
+        for(Transaction transaction : transactions){
+            if (latest == null || transaction.getTransactionDate().compareTo(latest.getTransactionDate()) > 0){
+                latest = transaction;
+            }
+        }
+
+        return latest;
+    }
+
+    public Transaction latestWithdrawal(){
+        Transaction latestWithdrawal = null;
+
+        for(Transaction transaction : transactions){
+            if ((transaction.amount<0 && latestWithdrawal == null) ||
+                (transaction.amount<0 && transaction.getTransactionDate().compareTo(
+                        latestWithdrawal.getTransactionDate()) > 0)){
+                latestWithdrawal = transaction;
+            }
+        }
+
+        return latestWithdrawal;
+    }
+
+    public AccountType accountType() {
         return accountType;
+    }
+
+    public List<Transaction> transactions() {
+        return transactions;
+    }
+
+    public Date openDate() {
+        return openDate;
+    }
+
+    public void setOpenDate(Date openDate){
+        this.openDate = openDate;
     }
 
 }
