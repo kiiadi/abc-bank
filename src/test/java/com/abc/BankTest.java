@@ -28,29 +28,4 @@ public class BankTest {
         assertEquals("Customer count equals 2", 2,  bank.getCustomers().size());
     }
 
-    @Test
-    public void testCheckingAccount() {
-        Bank bank = new Bank();
-        Customer bill = new Customer("Bill").openAccount(Account.AccountType.CHECKING, 100.00);
-        bank.addCustomer(bill);
-
-        assertEquals(0.1, bank.totalInterestPaid(), DOUBLE_DELTA);
-    }
-
-    @Test
-    public void testSavingsAccount() {
-        Bank bank = new Bank();
-        bank.addCustomer(new Customer("Bill").openAccount(Account.AccountType.SAVINGS, 1500.00));
-
-        assertEquals(0.0069444444443433895, bank.totalInterestPaid(), DOUBLE_DELTA);
-    }
-
-    @Test
-    public void testMaxiSavingsAccount() {
-        Bank bank = new Bank();
-        bank.addCustomer(new Customer("Bill").openAccount(Account.AccountType.MAXI_SAVINGS, 3000.00));
-
-        assertEquals(0.4166666666665151, bank.totalInterestPaid(), DOUBLE_DELTA);
-    }
-
 }

@@ -60,6 +60,8 @@ public abstract class Account {
 
     public Account() {
         accountType = AccountType.UNKNOWN;
+        transactions = new ArrayList<Transaction>();
+        openDate = new Date();
     }
 
     public Account(AccountType accountType) {

@@ -103,8 +103,9 @@ public class Customer {
     public void transfer(Account fromAccount, Account toAccount, double amount){
         if(!fromAccount.equals(toAccount)){
             toAccount.transferFrom(fromAccount, amount);
+        }else{
+            throw new IllegalArgumentException("Accounts must be distinct from each other");
         }
-        throw new IllegalArgumentException("Accounts must be distinct from each other");
     }
 
     /**
