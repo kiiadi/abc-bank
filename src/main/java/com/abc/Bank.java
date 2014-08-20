@@ -10,6 +10,10 @@ public class Bank {
         customers = new ArrayList<Customer>();
     }
 
+    /**
+     * Creates a bank with the provided customers...
+     * @param customers
+     */
     public Bank(Customer... customers){
         this();
         for (Customer toAdd : customers) {
@@ -17,7 +21,10 @@ public class Bank {
         }
     }
 
-
+    /**
+     * Adds the provided customer to this bank.
+     * @param customer
+     */
     public void addCustomer(Customer customer) {
         if(customers==null){
             customers = new ArrayList<Customer>();
@@ -25,6 +32,10 @@ public class Bank {
         customers.add(customer);
     }
 
+    /**
+     * Provides a formatted summary of customer related information.
+     * @return
+     */
     public String customerSummary() {
         String summary = "Customer Summary";
         for (Customer c : customers)
@@ -32,12 +43,18 @@ public class Bank {
         return summary;
     }
 
-    //Make sure correct plural of word is created based on the number passed in:
-    //If number passed in is 1 just return the word otherwise add an 's' at the end
+    /**
+     * Ensures correct plural of word is created based on the number passed in:
+     * - If number passed in is 1 just return the word otherwise add an 's' at the end
+     */
     private String pluralize(int number, String word) {
         return number + " " + (number == 1 ? word : word + "s");
     }
 
+    /**
+     * Calculates the total amount of interested paid on all accounts of all customers.
+     * @return - the total amount of interested paid on all accounts of all customers.
+     */
     public double totalInterestPaid() {
         double total = 0;
         for(Customer c: customers)
@@ -52,12 +69,5 @@ public class Bank {
 
     public void setCustomers(List<Customer> customers) {
         this.customers = customers;
-    }
-
-    public Customer getFirstCustomer() {
-        if(customers!=null && customers.size()>0){
-            return customers.get(0);
-        }
-        return null;
     }
 }

@@ -1,5 +1,7 @@
 package com.abc;
 
+import com.abc.account.CheckingAccount;
+import com.abc.account.SavingsAccount;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -12,8 +14,8 @@ public class CustomerTest {
     @Test //Test customer statement generation
     public void testApp(){
 
-        Account checkingAccount = new Account(Account.AccountType.CHECKING);
-        Account savingsAccount = new Account(Account.AccountType.SAVINGS);
+        Account checkingAccount = new CheckingAccount();
+        Account savingsAccount = new SavingsAccount();
 
         Customer henry = new Customer("Henry").openAccount(checkingAccount).openAccount(savingsAccount);
 
@@ -60,37 +62,37 @@ public class CustomerTest {
 
     @Test
     public void testTransfer(){
-        Account savings = new Account(Account.AccountType.SAVINGS,1000.00);
-        Account checking = new Account(Account.AccountType.SAVINGS,100.00);
+        Account savings = new SavingsAccount(1000.00);
+        Account checking = new CheckingAccount(100.00);
 
         Customer john = new Customer("John", savings, checking);
 
-        assertEquals("Savings account balance equals $1000.00", 1000.00, savings.balance(), DOUBLE_DELTA);
-        assertEquals("Checking account balance equals $100.00", 100.00, checking.balance(), DOUBLE_DELTA);
+        assertEquals("Savings account balance equals $1000.00", 1000.00, savings.sumTransactions(), DOUBLE_DELTA);
+        assertEquals("Checking account balance equals $100.00", 100.00, checking.sumTransactions(), DOUBLE_DELTA);
 
         john.transfer(savings, checking, 500.00);
 
-        assertEquals("Savings account balance equals $500.00", 500.00, savings.balance(), DOUBLE_DELTA);
-        assertEquals("Checking account balance equals 5100.00", 600.00, checking.balance(), DOUBLE_DELTA);
+        assertEquals("Savings account balance equals $500.00", 500.00, savings.sumTransactions(), DOUBLE_DELTA);
+        assertEquals("Checking account balance equals 5100.00", 600.00, checking.sumTransactions(), DOUBLE_DELTA);
     }
 
     @Test(expected = InsufficientFundsException.class)
     public void testTransferFail(){
-        Account savings = new Account(Account.AccountType.SAVINGS,1000.00);
-        Account checking = new Account(Account.AccountType.SAVINGS,100.00);
+        Account savings = new SavingsAccount(1000.00);
+        Account checking = new CheckingAccount(100.00);
 
         Customer john = new Customer("John", savings, checking);
 
-        assertEquals("Savings account balance equals $1000.00", 1000.00, savings.balance(), DOUBLE_DELTA);
-        assertEquals("Checking account balance equals $100.00", 100.00, checking.balance(), DOUBLE_DELTA);
+        assertEquals("Savings account balance equals $1000.00", 1000.00, savings.sumTransactions(), DOUBLE_DELTA);
+        assertEquals("Checking account balance equals $100.00", 100.00, checking.sumTransactions(), DOUBLE_DELTA);
 
         john.transfer(savings, checking, 1000.01);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testTransferFailSameAccounts(){
-        Account savings = new Account(Account.AccountType.SAVINGS,1000.00);
-        Account checking = new Account(Account.AccountType.SAVINGS,100.00);
+        Account savings = new SavingsAccount(1000.00);
+        Account checking = new CheckingAccount(100.00);
 
         Customer john = new Customer("John", savings, checking);
 

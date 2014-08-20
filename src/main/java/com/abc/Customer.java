@@ -1,10 +1,18 @@
 package com.abc;
 
+import com.abc.account.CheckingAccount;
+import com.abc.account.MaxiSavingsAccount;
+import com.abc.account.SavingsAccount;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Math.abs;
 
+/**
+ * A customer object with accounts and related convenience methods.
+ *
+ */
 public class Customer {
     private String name;
     private List<Account> accounts;
@@ -14,6 +22,11 @@ public class Customer {
         this.accounts = new ArrayList<Account>();
     }
 
+    /**
+     * Instantiates a customer with the specifed name and as an owner of the provided accounts.
+     * @param name
+     * @param accounts
+     */
     public Customer(String name, Account... accounts) {
         this(name);
         for (Account toAdd : accounts){
@@ -25,8 +38,13 @@ public class Customer {
         return name;
     }
 
+    /**
+     * Opens an account of the specified type.
+     * @param accountType
+     * @return
+     */
     public Customer openAccount(Account.AccountType accountType) {
-        accounts.add(new Account(accountType));
+        openAccount(accountType, 0.00);
         return this;
     }
 
@@ -37,8 +55,30 @@ public class Customer {
         return this;
     }
 
+    /**
+     * Opens an account of the specified type with the provided initial deposit.
+     * @param accountType - type of the account to open.
+     * @param initialDeposit - initial balance of the new account.
+     * @return
+     */
     public Customer openAccount(Account.AccountType accountType, double initialDeposit){
-        accounts.add(new Account(accountType, initialDeposit));
+        switch (accountType) {
+           default:
+           case CHECKING:
+               accounts.add(new CheckingAccount(initialDeposit));
+
+               break;
+
+           case SAVINGS:
+               accounts.add(new SavingsAccount(initialDeposit));
+
+               break;
+
+           case MAXI_SAVINGS:
+               accounts.add(new MaxiSavingsAccount(initialDeposit));
+
+               break;
+        }
         return this;
     }
 
@@ -53,10 +93,13 @@ public class Customer {
         return accounts;
     }
 
-    public void setAccounts(List<Account> accounts) {
-        this.accounts = accounts;
-    }
-
+    /**
+     * Convenient access to inter account transfers.
+     *
+     * @param fromAccount - the account to withdraw from
+     * @param toAccount - the account to deposit to.
+     * @param amount - the amount to transfer.
+     */
     public void transfer(Account fromAccount, Account toAccount, double amount){
         if(!fromAccount.equals(toAccount)){
             toAccount.transferFrom(fromAccount, amount);
@@ -64,6 +107,10 @@ public class Customer {
         throw new IllegalArgumentException("Accounts must be distinct from each other");
     }
 
+    /**
+     * The total amount of interest earned from all accounts.
+     * @return
+     */
     public double totalInterestEarned() {
         double total = 0;
         for (Account a : accounts)
@@ -76,7 +123,7 @@ public class Customer {
         double total = 0.0;
         for (Account a : accounts) {
             statement += "\n" + statementForAccount(a) + "\n";
-            total += a.balance();
+            total += a.availableBalance();
         }
         statement += "\nTotal In All Accounts " + toDollars(total);
         return statement;

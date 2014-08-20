@@ -10,7 +10,7 @@ public class BankTest {
     @Test
     public void testCustomerSummary() {
         Customer john = new Customer("John");
-        john.openAccount(Account.AccountType.CHECKING);
+        john.openAccount(Account.AccountType.CHECKING, 100.00);
         Bank bank = new Bank(john);
 
         assertEquals("Customer Summary\n - John (1 account)", bank.customerSummary());
@@ -19,10 +19,10 @@ public class BankTest {
     @Test
     public void testCustomerCount() {
         Customer john = new Customer("John");
-        john.openAccount(Account.AccountType.CHECKING);
+        john.openAccount(Account.AccountType.CHECKING, 100.00);
 
         Customer jim = new Customer("Jim");
-        jim.openAccount(Account.AccountType.CHECKING);
+        jim.openAccount(Account.AccountType.CHECKING, 100.00);
 
         Bank bank = new Bank(john, jim);
         assertEquals("Customer count equals 2", 2,  bank.getCustomers().size());
@@ -42,7 +42,7 @@ public class BankTest {
         Bank bank = new Bank();
         bank.addCustomer(new Customer("Bill").openAccount(Account.AccountType.SAVINGS, 1500.00));
 
-        assertEquals(2.0, bank.totalInterestPaid(), DOUBLE_DELTA);
+        assertEquals(0.0069444444443433895, bank.totalInterestPaid(), DOUBLE_DELTA);
     }
 
     @Test
@@ -50,7 +50,7 @@ public class BankTest {
         Bank bank = new Bank();
         bank.addCustomer(new Customer("Bill").openAccount(Account.AccountType.MAXI_SAVINGS, 3000.00));
 
-        assertEquals(170.0, bank.totalInterestPaid(), DOUBLE_DELTA);
+        assertEquals(0.4166666666665151, bank.totalInterestPaid(), DOUBLE_DELTA);
     }
 
 }

@@ -13,6 +13,11 @@ public class Transaction {
         this.transactionDate = Calendar.getInstance().getTime();
     }
 
+    public Transaction(double amount, Date transactionDate) {
+        this.amount = amount;
+        this.transactionDate = transactionDate;
+    }
+
     public Date getTransactionDate() {
         return transactionDate;
     }
