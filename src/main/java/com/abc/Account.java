@@ -131,6 +131,7 @@ public abstract class Account {
      * @param amount - the monetary value of the credit.
      */
     public void withdraw(double amount) {
+        System.out.println("availableBalance: "+this.availableBalance()+" -- sum: "+sumTransactions());
         if (amount <= 0) {
             throw new IllegalArgumentException("amount must be greater than zero");
         } else if (amount > this.availableBalance()) {
@@ -271,6 +272,7 @@ public abstract class Account {
                     break;//otherwise, we're done
                 }
             }
+            System.out.println("calculating accrual on balance :"+balance);
             //add our daily accrual, provided by subclasses, to our current balance
             balance += calculateDailyAccrual(balance, calendar.getTime());
 
