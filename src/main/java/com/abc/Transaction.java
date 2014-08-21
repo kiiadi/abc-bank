@@ -10,7 +10,16 @@ public class Transaction {
 
     public Transaction(double amount) {
         this.amount = amount;
-        this.transactionDate = DateProvider.getInstance().now();
+        this.transactionDate = Calendar.getInstance().getTime();
+    }
+
+    public Transaction(double amount, Date transactionDate) {
+        this.amount = amount;
+        this.transactionDate = transactionDate;
+    }
+
+    public Date getTransactionDate() {
+        return transactionDate;
     }
 
 }

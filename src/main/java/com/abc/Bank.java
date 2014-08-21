@@ -10,23 +10,51 @@ public class Bank {
         customers = new ArrayList<Customer>();
     }
 
+    /**
+     * Creates a bank with the provided customers...
+     * @param customers
+     */
+    public Bank(Customer... customers){
+        this();
+        for (Customer toAdd : customers) {
+            addCustomer(toAdd);
+        }
+    }
+
+    /**
+     * Adds the provided customer to this bank.
+     * @param customer
+     */
     public void addCustomer(Customer customer) {
+        if(customers==null){
+            customers = new ArrayList<Customer>();
+        }
         customers.add(customer);
     }
 
+    /**
+     * Provides a formatted summary of customer related information.
+     * @return
+     */
     public String customerSummary() {
         String summary = "Customer Summary";
         for (Customer c : customers)
-            summary += "\n - " + c.getName() + " (" + format(c.getNumberOfAccounts(), "account") + ")";
+            summary += "\n - " + c.getName() + " (" + pluralize(c.getNumberOfAccounts(), "account") + ")";
         return summary;
     }
 
-    //Make sure correct plural of word is created based on the number passed in:
-    //If number passed in is 1 just return the word otherwise add an 's' at the end
-    private String format(int number, String word) {
+    /**
+     * Ensures correct plural of word is created based on the number passed in:
+     * - If number passed in is 1 just return the word otherwise add an 's' at the end
+     */
+    private String pluralize(int number, String word) {
         return number + " " + (number == 1 ? word : word + "s");
     }
 
+    /**
+     * Calculates the total amount of interested paid on all accounts of all customers.
+     * @return - the total amount of interested paid on all accounts of all customers.
+     */
     public double totalInterestPaid() {
         double total = 0;
         for(Customer c: customers)
@@ -34,13 +62,12 @@ public class Bank {
         return total;
     }
 
-    public String getFirstCustomer() {
-        try {
-            customers = null;
-            return customers.get(0).getName();
-        } catch (Exception e){
-            e.printStackTrace();
-            return "Error";
-        }
+
+    public List<Customer> getCustomers() {
+        return customers;
+    }
+
+    public void setCustomers(List<Customer> customers) {
+        this.customers = customers;
     }
 }
