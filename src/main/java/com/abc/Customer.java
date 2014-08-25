@@ -29,8 +29,11 @@ public class Customer {
 
     public double totalInterestEarned() {
         double total = 0;
-        for (Account a : accounts)
+        
+        for (Account a : accounts){
             total += a.interestEarned();
+        }
+        
         return total;
     }
 
@@ -75,4 +78,48 @@ public class Customer {
     private String toDollars(double d){
         return String.format("$%,.2f", abs(d));
     }
+    
+    
+    // Transfers the specified amount from "from" account to "to" account.
+    public boolean transferBetweenAccounts(int from,int to,double amount){
+    	
+        Account [] transferAccounts= getTransferAccounts(from, to);
+        Account fromAccount=transferAccounts[0];
+        Account toAccount=transferAccounts[1];
+        
+        if(fromAccount!=null && toAccount!=null){
+        	fromAccount.withdraw(amount);
+        	toAccount.deposit(amount);
+        	return true;
+        }
+        else{
+        	throw new IllegalArgumentException("Invalid Account combination for transfer.");
+        }
+        
+    	
+    	
+    }
+
+    // Returns the Account objects for the corresponding from and to accounts provided the customer has the those accounts.
+    // From-Account is returned as first element and To-Account is returned as second element.
+	private Account [] getTransferAccounts(int fromAccount, int toAccount) {
+		
+		Account [] transferAccounts= new Account [2];
+    	
+    	for(Account account:accounts){
+    		
+    		if(account.getAccountType()==fromAccount){
+    			transferAccounts[0]=account;
+    		}
+    		
+    		if(account.getAccountType()==toAccount){
+    			transferAccounts[1]=account;
+    		}
+    		
+    	}
+    	
+    	return transferAccounts;
+    	
+	}
+    
 }
