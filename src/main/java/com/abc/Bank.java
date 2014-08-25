@@ -27,6 +27,15 @@ public class Bank {
         return number + " " + (number == 1 ? word : word + "s");
     }
 
+    public String totalInterestSummary() {
+        String summary = "Total Interest Summary \n";
+        summary+= "Total Interest Paid: "+totalInterestPaid();
+        
+        return summary;
+    }
+
+    
+    
     public double totalInterestPaid() {
         double total = 0;
         for(Customer c: customers)
