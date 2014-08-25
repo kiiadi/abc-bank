@@ -1,0 +1,30 @@
+package com.abc;
+
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
+public class AccountTest {
+
+	@Test
+	public void testHasWithdrawalsInThisPeriod() {
+
+		Account checking = new Account(Account.CHECKING);
+		checking.deposit(500);
+		checking.deposit(300);
+		checking.withdraw(250);
+
+		assertTrue(checking.hasWithdrawalsInThisPeriod(10));
+	}
+
+	@Test
+	public void testHasWithdrawalsInThisPeriodWithNoWithdrawals() {
+
+		Account checking = new Account(Account.CHECKING);
+		checking.deposit(500);
+		checking.deposit(300);
+
+		assertFalse(checking.hasWithdrawalsInThisPeriod(10));
+	}
+
+}
