@@ -11,42 +11,69 @@ public class BankTest {
     public void customerSummary() {
         Bank bank = new Bank();
         Customer john = new Customer("John");
-        john.openAccount(new Account(Account.CHECKING));
+        john.openAccount(new CheckingAccount());
         bank.addCustomer(john);
 
         assertEquals("Customer Summary\n - John (1 account)", bank.customerSummary());
+        
+        john.openAccount(new MaxiSavingsAccount());
+        
+        assertEquals("Customer Summary\n - John (2 accounts)", bank.customerSummary());
     }
 
     @Test
-    public void checkingAccount() {
+    public void checkingAccount()  {
         Bank bank = new Bank();
-        Account checkingAccount = new Account(Account.CHECKING);
-        Customer bill = new Customer("Bill").openAccount(checkingAccount);
+        Customer bill = new Customer("Bill");
+        try {
+        	Account acct = bill.openAccount(AccountType.CHECKING);
+        	acct.deposit(100.0);
+        }
+        catch(InvalidAccount ex) {
+        	ex.printStackTrace();
+        } catch (InvalidAccountTransaction e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         bank.addCustomer(bill);
-
-        checkingAccount.deposit(100.0);
 
         assertEquals(0.1, bank.totalInterestPaid(), DOUBLE_DELTA);
     }
 
     @Test
     public void savings_account() {
-        Bank bank = new Bank();
-        Account checkingAccount = new Account(Account.SAVINGS);
-        bank.addCustomer(new Customer("Bill").openAccount(checkingAccount));
-
-        checkingAccount.deposit(1500.0);
+    	Bank bank = new Bank();
+        Customer bill = new Customer("Bill");
+        try {
+        	Account acct = bill.openAccount(AccountType.SAVINGS);
+        	acct.deposit(1500.0);
+        }
+        catch(InvalidAccount ex) {
+        	ex.printStackTrace();
+        } catch (InvalidAccountTransaction e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        bank.addCustomer(bill);
 
         assertEquals(2.0, bank.totalInterestPaid(), DOUBLE_DELTA);
     }
 
     @Test
     public void maxi_savings_account() {
-        Bank bank = new Bank();
-        Account checkingAccount = new Account(Account.MAXI_SAVINGS);
-        bank.addCustomer(new Customer("Bill").openAccount(checkingAccount));
-
-        checkingAccount.deposit(3000.0);
+    	Bank bank = new Bank();
+        Customer bill = new Customer("Bill");
+        try {
+        	Account acct = bill.openAccount(AccountType.SAVINGS);
+        	acct.deposit(3000.0);
+        }
+        catch(InvalidAccount ex) {
+        	ex.printStackTrace();
+        } catch (InvalidAccountTransaction e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        bank.addCustomer(bill);
 
         assertEquals(170.0, bank.totalInterestPaid(), DOUBLE_DELTA);
     }

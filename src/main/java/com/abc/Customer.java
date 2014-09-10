@@ -1,6 +1,8 @@
 package com.abc;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import static java.lang.Math.abs;
@@ -11,68 +13,86 @@ public class Customer {
 
     public Customer(String name) {
         this.name = name;
-        this.accounts = new ArrayList<Account>();
+        this.accounts =  Collections.synchronizedList(new ArrayList<Account>());
+    }
+    
+    public Customer(String name, List<Account> list) {
+    	this.name = name ;
+    	this.accounts = Collections.synchronizedList(list);
     }
 
     public String getName() {
         return name;
     }
 
-    public Customer openAccount(Account account) {
+    public  synchronized void openAccount(Account account) {
         accounts.add(account);
-        return this;
+    }
+    
+    public Account openAccount(AccountType type) throws InvalidAccount {
+    	Account acct = AccountFactory.newAccount(type) ;
+    	this.openAccount(AccountFactory.newAccount(type));
+    	return acct ;
     }
 
     public int getNumberOfAccounts() {
         return accounts.size();
     }
 
-    public double totalInterestEarned() {
+    public synchronized double totalInterestEarned() {
         double total = 0;
-        for (Account a : accounts)
-            total += a.interestEarned();
+        for (InterestPayable acct : accounts)
+            total += acct.interestEarned();
         return total;
     }
-
-    public String getStatement() {
-        String statement = null;
-        statement = "Statement for " + name + "\n";
-        double total = 0.0;
-        for (Account a : accounts) {
-            statement += "\n" + statementForAccount(a) + "\n";
-            total += a.sumTransactions();
-        }
-        statement += "\nTotal In All Accounts " + toDollars(total);
-        return statement;
+    
+    public synchronized double totalBalance() {
+    	double total = 0.0 ;
+    	for ( Account acct : accounts ) {
+    		total += acct.getCurrBalance() ;
+    	}
+    	return total ;
+    }
+    
+    public List<Account> accounts() {
+    	return new ArrayList<Account>(accounts) ;
+    }
+    
+    public void xferMoney(Account src, Account dest, double amt) throws InvalidAccountTransaction {
+    	if ( !accounts.contains(src) || !accounts.contains(dest)) {
+    		throw new InvalidAccountTransaction("Not this customer account") ;
+    	}
+    	try {
+    		lock.lock();
+    		src.xferTo(dest, amt);
+		} catch (InvalidAccountTransaction e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			lock.unlock();
+		}
+    }
+    
+    public static class Builder {
+    	String name ;
+    	List<Account> accts = new ArrayList<Account>() ;
+    	
+    	public Builder(String name) {
+    		this.name = name ;
+    	}
+    	
+    	public Builder add(Account acct) {
+    		accts.add(acct);
+    		return this;
+    	}
+    	
+    	public Builder add(AccountType type) throws InvalidAccount {
+    		return add(AccountFactory.newAccount(type)) ;
+    	}
+    	
+    	public Customer build() {
+    		return new Customer(name, accts) ;
+    	}
     }
 
-    private String statementForAccount(Account a) {
-        String s = "";
-
-       //Translate to pretty account type
-        switch(a.getAccountType()){
-            case Account.CHECKING:
-                s += "Checking Account\n";
-                break;
-            case Account.SAVINGS:
-                s += "Savings Account\n";
-                break;
-            case Account.MAXI_SAVINGS:
-                s += "Maxi Savings Account\n";
-                break;
-        }
-
-        //Now total up all the transactions
-        double total = 0.0;
-        for (Transaction t : a.transactions) {
-            s += "  " + (t.amount < 0 ? "withdrawal" : "deposit") + " " + toDollars(t.amount) + "\n";
-            total += t.amount;
-        }
-        s += "Total " + toDollars(total);
-        return s;
-    }
-
-    private String toDollars(double d){
-        return String.format("$%,.2f", abs(d));
-    }
 }
