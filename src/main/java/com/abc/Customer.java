@@ -58,6 +58,21 @@ public class Customer {
     	return new ArrayList<Account>(accounts) ;
     }
     
+    public void xferMoney(Account src, Account dest, double amt) throws InvalidAccountTransaction {
+    	if ( !accounts.contains(src) || !accounts.contains(dest)) {
+    		throw new InvalidAccountTransaction("Not this customer account") ;
+    	}
+    	try {
+    		lock.lock();
+    		src.xferTo(dest, amt);
+		} catch (InvalidAccountTransaction e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			lock.unlock();
+		}
+    }
+    
     public static class Builder {
     	String name ;
     	List<Account> accts = new ArrayList<Account>() ;
