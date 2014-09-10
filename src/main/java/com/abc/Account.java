@@ -47,5 +47,16 @@ public abstract class Account implements InterestPayable {
 		/* return new list so that current activity does not escape current thread */
 		return acctActivity.transactions() ;
 	}
+	
+	public void xferTo(Account dest, double amt) throws InvalidAccountTransaction {
+		if ( this.getCurrBalance() < amt )
+			throw new InvalidAccountTransaction() ;
+		synchronized(this) {
+			synchronized(dest) {
+				this.withdraw(amt);
+				dest.deposit(amt);
+			}
+		}
+	}
 
 }
