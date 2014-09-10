@@ -6,8 +6,8 @@ import java.util.Date;
 public class Transaction {
  
 	private  final double amount;
-	private Date transactionDate; 
-    private TransactionType type ;
+	private final Date transactionDate; 
+    private final TransactionType type ;
 
     public Transaction(TransactionType type, double amount) {
         this.amount = amount;
