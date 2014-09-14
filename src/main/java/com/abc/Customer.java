@@ -75,4 +75,9 @@ public class Customer {
     private String toDollars(double d){
         return String.format("$%,.2f", abs(d));
     }
+    public void transfer(final Account from, final Account to, final double amount) {
+    	from.withdraw(amount);
+    	to.deposit(amount);
+    }
+    
 }
