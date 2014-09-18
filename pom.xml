@@ -15,10 +15,20 @@
 
     <dependencies>
         <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>2.4</version>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.11</version>
             <scope>test</scope>
         </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.googlecode.multithreadedtc</groupId>-->
+            <!--<artifactId>multithreadedtc</artifactId>-->
+            <!--<version>1.01</version>-->
+        <!--</dependency>-->
     </dependencies>
 </project>
