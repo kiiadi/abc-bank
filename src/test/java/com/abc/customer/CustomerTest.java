@@ -53,6 +53,7 @@ public class CustomerTest {
 
   @Test
   public void testGetName() throws Exception {
+    assertTrue("Customer.openAccount not working properly", customer.getName().equals("Sri"));
 
   }
 
@@ -84,7 +85,8 @@ public class CustomerTest {
     customer = customer.openAccount(account1).openAccount(account2);
     account1.deposit(1000, pastDate1);
     account1.deposit(10000, pastDate2);
-    String expected = "Checking Account Number: 7\nTotal:                   $11,000.00";
+    System.out.println(account1.getAccountNumber());
+    String expected = "Checking Account Number: 39\nTotal:                   $11,000.00";
     String statement = customer.getStatement(account1);
     assertTrue("Customer.getStatement not working properly", expected.equals(statement));
   }
