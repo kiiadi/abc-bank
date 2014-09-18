@@ -21,9 +21,10 @@ public class MaxiSavingsInterestCalculator<T extends List<Transaction>, V extend
   private boolean hasTransactionInLastTendays(T transactions){
     for(Transaction transaction : transactions) {
       int daysDifference = getDifferenceInDays(transaction);
-      if(daysDifference >= 10)
+      if(daysDifference <= 10)
         return true;
     }
     return false;
   }
+
 }

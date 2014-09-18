@@ -79,7 +79,7 @@ public class BankTest {
     account3.deposit(10000, pastDate3);
 
     double interest = bank.totalInterestPaid();
-    assertTrue("Bank.totalInterestPaid() not working properly", interest == 8.4);
+    assertTrue("Bank.totalInterestPaid() not working properly", interest == 141.6);
 
   }
 
