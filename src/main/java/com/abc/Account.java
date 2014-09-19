@@ -5,69 +5,96 @@ import java.util.List;
 
 public class Account {
 
-    public static final int CHECKING = 0;
-    public static final int SAVINGS = 1;
-    public static final int MAXI_SAVINGS = 2;
+	private AccountType accountType;
+	private double balance;
+	private List<Transaction> transactions;
 
-    private final int accountType;
-    public List<Transaction> transactions;
+	public Account(AccountType accountType) {
+		this.accountType = accountType;
+		transactions = new ArrayList<Transaction>();
+	}
 
-    public Account(int accountType) {
-        this.accountType = accountType;
-        this.transactions = new ArrayList<Transaction>();
-    }
+	public AccountType getAccountType() {
+		return accountType;
+	}
 
-    public void deposit(double amount) {
-        if (amount <= 0) {
-            throw new IllegalArgumentException("amount must be greater than zero");
-        } else {
-            transactions.add(new Transaction(amount));
-        }
-    }
+	public double getBalance() {
+		return balance;
+	}
 
-public void withdraw(double amount) {
-    if (amount <= 0) {
-        throw new IllegalArgumentException("amount must be greater than zero");
-    } else {
-        transactions.add(new Transaction(-amount));
-    }
-}
+	public void deposit(double amount) {
+		if (amount <= BankConstants.ZERO_AMOUNT)
+			throw new IllegalArgumentException(BankConstants.INVALID_AMOUNT);
+		balance = balance + amount;
+		transactions.add(new Transaction(amount));
+	}
 
-    public double interestEarned() {
-        double amount = sumTransactions();
-        switch(accountType){
-            case SAVINGS:
-                if (amount <= 1000)
-                    return amount * 0.001;
-                else
-                    return 1 + (amount-1000) * 0.002;
-//            case SUPER_SAVINGS:
-//                if (amount <= 4000)
-//                    return 20;
-            case MAXI_SAVINGS:
-                if (amount <= 1000)
-                    return amount * 0.02;
-                if (amount <= 2000)
-                    return 20 + (amount-1000) * 0.05;
-                return 70 + (amount-2000) * 0.1;
-            default:
-                return amount * 0.001;
-        }
-    }
+	public void withdraw(double amount) {
+		if (amount <= balance) {
+			balance = balance - amount;
+			transactions.add(new Transaction(BankConstants.NEGATIVE_MULTIPLIER * amount));
+		} else {
+			throw new IllegalArgumentException(BankConstants.INSUFFICIENT_FUNDS);
+		}
+	}
 
-    public double sumTransactions() {
-       return checkIfTransactionsExist(true);
-    }
+	public void transfer(double amount, Account otherAccount) {
+		this.withdraw(amount);
+		otherAccount.deposit(amount);
+	}
 
-    private double checkIfTransactionsExist(boolean checkAll) {
-        double amount = 0.0;
-        for (Transaction t: transactions)
-            amount += t.amount;
-        return amount;
-    }
+	public double interestEarned() {
+		return new InterestRateFactory().rateCalculator(accountType)
+				.calculateEarned(balance);
+	}
 
-    public int getAccountType() {
-        return accountType;
-    }
+	public List<Transaction> getAllTransactions() {
+		return transactions;
+	}
+
+	
+	
+	
+	
+	
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((accountType == null) ? 0 : accountType.hashCode());
+		long temp;
+		temp = Double.doubleToLongBits(balance);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result
+				+ ((transactions == null) ? 0 : transactions.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Account other = (Account) obj;
+		if (accountType != other.accountType)
+			return false;
+		if (Double.doubleToLongBits(balance) != Double
+				.doubleToLongBits(other.balance))
+			return false;
+		if (transactions == null) {
+			if (other.transactions != null)
+				return false;
+		} else if (!transactions.equals(other.transactions))
+			return false;
+		return true;
+	}
+	
+	
+	
 
 }
