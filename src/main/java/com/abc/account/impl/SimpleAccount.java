@@ -1,12 +1,12 @@
 package com.abc.account.impl;
 
+import com.abc.account.Account;
 import com.abc.account.AccountType;
 import com.abc.account.InSufficientFundsException;
 import com.abc.strategy.Strategy;
 import com.abc.transaction.Transaction;
 import com.abc.transaction.impl.SimpleTransaction;
 import com.abc.util.DateProvider;
-import com.abc.account.Account;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -16,6 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -52,6 +53,9 @@ public class SimpleAccount implements Account {
   protected Strategy<List<Transaction>, BigDecimal> interestCalculator;
 
   protected ReadWriteLock lock = new ReentrantReadWriteLock();
+  protected Lock readLock = lock.readLock();
+  protected Lock writeLock = lock.writeLock();
+  //protected Condition needWriteLock = writeLock.newCondition();
   private Thread lockOwningThread;
 
   public SimpleAccount(AccountType accountType) {
@@ -106,27 +110,27 @@ public class SimpleAccount implements Account {
   }
 
   private void createAndAddTransaction(BigDecimal amount) {
-    lock.writeLock().lock();
+    writeLock.lock();
     totalAmt = totalAmt.add(amount);
     transactions.add(new SimpleTransaction(amount));
-    lock.writeLock().unlock();
+    writeLock.unlock();
 
   }
 
   private void createAndAddTransactionWithDate(BigDecimal amount, Date date) {
-    lock.writeLock().lock();
+    writeLock.lock();
     totalAmt = totalAmt.add(amount);
     transactions.add(new SimpleTransaction(amount, date));
-    lock.writeLock().unlock();
+    writeLock.unlock();
   }
 
   @Override
   public BigDecimal interestEarned() {
     if(transactions.size() == 0)
       return new BigDecimal("0.0");
-    lock.readLock().lock();
+    readLock.lock();
     ArrayList<Transaction> t = new ArrayList<Transaction>(transactions);
-    lock.readLock().unlock();
+    readLock.unlock();
     BigDecimal interest = interestCalculator.execute(transactions);
     return interest;
   }
@@ -167,8 +171,8 @@ public class SimpleAccount implements Account {
    */
   @Override
   public void lock() {
+    writeLock.lock();
     lockOwningThread = Thread.currentThread();
-    lock.writeLock().lock();
   }
 
   /**
@@ -181,7 +185,8 @@ public class SimpleAccount implements Account {
     if(lockOwningThread != Thread.currentThread()){
       throw new IllegalMonitorStateException("The present thread does not own the lock the thread to unlock it.");
     }
-    lock.writeLock().unlock();
+    lockOwningThread = null;
+    writeLock.unlock();
   }
 
 
