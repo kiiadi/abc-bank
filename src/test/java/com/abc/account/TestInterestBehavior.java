@@ -45,6 +45,24 @@ public class TestInterestBehavior {
 	}
 	
 	@Test
+	public void shouldInitializeSavingsAccountInterestWithDefaultValue(){
+		this.savingsAccount = new SavingsAccount("S1");
+		assertEquals(0.0, savingsAccount.getInterestEarned(), 0);
+	}
+	
+	@Test
+	public void shouldInitializeCheckingAccountInterestWithDefaultValue(){
+		this.savingsAccount = new CheckingAccount("C1");
+		assertEquals(0.0, savingsAccount.getInterestEarned(), 0);
+	}
+	
+	@Test
+	public void shouldInitializeMaxSavingsAccountInterestWithDefaultValue(){
+		this.savingsAccount = new MaxSavingsAccount("MS1");
+		assertEquals(0.0, savingsAccount.getInterestEarned(), 0);
+	}
+	
+	@Test
 	public void shouldGetEarnedInterestOfCheckingAccount(){
 		new NonStrictExpectations() {{
 			checkingAccountInterestCalculator.calculate((IAccount) any);

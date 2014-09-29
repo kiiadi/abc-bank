@@ -33,4 +33,25 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.pitest</groupId>
+					<artifactId>pitest-maven</artifactId>
+					<version>LATEST</version>
+					<configuration>
+						<mutators>
+							<mutator>ALL</mutator>
+						</mutators>
+						<threads>10</threads>
+						<targetClasses>
+							<param>com.abc*</param>
+						</targetClasses>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
 </project>

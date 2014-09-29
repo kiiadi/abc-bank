@@ -23,10 +23,6 @@ public class IndividualCustomer implements ICustomer {
 		this.accounts = new ArrayList<IAccount>();
 	}
 	
-	public IndividualInformation getIndividualInformation() {
-		return individualInformation;
-	}
-
 	public void setIndividualInformation(final IndividualInformation individualInformation) {
 		this.individualInformation = individualInformation;
 	}

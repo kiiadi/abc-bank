@@ -1,9 +1,12 @@
 package com.abc.util;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -24,7 +27,15 @@ public class TestDateProvider {
 
 	@Test
 	public void shouldGetSameInstance(){
+		assertNotNull(DateProvider.getInstance());
 		assertEquals(dateProvider, DateProvider.getInstance());
+	}
+	
+	@Test
+	public void shouldGetNow(){
+		final SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+		final Date now = DateProvider.getInstance().now();
+		assertEquals(format.format(Calendar.getInstance().getTime()), format.format(now));
 	}
 	
 	@Test
