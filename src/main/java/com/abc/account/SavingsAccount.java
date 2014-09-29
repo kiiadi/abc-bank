@@ -15,7 +15,8 @@ import com.abc.util.DateProvider;
  */
 public class SavingsAccount extends Account implements IAccount{
 	
-	public SavingsAccount(){
+	public SavingsAccount(final String number){
+		super(number);
 		this.interestCalculator = new SavingsAccountInterestCalculator(0.1, 0.2);
 		super.transactions = new ArrayList<ITransaction>();
 		super.transactionValidators = getTransactionValidators();

@@ -15,7 +15,8 @@ import com.abc.util.DateProvider;
  */
 public class MaxSavingsAccount extends Account implements IAccount{
 
-	public MaxSavingsAccount(){
+	public MaxSavingsAccount(final String number){
+		super(number);
 		super.interestCalculator = new MaxSavingsAccountInterestCalculator(0.1, 5);
 		super.transactions = new ArrayList<ITransaction>();
 		super.transactionValidators = getTransactionValidators();

@@ -29,6 +29,12 @@ public abstract class Account implements IAccount{
 	private double balance;
 	
 	protected Date openingDate;
+	
+	private String number;
+	
+	protected Account(final String number){
+		this.number = number;
+	}
 
 	public synchronized void process(final Deposit deposit) {
 		this.balance += deposit.getAmount();
@@ -53,6 +59,10 @@ public abstract class Account implements IAccount{
 	
 	public Date getOpeningDate(){
 		return this.openingDate;
+	}
+	
+	public String getNumber(){
+		return this.number;
 	}
 	
 	/**

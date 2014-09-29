@@ -23,4 +23,12 @@ public class IndividualInformation {
 		return lastName;
 	}
 	
+	public String getDisplayName() {
+		final StringBuilder displayNameBuilder = new StringBuilder();
+		displayNameBuilder.append(lastName);
+		displayNameBuilder.append(", ");
+		displayNameBuilder.append(firstName);
+		return displayNameBuilder.toString();
+	}
+	
 }

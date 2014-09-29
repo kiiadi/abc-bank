@@ -36,9 +36,9 @@ public class TestInterestBehavior {
 	
 	@Before
 	public void setUp(){
-		this.checkingAccount = new CheckingAccount();
-		this.savingsAccount = new SavingsAccount();
-		this.maxSavingsAccount = new MaxSavingsAccount();
+		this.checkingAccount = new CheckingAccount("C1");
+		this.savingsAccount = new SavingsAccount("S1");
+		this.maxSavingsAccount = new MaxSavingsAccount("MS1");
 		Deencapsulation.setField(checkingAccount, "interestCalculator", checkingAccountInterestCalculator);
 		Deencapsulation.setField(savingsAccount, "interestCalculator", savingsAccountInterestCalculator);
 		Deencapsulation.setField(maxSavingsAccount, "interestCalculator", maxSavingsAccountInterestCalculator);

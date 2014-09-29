@@ -24,7 +24,12 @@ public class TestSavingsAccount {
 	
 	@Before
 	public void setUp(){
-		savingAccount = new SavingsAccount();
+		savingAccount = new SavingsAccount("S1");
+	}
+	
+	@Test
+	public void shouldGetAccountNumber(){
+		assertEquals("S1", savingAccount.getNumber());
 	}
 	
 	@Test

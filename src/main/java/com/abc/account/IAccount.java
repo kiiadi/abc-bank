@@ -29,4 +29,6 @@ public interface IAccount {
 	
 	public double getInterestEarned();
 	
+	public String getNumber();
+	
 }

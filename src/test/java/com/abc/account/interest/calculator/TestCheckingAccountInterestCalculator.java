@@ -29,7 +29,7 @@ public class TestCheckingAccountInterestCalculator {
 	public void setUp() throws ParseException{
 		this.checkingAccountInterestCalculator = new CheckingAccountInterestCalculator(0.1);
 		final SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-		this.checkingAccount = new CheckingAccount(); 
+		this.checkingAccount = new CheckingAccount("C1"); 
 		final Deposit deposit = new Deposit(10000.00);
 		checkingAccount.process(deposit);
 		

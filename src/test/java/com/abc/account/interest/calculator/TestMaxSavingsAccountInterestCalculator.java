@@ -33,7 +33,7 @@ public class TestMaxSavingsAccountInterestCalculator {
 	public void setUp() throws ValidationException, ParseException{
 		maxSavingsAccountInterestCalculator = new MaxSavingsAccountInterestCalculator(0.1, 5);
 		final SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-		maxSavingAccount = new MaxSavingsAccount();
+		maxSavingAccount = new MaxSavingsAccount("MS1");
 		Deencapsulation.setField(maxSavingAccount, "openingDate", format.parse("01/01/2014"));
 		final Deposit deposit = new Deposit(10000.00);
 		maxSavingAccount.process(deposit);
@@ -52,7 +52,7 @@ public class TestMaxSavingsAccountInterestCalculator {
 	
 	@Test 
 	public void shouldBeEligibleForMaxSavingsRate() throws ValidationException, ParseException{
-		maxSavingAccount = new MaxSavingsAccount();
+		maxSavingAccount = new MaxSavingsAccount("MS1");
 		final Deposit deposit = new Deposit(100.00);
 		maxSavingAccount.process(deposit);
 		final Withdraw withdraw3 = new Withdraw(11.00);
@@ -73,7 +73,7 @@ public class TestMaxSavingsAccountInterestCalculator {
 	@Test
 	public void shouldCalculateInterestWithMaxSavingsRate() throws ParseException{
 		final SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-		maxSavingAccount = new MaxSavingsAccount();
+		maxSavingAccount = new MaxSavingsAccount("MS1");
 		final Deposit deposit = new Deposit(1000.00);
 		maxSavingAccount.process(deposit);
 		Deencapsulation.setField(maxSavingAccount, "openingDate", format.parse("01/01/2014"));

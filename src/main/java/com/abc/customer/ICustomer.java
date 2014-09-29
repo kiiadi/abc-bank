@@ -13,8 +13,12 @@ public interface ICustomer {
 
     public int getNumberOfAccounts();
     
-    public double totalInterestEarned();
+    public double getTotalInterestEarned();
 
     public String getStatement();
+    
+    public String getId();
+    
+    public String getDisplayName();
 
 }

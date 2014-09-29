@@ -29,8 +29,8 @@ public class TestTransferBehavior {
 	
 	@Before
 	public void setUp(){
-		checkingAccount = new CheckingAccount();
-		savingAccount = new SavingsAccount();
+		checkingAccount = new CheckingAccount("C1");
+		savingAccount = new SavingsAccount("S1");
 		final Deposit deposit = new Deposit(100.00);
 		checkingAccount.process(deposit);
 	}

@@ -24,7 +24,12 @@ public class TestMaxSavingsAccount {
 	
 	@Before
 	public void setUp(){
-		this.maxSavingAccount = new MaxSavingsAccount();
+		this.maxSavingAccount = new MaxSavingsAccount("MS1");
+	}
+	
+	@Test
+	public void shouldGetAccountNumber(){
+		assertEquals("MS1", maxSavingAccount.getNumber());
 	}
 	
 	@Test
