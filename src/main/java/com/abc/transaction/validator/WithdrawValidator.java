@@ -11,7 +11,7 @@ import com.abc.transaction.ITransaction;
  */
 public class WithdrawValidator implements ITransactionValidator {
 	
-	public void validate(IAccount account, ITransaction transaction) throws NotEnoughBalanceException {
+	public void validate(final IAccount account, final ITransaction transaction) throws NotEnoughBalanceException {
 		if(transaction.getAmount() > account.getBalance()){
 			throw new NotEnoughBalanceException(account.getBalance(), transaction.getAmount());
 		}

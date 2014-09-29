@@ -24,7 +24,7 @@ public class Bank {
 
     public String getCustomerSummary() {
     	final StringBuilder statementBuilder = new StringBuilder();
-    	for(ICustomer customer : customers){
+    	for(final ICustomer customer : customers){
     		statementBuilder.append(customer.getStatement());
     		statementBuilder.append("\n");
     	}
