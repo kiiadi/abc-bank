@@ -34,4 +34,9 @@ public class TestDeposit {
 		final DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
 		assertEquals(dateFormat.format(DateProvider.getInstance().now()), dateFormat.format(deposit.getDate()));
 	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldGetIllegalArgumentException(){
+		new Deposit(-1);
+	}
 }

@@ -34,4 +34,9 @@ public class TestWithdraw {
 		final DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
 		assertEquals(dateFormat.format(DateProvider.getInstance().now()), dateFormat.format(withdraw.getDate()));
 	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldGetIllegalArgumentException(){
+		new Withdraw(-1);
+	}
 }

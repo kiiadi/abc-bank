@@ -13,6 +13,7 @@ public class Deposit extends Transaction implements ITransaction{
 	private double amount;
 	
 	public Deposit(final double amount){
+		super.validate(amount);
 		this.amount = amount;
 		super.date = DateProvider.getInstance().now();
 	}

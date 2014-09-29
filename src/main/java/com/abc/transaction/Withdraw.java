@@ -12,6 +12,7 @@ public class Withdraw extends Transaction implements ITransaction{
 	private double amount;
 	
 	public Withdraw(final double amount){
+		super.validate(amount);
 		this.amount = amount;
 		super.date = DateProvider.getInstance().now();
 	}

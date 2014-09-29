@@ -9,4 +9,10 @@ public abstract class Transaction {
 	public Date getDate(){
 		return this.date;
 	}
+	
+	protected void validate(final double amount){
+		if(amount < 0){
+			throw new IllegalArgumentException("Amount has to be greater than zero!");
+		}
+	}
 }
