@@ -3,22 +3,28 @@ package com.abc;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.abc.customer.ICustomer;
+
+/**
+ * 
+ * @author Sanju Thomas
+ *
+ */
 public class Bank {
-    private List<Customer> customers;
+	
+    private List<ICustomer> customers;
 
     public Bank() {
-        customers = new ArrayList<Customer>();
+        customers = new ArrayList<ICustomer>();
     }
 
-    public void addCustomer(Customer customer) {
+    public void addCustomer(ICustomer customer) {
         customers.add(customer);
     }
 
     public String customerSummary() {
-        String summary = "Customer Summary";
-        for (Customer c : customers)
-            summary += "\n - " + c.getName() + " (" + format(c.getNumberOfAccounts(), "account") + ")";
-        return summary;
+    	
+    	return null;
     }
 
     //Make sure correct plural of word is created based on the number passed in:
@@ -29,18 +35,13 @@ public class Bank {
 
     public double totalInterestPaid() {
         double total = 0;
-        for(Customer c: customers)
+        for(ICustomer c: customers)
             total += c.totalInterestEarned();
         return total;
     }
 
     public String getFirstCustomer() {
-        try {
-            customers = null;
-            return customers.get(0).getName();
-        } catch (Exception e){
-            e.printStackTrace();
-            return "Error";
-        }
+    	
+    	return null;
     }
 }
