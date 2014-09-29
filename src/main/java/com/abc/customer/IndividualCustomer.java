@@ -48,8 +48,16 @@ public class IndividualCustomer implements ICustomer {
 	}
 
 	public String getStatement() {
-		// TODO Auto-generated method stub
-		return null;
+		final StringBuilder statementBuilder = new StringBuilder();
+		statementBuilder.append("Customer ID: ");
+		statementBuilder.append(id);
+		statementBuilder.append(" - ");
+		statementBuilder.append("Customer Name: ");
+		statementBuilder.append(getDisplayName());
+		statementBuilder.append(" - ");
+		statementBuilder.append("Number of Account(s): ");
+		statementBuilder.append(getNumberOfAccounts());
+		return statementBuilder.toString();
 	}
 
 	public String getId() {

@@ -29,6 +29,7 @@ public class TestIndividualCustomer {
 	@Before
 	public void setUp(){
 		this.individualCustomer = new IndividualCustomer("C1");
+		((IndividualCustomer) individualCustomer).setIndividualInformation(new IndividualInformation("firstName", "lastName"));
 	}
 
 	@Test
@@ -44,7 +45,6 @@ public class TestIndividualCustomer {
 	
 	@Test
 	public void shouldSetIndividualInformation(){
-		((IndividualCustomer) individualCustomer).setIndividualInformation(new IndividualInformation("firstName", "lastName"));
 		assertEquals("lastName, firstName", individualCustomer.getDisplayName()); 
 	}
 	
@@ -72,5 +72,12 @@ public class TestIndividualCustomer {
 			mockSavingsAccount.getInterestEarned();
 			mockSavingsAccount.getInterestEarned();
 		}};
+	}
+	
+	@Test
+	public void shouldGetCustomerStatement(){
+		individualCustomer.openAccount(mockSavingsAccount);
+		individualCustomer.openAccount(mockCheckingAccount);
+		assertEquals("Customer ID: C1 - Customer Name: lastName, firstName - Number of Account(s): 2", individualCustomer.getStatement());
 	}
 }

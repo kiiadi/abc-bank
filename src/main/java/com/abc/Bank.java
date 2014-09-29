@@ -18,7 +18,7 @@ public class Bank {
         customers = new ArrayList<ICustomer>();
     }
 
-    public void addCustomer(ICustomer customer) {
+    public void addCustomer(final ICustomer customer) {
         customers.add(customer);
     }
 
@@ -29,13 +29,10 @@ public class Bank {
 
     public double totalInterestPaid() {
         double total = 0;
-        for(ICustomer c: customers)
-            total += c.getTotalInterestEarned();
+        for(final ICustomer customer: customers){
+            total += customer.getTotalInterestEarned();
+        }
         return total;
     }
 
-    public String getFirstCustomer() {
-    	
-    	return null;
-    }
 }
