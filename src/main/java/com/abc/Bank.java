@@ -3,44 +3,43 @@ package com.abc;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.abc.customer.ICustomer;
+
+/**
+ * 
+ * @author Sanju Thomas
+ *
+ */
 public class Bank {
-    private List<Customer> customers;
+	
+    private List<ICustomer> customers;
 
     public Bank() {
-        customers = new ArrayList<Customer>();
+        customers = new ArrayList<ICustomer>();
     }
 
-    public void addCustomer(Customer customer) {
+    public void addCustomer(final ICustomer customer) {
         customers.add(customer);
     }
 
-    public String customerSummary() {
-        String summary = "Customer Summary";
-        for (Customer c : customers)
-            summary += "\n - " + c.getName() + " (" + format(c.getNumberOfAccounts(), "account") + ")";
-        return summary;
+    public String getCustomerSummary() {
+    	final StringBuilder statementBuilder = new StringBuilder();
+    	for(final ICustomer customer : customers){
+    		statementBuilder.append(customer.getStatement());
+    		statementBuilder.append("\n");
+    	}
+    	return statementBuilder.toString();
     }
 
-    //Make sure correct plural of word is created based on the number passed in:
-    //If number passed in is 1 just return the word otherwise add an 's' at the end
-    private String format(int number, String word) {
-        return number + " " + (number == 1 ? word : word + "s");
-    }
-
-    public double totalInterestPaid() {
+    public double getTotalInterestPaid() {
         double total = 0;
-        for(Customer c: customers)
-            total += c.totalInterestEarned();
+        for(final ICustomer customer: customers){
+            total += customer.getTotalInterestEarned();
+        }
         return total;
     }
 
-    public String getFirstCustomer() {
-        try {
-            customers = null;
-            return customers.get(0).getName();
-        } catch (Exception e){
-            e.printStackTrace();
-            return "Error";
-        }
+    public int getCustomerCount(){
+    	return customers.size();
     }
 }
