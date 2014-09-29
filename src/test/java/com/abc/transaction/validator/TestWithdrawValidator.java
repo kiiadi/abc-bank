@@ -1,5 +1,7 @@
 package com.abc.transaction.validator;
 
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -38,5 +40,18 @@ public class TestWithdrawValidator {
 		final Deposit deposit = new Deposit(100.00);
 		account.process(deposit);
 		withdrawValidator.validate(account, new Withdraw(101.00));
+	}
+	
+	@Test()
+	public void shouldGetValidExceptionMessage(){
+		final IAccount account = new SavingsAccount("S1");
+		final Deposit deposit = new Deposit(100.00);
+		account.process(deposit);
+		try {
+			withdrawValidator.validate(account, new Withdraw(101.00));
+		} catch (final ValidationException e) {
+			final String message = e.getMessage();
+			assertEquals("Unfortunately account doesn't have enough balance to serve the requested withdrwal! Available balance: 100.0Requested amount: 101.0", message);
+		}
 	}
 }

@@ -29,6 +29,7 @@ public class TestDeposit {
 		assertEquals(10.99, deposit.getAmount(), 0.0);
 	}
 	
+	@Test
 	public void shouldGetDepositedDate(){
 		final DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
 		assertEquals(dateFormat.format(DateProvider.getInstance().now()), dateFormat.format(deposit.getDate()));

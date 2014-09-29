@@ -54,6 +54,16 @@ public class TestSavingsAccount {
 		assertEquals(50.00, savingAccount.getBalance(), 0);
 	}
 	
+	@Test
+	public void shoudlWithDraw100() throws ValidationException{
+		final Deposit deposit = new Deposit(100.00);
+		savingAccount.process(deposit);
+		assertEquals(100.00, savingAccount.getBalance(), 0);
+		final Withdraw withdraw = new Withdraw(100.00);
+		savingAccount.process(withdraw);
+		assertEquals(0.00, savingAccount.getBalance(), 0);
+	}
+	
 	
 	@Test(expected = NotEnoughBalanceException.class)
 	public void shouldGetNotEnoughBalanceException() throws ValidationException{

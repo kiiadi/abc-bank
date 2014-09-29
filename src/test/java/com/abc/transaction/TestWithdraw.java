@@ -29,6 +29,7 @@ public class TestWithdraw {
 		assertEquals(9.9, withdraw.getAmount(), 0.0);
 	}
 	
+	@Test
 	public void shouldGetDepositedDate(){
 		final DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
 		assertEquals(dateFormat.format(DateProvider.getInstance().now()), dateFormat.format(withdraw.getDate()));
