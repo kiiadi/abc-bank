@@ -22,12 +22,16 @@ public class Bank {
         customers.add(customer);
     }
 
-    public String customerSummary() {
-    	
-    	return null;
+    public String getCustomerSummary() {
+    	final StringBuilder statementBuilder = new StringBuilder();
+    	for(ICustomer customer : customers){
+    		statementBuilder.append(customer.getStatement());
+    		statementBuilder.append("\n");
+    	}
+    	return statementBuilder.toString();
     }
 
-    public double totalInterestPaid() {
+    public double getTotalInterestPaid() {
         double total = 0;
         for(final ICustomer customer: customers){
             total += customer.getTotalInterestEarned();
@@ -35,4 +39,7 @@ public class Bank {
         return total;
     }
 
+    public int getCustomerCount(){
+    	return customers.size();
+    }
 }
