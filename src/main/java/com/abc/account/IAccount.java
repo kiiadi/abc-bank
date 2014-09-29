@@ -27,5 +27,6 @@ public interface IAccount {
 	
 	public Date getOpeningDate();
 	
-	public double interestEarned();
+	public double getInterestEarned();
+	
 }

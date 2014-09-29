@@ -76,8 +76,12 @@ public abstract class Account implements IAccount{
 	 * Calculate the interest earned so far.
 	 * 
 	 */
-	public double interestEarned(){
-		return 0;
+	public double getInterestEarned(){
+		double interest = 0;
+		if(null != interestCalculator){
+			interest = interestCalculator.calculate(this);
+		}
+		return interest;
 	}
 
 	/**
