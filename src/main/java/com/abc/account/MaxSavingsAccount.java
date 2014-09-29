@@ -22,4 +22,12 @@ public class MaxSavingsAccount extends Account implements IAccount{
 		super.transactionValidators = getTransactionValidators();
 		openingDate = DateProvider.getInstance().now();
 	}
+	
+	public int hashCode() {
+		return super.hashCode();
+	}
+
+	public boolean equals(Object obj){
+		return super.equals(obj);
+	}
 }
