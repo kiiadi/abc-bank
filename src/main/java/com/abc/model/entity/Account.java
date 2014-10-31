@@ -50,4 +50,8 @@ public abstract class Account {
         return totalInterestReceived;
     }
 
+    public boolean isThereEnoughMoneyToDebit(BigDecimal amountToDebit) {
+        return getBalance().compareTo(amountToDebit) >= 0;
+    }
+
 }

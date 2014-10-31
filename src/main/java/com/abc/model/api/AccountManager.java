@@ -20,6 +20,7 @@ public interface AccountManager {
 
     Transaction depositMoneyToAccount(Account account, BigDecimal amount);
     Transaction withdrawMoneyFromAccount(Account account, BigDecimal amount);
+    void transferMoney(Customer customer, String account1, String account2, BigDecimal amount);
 
     Transaction addInterest(Account account);
 

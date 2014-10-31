@@ -17,4 +17,12 @@ public class Customer extends Role {
     public List<Account> getAccounts() {
         return accounts;
     }
+
+    public Account getAccountByName(String name) {
+        for(Account account : accounts) {
+            if(account.getName().equals(name)) return account;
+        }
+
+        return null;
+    }
 }

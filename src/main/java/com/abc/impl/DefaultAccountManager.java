@@ -43,9 +43,23 @@ public class DefaultAccountManager implements AccountManager {
 
     @Override
     public Transaction withdrawMoneyFromAccount(Account account, BigDecimal amount) {
-        Transaction transaction = new Transaction(amount, Transaction.Type.DEBIT, new Date());
-        account.getTransactions().add(transaction);
-        return transaction;
+        if(account.isThereEnoughMoneyToDebit(amount)) {
+            Transaction transaction = new Transaction(amount, Transaction.Type.DEBIT, new Date());
+            account.getTransactions().add(transaction);
+            return transaction;
+        } else {
+            throw new IllegalStateException("Account would have negative balance");
+        }
+    }
+
+    @Override
+    public void transferMoney(Customer customer, String account1, String account2, BigDecimal amount) {
+        Account accountOne = customer.getAccountByName(account1);
+        Account accountTwo = customer.getAccountByName(account2);
+        validateTransfer(accountOne, accountTwo, amount);
+
+        withdrawMoneyFromAccount(accountOne,amount);
+        depositMoneyToAccount(accountTwo,amount);
     }
 
     @Override
@@ -66,4 +80,16 @@ public class DefaultAccountManager implements AccountManager {
         customer.getAccounts().add(account);
         return account;
     }
+
+    private void validateTransfer(Account account1, Account account2, BigDecimal amount) {
+        if(amount.signum() == -1) {
+            throw new IllegalArgumentException("negative amount can't be transferred " + amount.toString());
+        }
+
+        if(account1 == null || account2 == null) {
+            throw new IllegalArgumentException((account1 == null ? "Source account not found." : "") +
+                    (account2 == null ? "Destination account not found." : ""));
+        }
+    }
+
 }
