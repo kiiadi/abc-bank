@@ -1,5 +1,6 @@
 package com.abc.impl.manager;
 
+import com.abc.impl.util.MathUtil;
 import com.abc.model.api.AccountManager;
 import com.abc.model.entity.*;
 
@@ -42,6 +43,14 @@ public class DefaultAccountManager implements AccountManager {
     @Override
     public Transaction withdrawMoneyFromAccount(Account account, BigDecimal amount) {
         Transaction transaction = new Transaction(amount, Transaction.Type.DEBIT, new Date());
+        account.getTransactions().add(transaction);
+        return transaction;
+    }
+
+    @Override
+    public Transaction addInterest(Account account) {
+        BigDecimal interestAmount = account.calculateInterest();
+        Transaction transaction = new Transaction(interestAmount, Transaction.Type.INTEREST, new Date());
         account.getTransactions().add(transaction);
         return transaction;
     }

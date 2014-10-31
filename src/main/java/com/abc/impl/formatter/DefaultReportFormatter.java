@@ -79,6 +79,9 @@ public class DefaultReportFormatter implements ReportFormatter {
             case DEBIT:
                 transactionType = "withdrawal";
                 break;
+            case INTEREST:
+                transactionType = "interest";
+                break;
             default:
                 throw new IllegalArgumentException(transaction.getType().toString());
         }

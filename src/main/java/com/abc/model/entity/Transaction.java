@@ -10,7 +10,8 @@ public class Transaction {
 
     public enum Type {
         CREDIT,
-        DEBIT
+        DEBIT,
+        INTEREST
     }
 
     private BigDecimal amount;
@@ -38,6 +39,7 @@ public class Transaction {
     public BigDecimal toSignedAmount() {
         switch(type) {
             case CREDIT:
+            case INTEREST:
                 return amount;
             case DEBIT:
                 return amount.multiply(new BigDecimal("-1"));

@@ -24,6 +24,10 @@ public abstract class Account {
         return name;
     }
 
+    public abstract String getAccountType();
+
+    public abstract BigDecimal calculateInterest();
+
     public BigDecimal getBalance() {
         BigDecimal balance = new BigDecimal("0");
 
@@ -34,5 +38,4 @@ public abstract class Account {
         return balance;
     }
 
-    public abstract String getAccountType();
 }

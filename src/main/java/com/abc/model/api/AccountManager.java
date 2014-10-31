@@ -18,4 +18,6 @@ public interface AccountManager {
     Transaction depositMoneyToAccount(Account account, BigDecimal amount);
     Transaction withdrawMoneyFromAccount(Account account, BigDecimal amount);
 
+    Transaction addInterest(Account account);
+
 }
