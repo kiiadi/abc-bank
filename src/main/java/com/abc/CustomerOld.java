@@ -5,20 +5,20 @@ import java.util.List;
 
 import static java.lang.Math.abs;
 
-public class Customer {
+public class CustomerOld {
     private String name;
-    private List<Account> accounts;
+    private List<AccountOld> accounts;
 
-    public Customer(String name) {
+    public CustomerOld(String name) {
         this.name = name;
-        this.accounts = new ArrayList<Account>();
+        this.accounts = new ArrayList<AccountOld>();
     }
 
     public String getName() {
         return name;
     }
 
-    public Customer openAccount(Account account) {
+    public CustomerOld openAccount(AccountOld account) {
         accounts.add(account);
         return this;
     }
@@ -29,7 +29,7 @@ public class Customer {
 
     public double totalInterestEarned() {
         double total = 0;
-        for (Account a : accounts)
+        for (AccountOld a : accounts)
             total += a.interestEarned();
         return total;
     }
@@ -38,7 +38,7 @@ public class Customer {
         String statement = null;
         statement = "Statement for " + name + "\n";
         double total = 0.0;
-        for (Account a : accounts) {
+        for (AccountOld a : accounts) {
             statement += "\n" + statementForAccount(a) + "\n";
             total += a.sumTransactions();
         }
@@ -46,25 +46,25 @@ public class Customer {
         return statement;
     }
 
-    private String statementForAccount(Account a) {
+    private String statementForAccount(AccountOld a) {
         String s = "";
 
        //Translate to pretty account type
         switch(a.getAccountType()){
-            case Account.CHECKING:
+            case AccountOld.CHECKING:
                 s += "Checking Account\n";
                 break;
-            case Account.SAVINGS:
+            case AccountOld.SAVINGS:
                 s += "Savings Account\n";
                 break;
-            case Account.MAXI_SAVINGS:
+            case AccountOld.MAXI_SAVINGS:
                 s += "Maxi Savings Account\n";
                 break;
         }
 
         //Now total up all the transactions
         double total = 0.0;
-        for (Transaction t : a.transactions) {
+        for (TransactionOld t : a.transactions) {
             s += "  " + (t.amount < 0 ? "withdrawal" : "deposit") + " " + toDollars(t.amount) + "\n";
             total += t.amount;
         }

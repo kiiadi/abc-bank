@@ -4,19 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Bank {
-    private List<Customer> customers;
+    private List<CustomerOld> customers;
 
     public Bank() {
-        customers = new ArrayList<Customer>();
+        customers = new ArrayList<CustomerOld>();
     }
 
-    public void addCustomer(Customer customer) {
+    public void addCustomer(CustomerOld customer) {
         customers.add(customer);
     }
 
     public String customerSummary() {
         String summary = "Customer Summary";
-        for (Customer c : customers)
+        for (CustomerOld c : customers)
             summary += "\n - " + c.getName() + " (" + format(c.getNumberOfAccounts(), "account") + ")";
         return summary;
     }
@@ -29,7 +29,7 @@ public class Bank {
 
     public double totalInterestPaid() {
         double total = 0;
-        for(Customer c: customers)
+        for(CustomerOld c: customers)
             total += c.totalInterestEarned();
         return total;
     }
