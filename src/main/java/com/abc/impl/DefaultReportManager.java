@@ -1,13 +1,9 @@
 package com.abc.impl;
 
+import com.abc.model.api.AccountManager;
 import com.abc.model.api.CustomerManager;
 import com.abc.model.api.ReportManager;
-import com.abc.model.entity.Account;
-import com.abc.model.entity.Customer;
-import com.abc.model.entity.CustomerReport;
-import com.abc.model.entity.CustomersAccountsReport;
-
-import java.util.List;
+import com.abc.model.entity.*;
 
 /**
  * Created by alexandr koller on 31/10/2014.
@@ -15,9 +11,14 @@ import java.util.List;
 public class DefaultReportManager implements ReportManager {
 
     private CustomerManager customerManager;
+    private AccountManager accountManager;
 
     public void setCustomerManager(CustomerManager customerManager) {
         this.customerManager = customerManager;
+    }
+
+    public void setAccountManager(AccountManager accountManager) {
+        this.accountManager = accountManager;
     }
 
     @Override
@@ -41,5 +42,16 @@ public class DefaultReportManager implements ReportManager {
         }
 
         return customersAccountsReport;
+    }
+
+    @Override
+    public InterestAmountPaidReport createInterestAmountReport() {
+        InterestAmountPaidReport interestAmountPaidReport = new InterestAmountPaidReport("Total Interest Amount Paid");
+
+        for(Account account : accountManager.getAllAccounts()) {
+            interestAmountPaidReport.addAccount(account);
+        }
+
+        return interestAmountPaidReport;
     }
 }

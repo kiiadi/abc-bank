@@ -5,32 +5,33 @@ import com.abc.model.api.AccountManager;
 import com.abc.model.entity.*;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by alexandr koller on 31/10/2014.
  */
 public class DefaultAccountManager implements AccountManager {
 
+    private List<Account> allAccounts = new ArrayList<Account>();
+
     @Override
     public Account openCheckingAccount(Customer customer, String accountName) {
         Account account = new CheckingAccount(accountName);
-        customer.getAccounts().add(account);
-        return account;
+        return persistAccount(account,customer);
     }
 
     @Override
     public Account openSavingsAccount(Customer customer, String accountName) {
         Account account = new SavingsAccount(accountName);
-        customer.getAccounts().add(account);
-        return account;
+        return persistAccount(account,customer);
     }
 
     @Override
     public Account openMaxiSavingsAccount(Customer customer, String accountName) {
         Account account = new MaxiSavingsAccount(accountName);
-        customer.getAccounts().add(account);
-        return account;
+        return persistAccount(account,customer);
     }
 
     @Override
@@ -53,5 +54,16 @@ public class DefaultAccountManager implements AccountManager {
         Transaction transaction = new Transaction(interestAmount, Transaction.Type.INTEREST, new Date());
         account.getTransactions().add(transaction);
         return transaction;
+    }
+
+    @Override
+    public List<Account> getAllAccounts() {
+        return allAccounts;
+    }
+
+    private Account persistAccount(Account account, Customer customer) {
+        allAccounts.add(account);
+        customer.getAccounts().add(account);
+        return account;
     }
 }

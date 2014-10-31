@@ -5,11 +5,14 @@ import com.abc.model.entity.Customer;
 import com.abc.model.entity.Transaction;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * Created by alexandr koller on 31/10/2014.
  */
 public interface AccountManager {
+
+    List<Account> getAllAccounts();
 
     Account openCheckingAccount(Customer customer, String accountName);
     Account openSavingsAccount(Customer customer, String accountName);

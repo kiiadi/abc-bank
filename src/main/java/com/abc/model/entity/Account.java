@@ -38,4 +38,16 @@ public abstract class Account {
         return balance;
     }
 
+    public BigDecimal getTotalInterestReceived() {
+        BigDecimal totalInterestReceived = new BigDecimal("0");
+
+        for(Transaction transaction : transactions) {
+            if(transaction.getType().equals(Transaction.Type.INTEREST)) {
+                totalInterestReceived = totalInterestReceived.add(transaction.toSignedAmount());
+            }
+        }
+
+        return totalInterestReceived;
+    }
+
 }

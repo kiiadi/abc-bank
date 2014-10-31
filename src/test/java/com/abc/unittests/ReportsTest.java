@@ -8,16 +8,16 @@ import com.abc.model.api.AccountManager;
 import com.abc.model.api.CustomerManager;
 import com.abc.model.api.ReportFormatter;
 import com.abc.model.api.ReportManager;
-import com.abc.model.entity.Account;
-import com.abc.model.entity.Customer;
-import com.abc.model.entity.CustomerReport;
-import static org.junit.Assert.*;
+import com.abc.model.entity.*;
 
-import com.abc.model.entity.CustomersAccountsReport;
+import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * Created by alexandr koller on 31/10/2014.
@@ -25,6 +25,7 @@ import java.math.BigDecimal;
 public class ReportsTest {
 
     public static final String LINE_SEPARATOR = System.getProperty("line.separator");
+    private final double DELTA = 0.000001;
 
     private ReportManager reportManager = new DefaultReportManager();
     private ReportFormatter reportFormatter = new DefaultReportFormatter();
@@ -38,8 +39,10 @@ public class ReportsTest {
 
         //dependency injection
         ((DefaultReportManager)reportManager).setCustomerManager(customerManager);
+        ((DefaultReportManager)reportManager).setAccountManager(accountManager);
 
-        //create some dummy customers
+
+        //create some dummy customers with some accounts and transactions
         customer1 = customerManager.addCustomer("Customer 1");
         Account checkingAccountCustomer1 = accountManager.openCheckingAccount(customer1,"Checking Account 1");
         Account savingsAccountCustomer1 = accountManager.openSavingsAccount(customer1,"Savings Account 1");
@@ -50,14 +53,39 @@ public class ReportsTest {
         accountManager.withdrawMoneyFromAccount(savingsAccountCustomer1, new BigDecimal(200));
         accountManager.depositMoneyToAccount(maxiSavingsAccountCustomer1, new BigDecimal(100.55));
 
+        //let's add the interest flow directly to make it clearer
+        maxiSavingsAccountCustomer1.getTransactions().add(new Transaction(new BigDecimal("1000"),
+                Transaction.Type.INTEREST, new Date()));
+
         Customer customer2 = customerManager.addCustomer("Customer 2");
-        accountManager.openCheckingAccount(customer2,"Checking Account 2");
+        Account customer2Account = accountManager.openCheckingAccount(customer2,"Checking Account 2");
+
+        //again, manual insert for the interest transaction
+        customer2Account.getTransactions().add(new Transaction(new BigDecimal("500.11"),
+                Transaction.Type.INTEREST, new Date()));
 
         customerManager.addCustomer("Customer 3");
 
     }
 
+    @Test //report showing the total interest paid by the bank on all accounts
+    public void generateInterestAmountsReport() {
+        InterestAmountPaidReport interestAmountPaidReport = reportManager.createInterestAmountReport();
+
+        assertEquals(1500.11, interestAmountPaidReport.getTotalInterestPaid().doubleValue(),DELTA);
+    }
+
     @Test
+    public void basicFormatOfInterestPaidReport() {
+        InterestAmountPaidReport interestAmountPaidReport = reportManager.createInterestAmountReport();
+        String interestPaidReportBasicFormat = reportFormatter.formatInterestAmountPaidReport(interestAmountPaidReport);
+
+        assertEquals("Total interest paid across all accounts: $1,500.11"
+                , interestPaidReportBasicFormat);
+
+    }
+
+    @Test //this is referred to as the "the list of customers and how many accounts they have"
     public void generateCustomersAccountsReport() {
         CustomersAccountsReport customersAccountsReport = reportManager.createCustomersAccountsReport();
 
@@ -83,7 +111,7 @@ public class ReportsTest {
 
     }
 
-    @Test
+    @Test //report for a customer about their accounts
     public void generateCustomerReport() {
 
         CustomerReport customerReport = reportManager.createCustomerReport(customer1);
@@ -115,9 +143,10 @@ public class ReportsTest {
                 LINE_SEPARATOR +
                 "Maxi-Savings Account (Maxi Savings Account 1)" + LINE_SEPARATOR +
                 "  deposit $100.55" + LINE_SEPARATOR +
-                "Total $100.55" + LINE_SEPARATOR +
+                "  interest $1,000.00" + LINE_SEPARATOR +
+                "Total $1,100.55" + LINE_SEPARATOR +
                 LINE_SEPARATOR +
-                "Total In All Accounts $4,000.55", customerReportBasicFormat);
+                "Total In All Accounts $5,000.55", customerReportBasicFormat);
     }
 
 

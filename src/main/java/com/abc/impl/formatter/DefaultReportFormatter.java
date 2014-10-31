@@ -1,10 +1,7 @@
 package com.abc.impl.formatter;
 
 import com.abc.model.api.ReportFormatter;
-import com.abc.model.entity.Customer;
-import com.abc.model.entity.CustomerReport;
-import com.abc.model.entity.CustomersAccountsReport;
-import com.abc.model.entity.Transaction;
+import com.abc.model.entity.*;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
@@ -19,6 +16,12 @@ import java.util.Locale;
 public class DefaultReportFormatter implements ReportFormatter {
 
     public static final String LINE_SEPARATOR = System.getProperty("line.separator");
+
+    @Override
+    public String formatInterestAmountPaidReport(InterestAmountPaidReport interestAmountPaidReport) {
+        return "Total interest paid across all accounts: " +
+                amountToReportableAmount(interestAmountPaidReport.getTotalInterestPaid());
+    }
 
     @Override
     public String formatCustomersAccountsReport(CustomersAccountsReport customersAccountsReport) {
