@@ -5,5 +5,12 @@ package com.abc.model.entity;
  */
 public class SavingsAccount extends Account {
 
+    public SavingsAccount(String name) {
+        super(name);
+    }
 
+    @Override
+    public String getAccountType() {
+        return "Savings Account";
+    }
 }

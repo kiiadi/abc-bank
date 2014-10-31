@@ -34,4 +34,15 @@ public class Transaction {
     public Date getCreatedOn() {
         return createdOn;
     }
+
+    public BigDecimal toSignedAmount() {
+        switch(type) {
+            case CREDIT:
+                return amount;
+            case DEBIT:
+                return amount.multiply(new BigDecimal("-1"));
+            default:
+                throw new IllegalArgumentException(type.toString());
+        }
+    }
 }

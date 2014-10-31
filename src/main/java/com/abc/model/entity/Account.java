@@ -1,5 +1,6 @@
 package com.abc.model.entity;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,9 +9,30 @@ import java.util.List;
  */
 public abstract class Account {
 
+    private String name;
     private List<Transaction> transactions = new ArrayList<Transaction>();
 
     public List<Transaction> getTransactions() {
         return transactions;
     }
+
+    protected Account(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public BigDecimal getBalance() {
+        BigDecimal balance = new BigDecimal("0");
+
+        for(Transaction transaction : transactions) {
+            balance = balance.add(transaction.toSignedAmount());
+        }
+
+        return balance;
+    }
+
+    public abstract String getAccountType();
 }

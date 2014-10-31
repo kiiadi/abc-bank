@@ -5,7 +5,7 @@ import com.abc.model.api.AccountManager;
 import com.abc.model.entity.Account;
 import com.abc.model.entity.Customer;
 import com.abc.model.entity.Transaction;
-import org.junit.Assert;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,7 +22,7 @@ public class AccountBalanceManipulationTest {
     @Before
     public void setUpAccount() {
 
-        account = accountManager.openCheckingAccount(new Customer("Customer 1"));
+        account = accountManager.openCheckingAccount(new Customer("Customer 1"),"Account 1");
 
     }
 
@@ -32,12 +32,12 @@ public class AccountBalanceManipulationTest {
 
         accountManager.depositMoneyToAccount(account,amountOfMoneyToDeposit);
 
-        Assert.assertEquals(1, account.getTransactions().size());
+        assertEquals(1, account.getTransactions().size());
 
         Transaction transaction = account.getTransactions().get(0);
-        Assert.assertEquals(amountOfMoneyToDeposit,transaction.getAmount());
-        Assert.assertEquals(Transaction.Type.CREDIT,transaction.getType());
-        Assert.assertNotNull(transaction.getCreatedOn());
+        assertEquals(amountOfMoneyToDeposit,transaction.getAmount());
+        assertEquals(Transaction.Type.CREDIT,transaction.getType());
+        assertNotNull(transaction.getCreatedOn());
     }
 
     @Test
@@ -46,12 +46,12 @@ public class AccountBalanceManipulationTest {
 
         accountManager.withdrawMoneyFromAccount(account,amountOfMoneyToWithdraw);
 
-        Assert.assertEquals(1, account.getTransactions().size());
+        assertEquals(1, account.getTransactions().size());
 
         Transaction transaction = account.getTransactions().get(0);
-        Assert.assertEquals(amountOfMoneyToWithdraw,transaction.getAmount());
-        Assert.assertEquals(Transaction.Type.DEBIT,transaction.getType());
-        Assert.assertNotNull(transaction.getCreatedOn());
+        assertEquals(amountOfMoneyToWithdraw,transaction.getAmount());
+        assertEquals(Transaction.Type.DEBIT,transaction.getType());
+        assertNotNull(transaction.getCreatedOn());
     }
 
     //@todo test over withdrawal. test summing up transactions

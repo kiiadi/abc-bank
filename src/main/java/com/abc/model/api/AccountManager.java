@@ -11,9 +11,9 @@ import java.math.BigDecimal;
  */
 public interface AccountManager {
 
-    Account openCheckingAccount(Customer customer);
-    Account openSavingsAccount(Customer customer);
-    Account openMaxiSavingsAccount(Customer customer);
+    Account openCheckingAccount(Customer customer, String accountName);
+    Account openSavingsAccount(Customer customer, String accountName);
+    Account openMaxiSavingsAccount(Customer customer, String accountName);
 
     Transaction depositMoneyToAccount(Account account, BigDecimal amount);
     Transaction withdrawMoneyFromAccount(Account account, BigDecimal amount);

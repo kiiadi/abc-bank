@@ -12,22 +12,22 @@ import java.util.Date;
 public class DefaultAccountManager implements AccountManager {
 
     @Override
-    public Account openCheckingAccount(Customer customer) {
-        Account account = new CheckingAccount();
+    public Account openCheckingAccount(Customer customer, String accountName) {
+        Account account = new CheckingAccount(accountName);
         customer.getAccounts().add(account);
         return account;
     }
 
     @Override
-    public Account openSavingsAccount(Customer customer) {
-        Account account = new SavingsAccount();
+    public Account openSavingsAccount(Customer customer, String accountName) {
+        Account account = new SavingsAccount(accountName);
         customer.getAccounts().add(account);
         return account;
     }
 
     @Override
-    public Account openMaxiSavingsAccount(Customer customer) {
-        Account account = new MaxiSavingsAccount();
+    public Account openMaxiSavingsAccount(Customer customer, String accountName) {
+        Account account = new MaxiSavingsAccount(accountName);
         customer.getAccounts().add(account);
         return account;
     }

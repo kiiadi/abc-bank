@@ -2,11 +2,8 @@ package com.abc.unittests;
 
 import com.abc.impl.manager.DefaultAccountManager;
 import com.abc.model.api.AccountManager;
-import com.abc.model.entity.CheckingAccount;
-import com.abc.model.entity.Customer;
-import com.abc.model.entity.MaxiSavingsAccount;
-import com.abc.model.entity.SavingsAccount;
-import org.junit.Assert;
+import com.abc.model.entity.*;
+import static org.junit.Assert.*;
 import org.junit.Test;
 
 /**
@@ -19,28 +16,37 @@ public class AccountLifecycleTest {
     @Test
     public void addNewCheckingAccount() {
         Customer customer = new Customer("Customer 1");
-        accountManager.openCheckingAccount(customer);
+        String accountName = "Checking Account";
+        accountManager.openCheckingAccount(customer,accountName);
 
-        Assert.assertEquals(1,customer.getAccounts().size());
-        Assert.assertEquals(CheckingAccount.class,customer.getAccounts().get(0).getClass());
+        assertEquals(1,customer.getAccounts().size());
+        Account newAccount = customer.getAccounts().get(0);
+        assertEquals(CheckingAccount.class,newAccount.getClass());
+        assertEquals(accountName,newAccount.getName());
     }
 
     @Test
     public void addNewSavingsAccount() {
         Customer customer = new Customer("Customer 1");
-        accountManager.openSavingsAccount(customer);
+        String accountName = "Savings Account";
+        accountManager.openSavingsAccount(customer, accountName);
 
-        Assert.assertEquals(1,customer.getAccounts().size());
-        Assert.assertEquals(SavingsAccount.class,customer.getAccounts().get(0).getClass());
+        assertEquals(1,customer.getAccounts().size());
+        Account newAccount = customer.getAccounts().get(0);
+        assertEquals(SavingsAccount.class,customer.getAccounts().get(0).getClass());
+        assertEquals(accountName,newAccount.getName());
     }
 
     @Test
     public void addNewMaxiSavingsAccount() {
         Customer customer = new Customer("Customer 1");
-        accountManager.openMaxiSavingsAccount(customer);
+        String accountName = "Maxi Savings Account";
+        accountManager.openMaxiSavingsAccount(customer,accountName);
 
-        Assert.assertEquals(1,customer.getAccounts().size());
-        Assert.assertEquals(MaxiSavingsAccount.class,customer.getAccounts().get(0).getClass());
+        assertEquals(1,customer.getAccounts().size());
+        Account newAccount = customer.getAccounts().get(0);
+        assertEquals(MaxiSavingsAccount.class,customer.getAccounts().get(0).getClass());
+        assertEquals(accountName,newAccount.getName());
     }
 
 
