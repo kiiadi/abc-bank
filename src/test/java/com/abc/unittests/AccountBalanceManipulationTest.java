@@ -28,7 +28,7 @@ public class AccountBalanceManipulationTest {
 
     @Test
     public void depositMoneyToAccount() {
-        BigDecimal amountOfMoneyToDeposit = new BigDecimal(1000.11);
+        BigDecimal amountOfMoneyToDeposit = new BigDecimal("1000.11");
 
         accountManager.depositMoneyToAccount(account,amountOfMoneyToDeposit);
 
@@ -42,7 +42,7 @@ public class AccountBalanceManipulationTest {
 
     @Test
     public void withdrawMoneyFromAccount() {
-        BigDecimal amountOfMoneyToWithdraw = new BigDecimal(1000.11);
+        BigDecimal amountOfMoneyToWithdraw = new BigDecimal("1000.11");
 
         accountManager.withdrawMoneyFromAccount(account,amountOfMoneyToWithdraw);
 

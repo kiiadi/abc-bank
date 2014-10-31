@@ -48,10 +48,10 @@ public class ReportsTest {
         Account savingsAccountCustomer1 = accountManager.openSavingsAccount(customer1,"Savings Account 1");
         Account maxiSavingsAccountCustomer1 = accountManager.openMaxiSavingsAccount(customer1,"Maxi Savings Account 1");
 
-        accountManager.depositMoneyToAccount(checkingAccountCustomer1,new BigDecimal(100));
-        accountManager.depositMoneyToAccount(savingsAccountCustomer1, new BigDecimal(4000));
-        accountManager.withdrawMoneyFromAccount(savingsAccountCustomer1, new BigDecimal(200));
-        accountManager.depositMoneyToAccount(maxiSavingsAccountCustomer1, new BigDecimal(100.55));
+        accountManager.depositMoneyToAccount(checkingAccountCustomer1,new BigDecimal("100"));
+        accountManager.depositMoneyToAccount(savingsAccountCustomer1, new BigDecimal("4000"));
+        accountManager.withdrawMoneyFromAccount(savingsAccountCustomer1, new BigDecimal("200"));
+        accountManager.depositMoneyToAccount(maxiSavingsAccountCustomer1, new BigDecimal("100.55"));
 
         //let's add the interest flow directly to make it clearer
         maxiSavingsAccountCustomer1.getTransactions().add(new Transaction(new BigDecimal("1000"),
