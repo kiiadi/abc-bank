@@ -25,6 +25,7 @@ public class InterestRateCalculationTest {
     private Customer customer = new Customer("Customer 1");
     private AccountManager accountManager = new DefaultAccountManager();
 
+    //below tests are testing interest rate calculation
     @Test
     public void testMathUtil_interestRateForOneDay_1() {
         double oneDayInterestRate = MathUtil.calculateInterestRateForOneDay(5.0);
@@ -59,6 +60,7 @@ public class InterestRateCalculationTest {
         assertEquals(101, currentBalance.doubleValue(), DELTA);
     }
 
+    //followed by test for each specific account
     @Test
     public void testCheckingAccount() {
 
@@ -72,7 +74,19 @@ public class InterestRateCalculationTest {
     }
 
     @Test
-    public void testSavingsAccount() {
+    public void testSavingsAccount_withinFirstLevelOfInterest() {
+
+        Account savingsAccount = accountManager.openSavingsAccount(customer,"Savings Account");
+        accountManager.depositMoneyToAccount(savingsAccount,new BigDecimal("999.00"));
+        Transaction interestTransaction = accountManager.addInterest(savingsAccount);
+
+        assertEquals(Transaction.Type.INTEREST,interestTransaction.getType());
+        assertEquals(0.002735,interestTransaction.getAmount().doubleValue(), DELTA);
+
+    }
+
+    @Test
+    public void testSavingsAccount_bothLevelsOfInterest() {
 
         Account savingsAccount = accountManager.openSavingsAccount(customer,"Savings Account");
         accountManager.depositMoneyToAccount(savingsAccount,new BigDecimal("100000.00"));
