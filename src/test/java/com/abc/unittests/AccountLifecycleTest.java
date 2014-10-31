@@ -1,6 +1,6 @@
 package com.abc.unittests;
 
-import com.abc.impl.manager.DefaultAccountManager;
+import com.abc.impl.DefaultAccountManager;
 import com.abc.model.api.AccountManager;
 import com.abc.model.entity.*;
 import static org.junit.Assert.*;
@@ -19,10 +19,10 @@ public class AccountLifecycleTest {
         String accountName = "Checking Account";
         accountManager.openCheckingAccount(customer,accountName);
 
-        assertEquals(1,customer.getAccounts().size());
+        assertEquals(1, customer.getAccounts().size());
         Account newAccount = customer.getAccounts().get(0);
-        assertEquals(CheckingAccount.class,newAccount.getClass());
-        assertEquals(accountName,newAccount.getName());
+        assertEquals(CheckingAccount.class, newAccount.getClass());
+        assertEquals(accountName, newAccount.getName());
     }
 
     @Test
@@ -31,10 +31,10 @@ public class AccountLifecycleTest {
         String accountName = "Savings Account";
         accountManager.openSavingsAccount(customer, accountName);
 
-        assertEquals(1,customer.getAccounts().size());
+        assertEquals(1, customer.getAccounts().size());
         Account newAccount = customer.getAccounts().get(0);
-        assertEquals(SavingsAccount.class,customer.getAccounts().get(0).getClass());
-        assertEquals(accountName,newAccount.getName());
+        assertEquals(SavingsAccount.class, customer.getAccounts().get(0).getClass());
+        assertEquals(accountName, newAccount.getName());
     }
 
     @Test
@@ -43,10 +43,10 @@ public class AccountLifecycleTest {
         String accountName = "Maxi Savings Account";
         accountManager.openMaxiSavingsAccount(customer,accountName);
 
-        assertEquals(1,customer.getAccounts().size());
+        assertEquals(1, customer.getAccounts().size());
         Account newAccount = customer.getAccounts().get(0);
-        assertEquals(MaxiSavingsAccount.class,customer.getAccounts().get(0).getClass());
-        assertEquals(accountName,newAccount.getName());
+        assertEquals(MaxiSavingsAccount.class, customer.getAccounts().get(0).getClass());
+        assertEquals(accountName, newAccount.getName());
     }
 
 

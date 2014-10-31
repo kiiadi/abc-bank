@@ -1,6 +1,6 @@
 package com.abc.unittests;
 
-import com.abc.impl.manager.DefaultAccountManager;
+import com.abc.impl.DefaultAccountManager;
 import com.abc.model.api.AccountManager;
 import com.abc.model.entity.Account;
 import com.abc.model.entity.Customer;
@@ -35,8 +35,8 @@ public class AccountBalanceManipulationTest {
         assertEquals(1, account.getTransactions().size());
 
         Transaction transaction = account.getTransactions().get(0);
-        assertEquals(amountOfMoneyToDeposit,transaction.getAmount());
-        assertEquals(Transaction.Type.CREDIT,transaction.getType());
+        assertEquals(amountOfMoneyToDeposit, transaction.getAmount());
+        assertEquals(Transaction.Type.CREDIT, transaction.getType());
         assertNotNull(transaction.getCreatedOn());
     }
 
@@ -49,8 +49,8 @@ public class AccountBalanceManipulationTest {
         assertEquals(1, account.getTransactions().size());
 
         Transaction transaction = account.getTransactions().get(0);
-        assertEquals(amountOfMoneyToWithdraw,transaction.getAmount());
-        assertEquals(Transaction.Type.DEBIT,transaction.getType());
+        assertEquals(amountOfMoneyToWithdraw, transaction.getAmount());
+        assertEquals(Transaction.Type.DEBIT, transaction.getType());
         assertNotNull(transaction.getCreatedOn());
     }
 

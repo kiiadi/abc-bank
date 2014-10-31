@@ -1,4 +1,4 @@
-package com.abc.impl.manager;
+package com.abc.impl;
 
 import com.abc.impl.util.MathUtil;
 import com.abc.model.api.AccountManager;

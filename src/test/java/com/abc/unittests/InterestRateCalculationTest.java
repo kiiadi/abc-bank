@@ -2,7 +2,7 @@ package com.abc.unittests;
 
 
 import com.abc.dummy.DummySystemSettings;
-import com.abc.impl.manager.DefaultAccountManager;
+import com.abc.impl.DefaultAccountManager;
 import com.abc.impl.util.MathUtil;
 import com.abc.model.api.AccountManager;
 import com.abc.model.entity.Account;

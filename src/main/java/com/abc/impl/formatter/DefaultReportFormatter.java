@@ -1,8 +1,9 @@
 package com.abc.impl.formatter;
 
 import com.abc.model.api.ReportFormatter;
-import com.abc.model.entity.Account;
+import com.abc.model.entity.Customer;
 import com.abc.model.entity.CustomerReport;
+import com.abc.model.entity.CustomersAccountsReport;
 import com.abc.model.entity.Transaction;
 
 import java.math.BigDecimal;
@@ -13,44 +14,78 @@ import java.util.Locale;
 /**
  * Created by alexandr koller on 31/10/2014.
  */
+
+//this is a good candidate for further refactor so the different reports are not so mingled
 public class DefaultReportFormatter implements ReportFormatter {
 
     public static final String LINE_SEPARATOR = System.getProperty("line.separator");
 
     @Override
-    public String formatCustomerReportToBasicFormat(CustomerReport customerReport) {
+    public String formatCustomersAccountsReport(CustomersAccountsReport customersAccountsReport) {
         String formattedReport = "";
 
-        formattedReport += createHeader(customerReport);
+        formattedReport += createCustomersAccountsReportHeader();
+        formattedReport += LINE_SEPARATOR;
+        formattedReport += createCustomersAccountsReportBody(customersAccountsReport);
+
+        return formattedReport;
+    }
+
+    private String createCustomersAccountsReportHeader() {
+        return "Customer Summary";
+    }
+
+    private String createCustomersAccountsReportBody(CustomersAccountsReport customersAccountsReport) {
+        String body = "";
+
+        List<Customer> customers = customersAccountsReport.getCustomers();
+        for(int i = 0;i < customers.size();i++) {
+            body += createCustomersAccountsReportItem(customers.get(i));
+            body += i < customers.size() - 1 ? LINE_SEPARATOR : "";
+        }
+
+        return body;
+    }
+
+    private String createCustomersAccountsReportItem(Customer customer) {
+        int numberOfAccounts = customer.getAccounts().size();
+        return String.format("- %s (%d account%s)",customer.getName(),numberOfAccounts,numberOfAccounts == 1 ? "" : "s");
+    }
+
+    @Override
+    public String formatCustomerReport(CustomerReport customerReport) {
+        String formattedReport = "";
+
+        formattedReport += createCustomerReportHeader(customerReport);
         formattedReport += LINE_SEPARATOR;
         formattedReport += LINE_SEPARATOR;
-        formattedReport += createBody(customerReport);
+        formattedReport += createCustomerReportBody(customerReport);
         formattedReport += LINE_SEPARATOR;
-        formattedReport += createFooter(customerReport);
+        formattedReport += createCustomerReportFooter(customerReport);
 
 
         return formattedReport;
     }
 
-    private String createHeader(CustomerReport customerReport) {
+    private String createCustomerReportHeader(CustomerReport customerReport) {
         return "Statement for " + customerReport.getCustomerName();
     }
 
-    private String createBody(CustomerReport customerReport) {
+    private String createCustomerReportBody(CustomerReport customerReport) {
 
         String body = "";
 
         List<CustomerReport.CustomerReportItem> customerReportItems = customerReport.getReportItems();
         for(int i = 0;i < customerReportItems.size();i++) {
             CustomerReport.CustomerReportItem customerReportItem = customerReportItems.get(i);
-            body += createReportItem(customerReportItem);
+            body += createCustomerReportItem(customerReportItem);
             body += LINE_SEPARATOR + ((i < customerReportItems.size() - 1) ? LINE_SEPARATOR : "");
         }
 
         return body;
     }
 
-    private String createReportItem(CustomerReport.CustomerReportItem customerReportItem) {
+    private String createCustomerReportItem(CustomerReport.CustomerReportItem customerReportItem) {
         String reportItem = createAccountTitleLine(customerReportItem) + LINE_SEPARATOR;
 
         for(Transaction transaction : customerReportItem.getAccount().getTransactions()) {
@@ -89,7 +124,7 @@ public class DefaultReportFormatter implements ReportFormatter {
         return transactionType + " " + amountToReportableAmount(transaction.getAmount());
     }
 
-    private String createFooter(CustomerReport customerReport) {
+    private String createCustomerReportFooter(CustomerReport customerReport) {
         return "Total In All Accounts " + amountToReportableAmount(calculateTotalAmountInAllAccounts(customerReport));
     }
 
