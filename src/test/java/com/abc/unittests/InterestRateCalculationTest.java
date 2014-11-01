@@ -3,6 +3,7 @@ package com.abc.unittests;
 
 import com.abc.dummy.DummySystemSettings;
 import com.abc.impl.DefaultAccountManager;
+import com.abc.impl.DefaultSystemSettings;
 import com.abc.impl.helper.InterestRateCalculator;
 import com.abc.model.api.AccountManager;
 import com.abc.model.entity.Account;
@@ -113,6 +114,8 @@ public class InterestRateCalculationTest {
     public void testMaxiSavingsAccount_withdrawalWithinTheNoWithdrawalsHorizon() {
 
         Account maxiSavingsAccount = accountManager.openMaxiSavingsAccount(customer,"Maxi Savings Account");
+        //this manual injection should become unnecessary with the introduction of a DI framework
+        ((MaxiSavingsAccount)maxiSavingsAccount).setSystemSettings(new DefaultSystemSettings());
         accountManager.depositMoneyToAccount(maxiSavingsAccount, new BigDecimal("100000.00"));
         accountManager.withdrawMoneyFromAccount(maxiSavingsAccount, new BigDecimal("500.00"));
         Transaction interestTransaction = accountManager.addInterest(maxiSavingsAccount);

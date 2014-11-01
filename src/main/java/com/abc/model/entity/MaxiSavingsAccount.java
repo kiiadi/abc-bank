@@ -16,7 +16,7 @@ public class MaxiSavingsAccount extends Account {
     private static final int NUMBER_OF_DAYS_NO_WITHDRAWALS_PREFERRED = 10;
     private static final double LOWER_INTEREST_RATE = 0.1;
     private static final double HIGHER_INTEREST_RATE = 5.0;
-    private SystemSettings systemSettings = new DefaultSystemSettings();
+    private SystemSettings systemSettings;
 
     public MaxiSavingsAccount(String name) {
         super(name);
