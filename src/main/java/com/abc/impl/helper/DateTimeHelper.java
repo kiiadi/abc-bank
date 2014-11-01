@@ -1,4 +1,4 @@
-package com.abc.impl.util;
+package com.abc.impl.helper;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -9,7 +9,7 @@ import java.util.Date;
 /**
  * Created by alexandr koller on 31/10/2014.
  */
-public class DateTimeUtil {
+public class DateTimeHelper {
 
     public static Date pushDateForwardByNumberOfDays(Date date, int numberOfDays) {
 

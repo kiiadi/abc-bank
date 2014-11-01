@@ -1,6 +1,6 @@
 package com.abc.dummy;
 
-import com.abc.impl.util.DateTimeUtil;
+import com.abc.impl.helper.DateTimeHelper;
 import com.abc.model.api.SystemSettings;
 
 import java.util.Calendar;
@@ -16,6 +16,6 @@ public class DummySystemSettings implements SystemSettings {
         //this is way in the future for the tests
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.YEAR,10);
-        return DateTimeUtil.removeTimeInformation(calendar.getTime());
+        return DateTimeHelper.removeTimeInformation(calendar.getTime());
     }
 }

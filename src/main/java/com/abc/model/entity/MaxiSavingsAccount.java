@@ -1,8 +1,8 @@
 package com.abc.model.entity;
 
 import com.abc.impl.DefaultSystemSettings;
-import com.abc.impl.util.DateTimeUtil;
-import com.abc.impl.util.MathUtil;
+import com.abc.impl.helper.DateTimeHelper;
+import com.abc.impl.helper.InterestRateCalculator;
 import com.abc.model.api.SystemSettings;
 
 import java.math.BigDecimal;
@@ -34,9 +34,9 @@ public class MaxiSavingsAccount extends Account {
     @Override
     public BigDecimal calculateInterest() {
         if(haveThereBeenWithdrawals(NUMBER_OF_DAYS_NO_WITHDRAWALS_PREFERRED)) {
-            return MathUtil.calculateInterestForOneDay(getBalance(), LOWER_INTEREST_RATE);
+            return InterestRateCalculator.calculateInterestForOneDay(getBalance(), LOWER_INTEREST_RATE);
         } else {
-            return MathUtil.calculateInterestForOneDay(getBalance(), HIGHER_INTEREST_RATE);
+            return InterestRateCalculator.calculateInterestForOneDay(getBalance(), HIGHER_INTEREST_RATE);
         }
     }
 
@@ -44,7 +44,7 @@ public class MaxiSavingsAccount extends Account {
         Date dateOfLastWithdrawal = dateOfLastWithdrawal();
         if(dateOfLastWithdrawal == null) return false;
 
-        Date dateForComparison = DateTimeUtil.pushDateForwardByNumberOfDays(dateOfLastWithdrawal, numberOfDaysToLookBack);
+        Date dateForComparison = DateTimeHelper.pushDateForwardByNumberOfDays(dateOfLastWithdrawal, numberOfDaysToLookBack);
         return !dateForComparison.before(systemSettings.getSystemDate());
     }
 

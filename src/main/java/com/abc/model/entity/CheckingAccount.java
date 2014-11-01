@@ -1,6 +1,6 @@
 package com.abc.model.entity;
 
-import com.abc.impl.util.MathUtil;
+import com.abc.impl.helper.InterestRateCalculator;
 
 import java.math.BigDecimal;
 
@@ -22,6 +22,6 @@ public class CheckingAccount extends Account {
 
     @Override
     public BigDecimal calculateInterest() {
-        return MathUtil.calculateInterestForOneDay(getBalance(), INTEREST_RATE);
+        return InterestRateCalculator.calculateInterestForOneDay(getBalance(), INTEREST_RATE);
     }
 }

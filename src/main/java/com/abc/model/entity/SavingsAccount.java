@@ -1,6 +1,6 @@
 package com.abc.model.entity;
 
-import com.abc.impl.util.MathUtil;
+import com.abc.impl.helper.InterestRateCalculator;
 
 import java.math.BigDecimal;
 
@@ -32,13 +32,13 @@ public class SavingsAccount extends Account {
     }
 
     private BigDecimal calculateInterestUsingBothInterestRates() {
-        BigDecimal firstPartOfInterest = MathUtil.calculateInterestForOneDay(THRESHOLD, FIRST_LAYER_INTEREST_RATE);
+        BigDecimal firstPartOfInterest = InterestRateCalculator.calculateInterestForOneDay(THRESHOLD, FIRST_LAYER_INTEREST_RATE);
         BigDecimal amountOverThreshold = getBalance().subtract(THRESHOLD);
-        BigDecimal secondPartOfInterest = MathUtil.calculateInterestForOneDay(amountOverThreshold, SECOND_LAYER_INTEREST_RATE);
+        BigDecimal secondPartOfInterest = InterestRateCalculator.calculateInterestForOneDay(amountOverThreshold, SECOND_LAYER_INTEREST_RATE);
         return firstPartOfInterest.add(secondPartOfInterest);
     }
 
     private BigDecimal calculateInterestWithOneInterestRateOnly() {
-        return MathUtil.calculateInterestForOneDay(getBalance(), FIRST_LAYER_INTEREST_RATE);
+        return InterestRateCalculator.calculateInterestForOneDay(getBalance(), FIRST_LAYER_INTEREST_RATE);
     }
 }

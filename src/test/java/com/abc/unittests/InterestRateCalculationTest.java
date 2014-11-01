@@ -3,7 +3,7 @@ package com.abc.unittests;
 
 import com.abc.dummy.DummySystemSettings;
 import com.abc.impl.DefaultAccountManager;
-import com.abc.impl.util.MathUtil;
+import com.abc.impl.helper.InterestRateCalculator;
 import com.abc.model.api.AccountManager;
 import com.abc.model.entity.Account;
 import com.abc.model.entity.Customer;
@@ -28,21 +28,21 @@ public class InterestRateCalculationTest {
     //below tests are testing interest rate calculation
     @Test
     public void testMathUtil_interestRateForOneDay_1() {
-        double oneDayInterestRate = MathUtil.calculateInterestRateForOneDay(5.0);
+        double oneDayInterestRate = InterestRateCalculator.calculateInterestRateForOneDay(5.0);
 
         assertEquals(0.013368,oneDayInterestRate, DELTA);
     }
 
     @Test
     public void testMathUtil_interestRateForOneDay_2() {
-        double oneDayInterestRate = MathUtil.calculateInterestRateForOneDay(6.0);
+        double oneDayInterestRate = InterestRateCalculator.calculateInterestRateForOneDay(6.0);
 
         assertEquals(0.015965,oneDayInterestRate, DELTA);
     }
 
     @Test
     public void testMathUtil_interestForOneDay() {
-        BigDecimal interest = MathUtil.calculateInterestForOneDay(new BigDecimal("200000.00"), 6.95);
+        BigDecimal interest = InterestRateCalculator.calculateInterestForOneDay(new BigDecimal("200000.00"), 6.95);
 
         //one day the interest is expected to be:
         assertEquals(36.820511, interest.doubleValue(), DELTA);
@@ -53,7 +53,7 @@ public class InterestRateCalculationTest {
         //over a whole year the interest is one dollar
         BigDecimal currentBalance = new BigDecimal("100");
         for(int i = 0;i < 365;i++) {
-            BigDecimal interest = MathUtil.calculateInterestForOneDay(currentBalance, 1);
+            BigDecimal interest = InterestRateCalculator.calculateInterestForOneDay(currentBalance, 1);
             currentBalance = currentBalance.add(interest);
         }
 

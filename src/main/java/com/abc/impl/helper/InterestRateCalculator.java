@@ -1,11 +1,11 @@
-package com.abc.impl.util;
+package com.abc.impl.helper;
 
 import java.math.BigDecimal;
 
 /**
  * Created by alexandr koller on 31/10/2014.
  */
-public class MathUtil {
+public class InterestRateCalculator {
 
     //this would probably take a day count convention rather than just use 365 days per year
     public static double calculateInterestRateForOneDay(double annualInterestRateInPercent) {
