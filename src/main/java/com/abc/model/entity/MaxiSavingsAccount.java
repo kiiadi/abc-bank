@@ -13,9 +13,9 @@ import java.util.Date;
  */
 public class MaxiSavingsAccount extends Account {
 
-    private static final int numberOfDaysNoWithdrawalsPreferred = 10;
-    private static final double lowerInterestRate = 0.1;
-    private static final double higherInterestRate = 5.0;
+    private static final int NUMBER_OF_DAYS_NO_WITHDRAWALS_PREFERRED = 10;
+    private static final double LOWER_INTEREST_RATE = 0.1;
+    private static final double HIGHER_INTEREST_RATE = 5.0;
     private SystemSettings systemSettings = new DefaultSystemSettings();
 
     public MaxiSavingsAccount(String name) {
@@ -33,10 +33,10 @@ public class MaxiSavingsAccount extends Account {
 
     @Override
     public BigDecimal calculateInterest() {
-        if(haveThereBeenWithdrawals(numberOfDaysNoWithdrawalsPreferred)) {
-            return MathUtil.calculateInterestForOneDay(getBalance(), lowerInterestRate);
+        if(haveThereBeenWithdrawals(NUMBER_OF_DAYS_NO_WITHDRAWALS_PREFERRED)) {
+            return MathUtil.calculateInterestForOneDay(getBalance(), LOWER_INTEREST_RATE);
         } else {
-            return MathUtil.calculateInterestForOneDay(getBalance(), higherInterestRate);
+            return MathUtil.calculateInterestForOneDay(getBalance(), HIGHER_INTEREST_RATE);
         }
     }
 

@@ -9,7 +9,7 @@ import java.math.BigDecimal;
  */
 public class CheckingAccount extends Account {
 
-    private static final double interestRate = 0.1;
+    private static final double INTEREST_RATE = 0.1;
 
     public CheckingAccount(String name) {
         super(name);
@@ -22,6 +22,6 @@ public class CheckingAccount extends Account {
 
     @Override
     public BigDecimal calculateInterest() {
-        return MathUtil.calculateInterestForOneDay(getBalance(), interestRate);
+        return MathUtil.calculateInterestForOneDay(getBalance(), INTEREST_RATE);
     }
 }

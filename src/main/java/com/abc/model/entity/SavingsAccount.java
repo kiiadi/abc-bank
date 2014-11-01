@@ -9,9 +9,9 @@ import java.math.BigDecimal;
  */
 public class SavingsAccount extends Account {
 
-    private static final double firstLayerInterestRate = 0.1;
-    private static final BigDecimal threshold = new BigDecimal("1000");
-    private static final double secondLayerInterestRate = 0.2;
+    private static final double FIRST_LAYER_INTEREST_RATE = 0.1;
+    private static final BigDecimal THRESHOLD = new BigDecimal("1000");
+    private static final double SECOND_LAYER_INTEREST_RATE = 0.2;
 
     public SavingsAccount(String name) {
         super(name);
@@ -24,16 +24,21 @@ public class SavingsAccount extends Account {
 
     @Override
     public BigDecimal calculateInterest() {
-        if(getBalance().compareTo(threshold) > 0) {
-            //there are two rates used, one for amount below threshold, one for above
-            BigDecimal firstPartOfInterest = MathUtil.calculateInterestForOneDay(threshold,firstLayerInterestRate);
-            BigDecimal amountOverThreshold = getBalance().subtract(threshold);
-            BigDecimal secondPartOfInterest = MathUtil.calculateInterestForOneDay(amountOverThreshold,secondLayerInterestRate);
-            return firstPartOfInterest.add(secondPartOfInterest);
+        if(getBalance().compareTo(THRESHOLD) > 0) {
+            return calculateInterestUsingBothInterestRates();
         } else {
-            //when the balance is less than 1000 it's as simple as this
-            return MathUtil.calculateInterestForOneDay(getBalance(), firstLayerInterestRate);
+            return calculateInterestWithOneInterestRateOnly();
         }
     }
 
+    private BigDecimal calculateInterestUsingBothInterestRates() {
+        BigDecimal firstPartOfInterest = MathUtil.calculateInterestForOneDay(THRESHOLD, FIRST_LAYER_INTEREST_RATE);
+        BigDecimal amountOverThreshold = getBalance().subtract(THRESHOLD);
+        BigDecimal secondPartOfInterest = MathUtil.calculateInterestForOneDay(amountOverThreshold, SECOND_LAYER_INTEREST_RATE);
+        return firstPartOfInterest.add(secondPartOfInterest);
+    }
+
+    private BigDecimal calculateInterestWithOneInterestRateOnly() {
+        return MathUtil.calculateInterestForOneDay(getBalance(), FIRST_LAYER_INTEREST_RATE);
+    }
 }
