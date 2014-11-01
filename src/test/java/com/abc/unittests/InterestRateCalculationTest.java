@@ -29,21 +29,21 @@ public class InterestRateCalculationTest {
 
     //below tests are testing interest rate calculation
     @Test
-    public void testMathUtil_interestRateForOneDay_1() {
+    public void testInterestRateCalculator_interestRateForOneDay_1() {
         double oneDayInterestRate = InterestRateCalculator.calculateInterestRateForOneDay(5.0);
 
         assertEquals(0.013368,oneDayInterestRate, DELTA);
     }
 
     @Test
-    public void testMathUtil_interestRateForOneDay_2() {
+    public void testInterestRateCalculator_interestRateForOneDay_2() {
         double oneDayInterestRate = InterestRateCalculator.calculateInterestRateForOneDay(6.0);
 
         assertEquals(0.015965,oneDayInterestRate, DELTA);
     }
 
     @Test
-    public void testMathUtil_interestForOneDay() {
+    public void testInterestRateCalculator_interestForOneDay() {
         BigDecimal interest = InterestRateCalculator.calculateInterestForOneDay(new BigDecimal("200000.00"), 6.95);
 
         //one day the interest is expected to be:
@@ -51,7 +51,7 @@ public class InterestRateCalculationTest {
     }
 
     @Test
-    public void testMathUtil_interestForOneYear() {
+    public void testInterestRateCalculator_interestForOneYear() {
         //over a whole year the interest is one dollar
         BigDecimal currentBalance = new BigDecimal("100");
         for(int i = 0;i < 365;i++) {
