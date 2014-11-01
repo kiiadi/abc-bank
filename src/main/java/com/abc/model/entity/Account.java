@@ -2,6 +2,7 @@ package com.abc.model.entity;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -27,6 +28,21 @@ public abstract class Account {
     public abstract String getAccountType();
 
     public abstract BigDecimal calculateInterest();
+
+    public void creditAccount(BigDecimal amount) {
+        Transaction transaction = new Transaction(amount, Transaction.Type.CREDIT, new Date());
+        transactions.add(transaction);
+    }
+
+    public void debitAccount(BigDecimal amount) {
+        Transaction transaction = new Transaction(amount, Transaction.Type.DEBIT, new Date());
+        transactions.add(transaction);
+    }
+
+    public void addInterest(BigDecimal amount) {
+        Transaction transaction = new Transaction(amount, Transaction.Type.INTEREST, new Date());
+        transactions.add(transaction);
+    }
 
     public BigDecimal getBalance() {
         BigDecimal balance = new BigDecimal("0");

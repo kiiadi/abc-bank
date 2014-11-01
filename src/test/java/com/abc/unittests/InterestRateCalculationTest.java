@@ -13,6 +13,7 @@ import com.abc.model.entity.Transaction;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -67,7 +68,8 @@ public class InterestRateCalculationTest {
 
         Account checkingAccount = accountManager.openCheckingAccount(customer,"Checking Account");
         accountManager.depositMoneyToAccount(checkingAccount,new BigDecimal("100000.00"));
-        Transaction interestTransaction = accountManager.addInterest(checkingAccount);
+        accountManager.addInterest(checkingAccount);
+        Transaction interestTransaction = getLastTransaction(checkingAccount);
 
         assertEquals(Transaction.Type.INTEREST,interestTransaction.getType());
         assertEquals(0.273836,interestTransaction.getAmount().doubleValue(), DELTA);
@@ -79,7 +81,8 @@ public class InterestRateCalculationTest {
 
         Account savingsAccount = accountManager.openSavingsAccount(customer,"Savings Account");
         accountManager.depositMoneyToAccount(savingsAccount,new BigDecimal("999.00"));
-        Transaction interestTransaction = accountManager.addInterest(savingsAccount);
+        accountManager.addInterest(savingsAccount);
+        Transaction interestTransaction = getLastTransaction(savingsAccount);
 
         assertEquals(Transaction.Type.INTEREST,interestTransaction.getType());
         assertEquals(0.002735,interestTransaction.getAmount().doubleValue(), DELTA);
@@ -91,7 +94,8 @@ public class InterestRateCalculationTest {
 
         Account savingsAccount = accountManager.openSavingsAccount(customer,"Savings Account");
         accountManager.depositMoneyToAccount(savingsAccount,new BigDecimal("100000.00"));
-        Transaction interestTransaction = accountManager.addInterest(savingsAccount);
+        accountManager.addInterest(savingsAccount);
+        Transaction interestTransaction = getLastTransaction(savingsAccount);
 
         assertEquals(Transaction.Type.INTEREST,interestTransaction.getType());
         assertEquals(0.002738 + 0.541925,interestTransaction.getAmount().doubleValue(), DELTA);
@@ -103,7 +107,8 @@ public class InterestRateCalculationTest {
 
         Account maxiSavingsAccount = accountManager.openMaxiSavingsAccount(customer,"Maxi Savings Account");
         accountManager.depositMoneyToAccount(maxiSavingsAccount, new BigDecimal("100000.00"));
-        Transaction interestTransaction = accountManager.addInterest(maxiSavingsAccount);
+        accountManager.addInterest(maxiSavingsAccount);
+        Transaction interestTransaction = getLastTransaction(maxiSavingsAccount);
 
         assertEquals(Transaction.Type.INTEREST,interestTransaction.getType());
         assertEquals(13.368061,interestTransaction.getAmount().doubleValue(), DELTA);
@@ -118,7 +123,8 @@ public class InterestRateCalculationTest {
         ((MaxiSavingsAccount)maxiSavingsAccount).setSystemSettings(new DefaultSystemSettings());
         accountManager.depositMoneyToAccount(maxiSavingsAccount, new BigDecimal("100000.00"));
         accountManager.withdrawMoneyFromAccount(maxiSavingsAccount, new BigDecimal("500.00"));
-        Transaction interestTransaction = accountManager.addInterest(maxiSavingsAccount);
+        accountManager.addInterest(maxiSavingsAccount);
+        Transaction interestTransaction = getLastTransaction(maxiSavingsAccount);
 
         assertEquals(Transaction.Type.INTEREST,interestTransaction.getType());
         assertEquals(0.272466,interestTransaction.getAmount().doubleValue(), DELTA);
@@ -134,11 +140,19 @@ public class InterestRateCalculationTest {
 
         //this line will make the account think the withdrawal is old
         ((MaxiSavingsAccount)maxiSavingsAccount).setSystemSettings(new DummySystemSettings());
-        Transaction interestTransaction = accountManager.addInterest(maxiSavingsAccount);
+        accountManager.addInterest(maxiSavingsAccount);
+        Transaction interestTransaction = getLastTransaction(maxiSavingsAccount);
 
         assertEquals(Transaction.Type.INTEREST,interestTransaction.getType());
         assertEquals(13.368061,interestTransaction.getAmount().doubleValue(), DELTA);
 
+    }
+
+    private Transaction getLastTransaction(Account account) {
+        List<Transaction> transactionList = account.getTransactions();
+        if(transactionList.isEmpty()) return null;
+
+        return transactionList.get(transactionList.size() - 1);
     }
 
 }

@@ -19,11 +19,10 @@ public interface AccountManager {
     Account openSavingsAccount(Customer customer, String accountName);
     Account openMaxiSavingsAccount(Customer customer, String accountName);
 
-    Transaction depositMoneyToAccount(Account account, BigDecimal amount);
-    Transaction withdrawMoneyFromAccount(Account account, BigDecimal amount);
+    void depositMoneyToAccount(Account account, BigDecimal amount);
+    void withdrawMoneyFromAccount(Account account, BigDecimal amount);
     void transferMoney(Transfer transfer);
-
-    Transaction addInterest(Account account);
+    void addInterest(Account account);
 
     public static class AttemptedAccountOverflow extends RuntimeException {
 

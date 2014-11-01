@@ -5,7 +5,6 @@ import com.abc.model.entity.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -34,18 +33,14 @@ public class DefaultAccountManager implements AccountManager {
     }
 
     @Override
-    public Transaction depositMoneyToAccount(Account account, BigDecimal amount) {
-        Transaction transaction = new Transaction(amount, Transaction.Type.CREDIT, new Date());
-        account.getTransactions().add(transaction);
-        return transaction;
+    public void depositMoneyToAccount(Account account, BigDecimal amount) {
+        account.creditAccount(amount);
     }
 
     @Override
-    public Transaction withdrawMoneyFromAccount(Account account, BigDecimal amount) {
+    public void withdrawMoneyFromAccount(Account account, BigDecimal amount) {
         if(account.isThereEnoughMoneyToDebit(amount)) {
-            Transaction transaction = new Transaction(amount, Transaction.Type.DEBIT, new Date());
-            account.getTransactions().add(transaction);
-            return transaction;
+            account.debitAccount(amount);
         } else {
             throw new AttemptedAccountOverflow();
         }
@@ -62,11 +57,9 @@ public class DefaultAccountManager implements AccountManager {
     }
 
     @Override
-    public Transaction addInterest(Account account) {
+    public void addInterest(Account account) {
         BigDecimal interestAmount = account.calculateInterest();
-        Transaction transaction = new Transaction(interestAmount, Transaction.Type.INTEREST, new Date());
-        account.getTransactions().add(transaction);
-        return transaction;
+        account.addInterest(interestAmount);
     }
 
     @Override
