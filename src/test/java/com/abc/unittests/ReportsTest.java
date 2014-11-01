@@ -1,13 +1,13 @@
 package com.abc.unittests;
 
 import com.abc.impl.DefaultCustomerManager;
+import com.abc.impl.DefaultReportGenerator;
 import com.abc.impl.formatter.DefaultReportFormatter;
 import com.abc.impl.DefaultAccountManager;
-import com.abc.impl.DefaultReportManager;
 import com.abc.model.api.AccountManager;
 import com.abc.model.api.CustomerManager;
 import com.abc.model.api.ReportFormatter;
-import com.abc.model.api.ReportManager;
+import com.abc.model.api.ReportGenerator;
 import com.abc.model.entity.*;
 
 import static org.junit.Assert.*;
@@ -27,7 +27,7 @@ public class ReportsTest {
     public static final String LINE_SEPARATOR = System.getProperty("line.separator");
     private final double DELTA = 0.000001;
 
-    private ReportManager reportManager = new DefaultReportManager();
+    private ReportGenerator reportGenerator = new DefaultReportGenerator();
     private ReportFormatter reportFormatter = new DefaultReportFormatter();
     private AccountManager accountManager = new DefaultAccountManager();
     private CustomerManager customerManager = new DefaultCustomerManager();
@@ -38,8 +38,8 @@ public class ReportsTest {
     public void setUp() {
 
         //dependency injection
-        ((DefaultReportManager)reportManager).setCustomerManager(customerManager);
-        ((DefaultReportManager)reportManager).setAccountManager(accountManager);
+        ((DefaultReportGenerator) reportGenerator).setCustomerManager(customerManager);
+        ((DefaultReportGenerator) reportGenerator).setAccountManager(accountManager);
 
 
         //create some dummy customers with some accounts and transactions
@@ -70,14 +70,14 @@ public class ReportsTest {
 
     @Test //report showing the total interest paid by the bank on all accounts
     public void generateInterestAmountsReport() {
-        InterestAmountPaidReport interestAmountPaidReport = reportManager.createInterestAmountReport();
+        InterestAmountPaidReport interestAmountPaidReport = reportGenerator.createInterestAmountReport();
 
         assertEquals(1500.11, interestAmountPaidReport.getTotalInterestPaid().doubleValue(),DELTA);
     }
 
     @Test
     public void basicFormatOfInterestPaidReport() {
-        InterestAmountPaidReport interestAmountPaidReport = reportManager.createInterestAmountReport();
+        InterestAmountPaidReport interestAmountPaidReport = reportGenerator.createInterestAmountReport();
         String interestPaidReportBasicFormat = reportFormatter.formatInterestAmountPaidReport(interestAmountPaidReport);
 
         assertEquals("Total interest paid across all accounts: $1,500.11"
@@ -87,7 +87,7 @@ public class ReportsTest {
 
     @Test //this is referred to as the "the list of customers and how many accounts they have"
     public void generateCustomersAccountsReport() {
-        CustomersAccountsReport customersAccountsReport = reportManager.createCustomersAccountsReport();
+        CustomersAccountsReport customersAccountsReport = reportGenerator.createCustomersAccountsReport();
 
         assertEquals(customerManager.getAllCustomers().size(),customersAccountsReport.getCustomers().size());
         for(Customer customer : customerManager.getAllCustomers()) {
@@ -99,7 +99,7 @@ public class ReportsTest {
 
     @Test
     public void basicFormatOfCustomersAccountsReport() {
-        CustomersAccountsReport customersAccountsReport = reportManager.createCustomersAccountsReport();
+        CustomersAccountsReport customersAccountsReport = reportGenerator.createCustomersAccountsReport();
         String customersAccountsReportBasicFormat = reportFormatter.
                 formatCustomersAccountsReport(customersAccountsReport);
 
@@ -114,7 +114,7 @@ public class ReportsTest {
     @Test //report for a customer about their accounts
     public void generateCustomerReport() {
 
-        CustomerReport customerReport = reportManager.createCustomerReport(customer1);
+        CustomerReport customerReport = reportGenerator.createCustomerReport(customer1);
 
         assertEquals(customer1.getAccounts().size(), customerReport.getReportItems().size());
         for(Account customerAccount : customer1.getAccounts()) {
@@ -126,7 +126,7 @@ public class ReportsTest {
     @Test
     public void basicFormatOfCustomerReport() {
 
-        CustomerReport customerReport = reportManager.createCustomerReport(customer1);
+        CustomerReport customerReport = reportGenerator.createCustomerReport(customer1);
         String customerReportBasicFormat = reportFormatter.formatCustomerReport(customerReport);
 
 

@@ -45,7 +45,7 @@ public class MaxiSavingsAccount extends Account {
         if(dateOfLastWithdrawal == null) return false;
 
         Date dateForComparison = DateTimeUtil.pushDateForwardByNumberOfDays(dateOfLastWithdrawal, numberOfDaysToLookBack);
-        return dateForComparison.after(systemSettings.getSystemDate()); //this of course may be too precise
+        return !dateForComparison.before(systemSettings.getSystemDate());
     }
 
     private Date dateOfLastWithdrawal() {

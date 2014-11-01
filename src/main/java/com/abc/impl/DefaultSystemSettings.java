@@ -1,7 +1,11 @@
 package com.abc.impl;
 
+import com.abc.impl.util.DateTimeUtil;
 import com.abc.model.api.*;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -11,6 +15,7 @@ public class DefaultSystemSettings implements SystemSettings {
 
     @Override
     public Date getSystemDate() {
-        return new Date();
+        //Joda Time LocalDate would be more appropriate here
+        return DateTimeUtil.removeTimeInformation(new Date());
     }
 }

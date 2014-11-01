@@ -2,13 +2,13 @@ package com.abc.impl;
 
 import com.abc.model.api.AccountManager;
 import com.abc.model.api.CustomerManager;
-import com.abc.model.api.ReportManager;
+import com.abc.model.api.ReportGenerator;
 import com.abc.model.entity.*;
 
 /**
  * Created by alexandr koller on 31/10/2014.
  */
-public class DefaultReportManager implements ReportManager {
+public class DefaultReportGenerator implements ReportGenerator {
 
     private CustomerManager customerManager;
     private AccountManager accountManager;
