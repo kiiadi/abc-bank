@@ -48,18 +48,18 @@ public class DefaultAccountManager implements AccountManager {
             account.getTransactions().add(transaction);
             return transaction;
         } else {
-            throw new IllegalStateException("Account would have negative balance");
+            throw new AttemptedAccountOverflow();
         }
     }
 
     @Override
-    public void transferMoney(Customer customer, String account1, String account2, BigDecimal amount) {
-        Account accountOne = customer.getAccountByName(account1);
-        Account accountTwo = customer.getAccountByName(account2);
-        validateTransfer(accountOne, accountTwo, amount);
+    public void transferMoney(Transfer transfer) {
+        Account sourceAccount = transfer.getSourceAccount();
+        Account destinationAccount = transfer.getDestinationAccount();
+        validateTransfer(transfer.getAmount());
 
-        withdrawMoneyFromAccount(accountOne,amount);
-        depositMoneyToAccount(accountTwo,amount);
+        withdrawMoneyFromAccount(sourceAccount,transfer.getAmount());
+        depositMoneyToAccount(destinationAccount,transfer.getAmount());
     }
 
     @Override
@@ -81,14 +81,9 @@ public class DefaultAccountManager implements AccountManager {
         return account;
     }
 
-    private void validateTransfer(Account account1, Account account2, BigDecimal amount) {
+    private void validateTransfer(BigDecimal amount) {
         if(amount.signum() == -1) {
-            throw new IllegalArgumentException("negative amount can't be transferred " + amount.toString());
-        }
-
-        if(account1 == null || account2 == null) {
-            throw new IllegalArgumentException((account1 == null ? "Source account not found." : "") +
-                    (account2 == null ? "Destination account not found." : ""));
+            throw new AttemptedNegativeAmountTransfer();
         }
     }
 

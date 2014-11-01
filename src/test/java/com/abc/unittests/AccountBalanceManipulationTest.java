@@ -6,6 +6,8 @@ import com.abc.model.entity.Account;
 import com.abc.model.entity.Customer;
 import com.abc.model.entity.Transaction;
 import static org.junit.Assert.*;
+
+import com.abc.model.entity.Transfer;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -42,17 +44,8 @@ public class AccountBalanceManipulationTest {
         assertEquals(amountOfMoneyToDeposit,account.getBalance());
     }
 
-    @Test
-    public void testSummingUpTransactions() {
-        Account account = accountManager.openMaxiSavingsAccount(new Customer("Customer 1"),"Account 1");
-        accountManager.depositMoneyToAccount(account, new BigDecimal("100.00"));
-        accountManager.withdrawMoneyFromAccount(account, new BigDecimal("30.00"));
-        accountManager.depositMoneyToAccount(account, new BigDecimal("20.00"));
-
-        assertEquals(90.0,account.getBalance().doubleValue(),DELTA);
-    }
-
-    @Test(expected = IllegalStateException.class)
+    //Few tests on withdrawal follows
+    @Test(expected = AccountManager.AttemptedAccountOverflow.class)
     public void withdrawMoneyFromAccount_askedForTooMuch() {
         Account account = accountManager.openCheckingAccount(new Customer("Customer 1"),"Account 1");
         BigDecimal amountOfMoneyToWithdraw = new BigDecimal("1000.11");
@@ -81,6 +74,17 @@ public class AccountBalanceManipulationTest {
     }
 
     @Test
+    public void testSummingUpTransactions() {
+        Account account = accountManager.openMaxiSavingsAccount(new Customer("Customer 1"),"Account 1");
+        accountManager.depositMoneyToAccount(account, new BigDecimal("100.00"));
+        accountManager.withdrawMoneyFromAccount(account, new BigDecimal("30.00"));
+        accountManager.depositMoneyToAccount(account, new BigDecimal("20.00"));
+
+        assertEquals(90.0,account.getBalance().doubleValue(),DELTA);
+    }
+
+    //Now follow tests for transfer between customer's accounts
+    @Test
     public void moveMoneyFromOneAccountToAnother() {
         Customer customer = new Customer("Customer 1");
         String accountOneName = "Account 1";
@@ -91,8 +95,12 @@ public class AccountBalanceManipulationTest {
         accountManager.depositMoneyToAccount(accountOne, new BigDecimal("200.00"));
         accountManager.depositMoneyToAccount(accountTwo,new BigDecimal("1000.00"));
 
+        Transfer transfer = Transfer.CreateInternalTransfer(customer,accountOneName,accountTwoName);
+
         BigDecimal transferredAmount = new BigDecimal("100.00");
-        accountManager.transferMoney(customer, accountOneName, accountTwoName, transferredAmount);
+        transfer.setAmount(transferredAmount);
+
+        accountManager.transferMoney(transfer);
 
         //we expect one new transaction on each side
         assertEquals(2,accountOne.getTransactions().size());
@@ -113,14 +121,25 @@ public class AccountBalanceManipulationTest {
         assertEquals(new BigDecimal("1100.00"),accountTwo.getBalance());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = Transfer.AccountNotFound.class)
     public void moveMoneyFromNonExistingAccount() {
         Customer customer = new Customer("Customer 1");
-        accountManager.transferMoney(customer, "Non existing account 1", "Non existing account 2",
-                new BigDecimal("1000.00"));
+        accountManager.openCheckingAccount(customer,"Existing account");
+        Transfer transfer = Transfer.CreateInternalTransfer(customer,"Non existing account","Existing account");
+        transfer.setAmount(new BigDecimal("1000"));
+        accountManager.transferMoney(transfer);
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test(expected = Transfer.AccountNotFound.class)
+    public void moveMoneyToNonExistingAccount() {
+        Customer customer = new Customer("Customer 1");
+        accountManager.openCheckingAccount(customer,"Existing account");
+        Transfer transfer = Transfer.CreateInternalTransfer(customer,"Existing account","Non existing account");
+        transfer.setAmount(new BigDecimal("1000"));
+        accountManager.transferMoney(transfer);
+    }
+
+    @Test(expected = AccountManager.AttemptedAccountOverflow.class)
     public void moveMoneyFromOneAccountToAnother_askedForMoreThanBalance() {
         Customer customer = new Customer("Customer 1");
         String accountOneName = "Account 1";
@@ -128,10 +147,12 @@ public class AccountBalanceManipulationTest {
         accountManager.openMaxiSavingsAccount(customer,accountOneName);
         accountManager.openCheckingAccount(customer,accountTwoName);
 
-        accountManager.transferMoney(customer, accountOneName, accountTwoName, new BigDecimal("1000.00"));
+        Transfer transfer = Transfer.CreateInternalTransfer(customer, accountOneName, accountTwoName);
+        transfer.setAmount(new BigDecimal("1000.00"));
+        accountManager.transferMoney(transfer);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = AccountManager.AttemptedNegativeAmountTransfer.class)
     public void moveMoneyFromOneAccountToAnother_askedForNegativeAmount() {
         Customer customer = new Customer("Customer 1");
         String accountOneName = "Account 1";
@@ -139,10 +160,10 @@ public class AccountBalanceManipulationTest {
         accountManager.openMaxiSavingsAccount(customer,accountOneName);
         accountManager.openCheckingAccount(customer,accountTwoName);
 
-        accountManager.transferMoney(customer, accountOneName, accountTwoName, new BigDecimal("-1000.00"));
+        Transfer transfer = Transfer.CreateInternalTransfer(customer,accountOneName, accountTwoName);
+        transfer.setAmount(new BigDecimal("-1000.00"));
+
+        accountManager.transferMoney(transfer);
     }
-
-
-
 
 }

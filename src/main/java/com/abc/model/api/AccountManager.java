@@ -3,6 +3,7 @@ package com.abc.model.api;
 import com.abc.model.entity.Account;
 import com.abc.model.entity.Customer;
 import com.abc.model.entity.Transaction;
+import com.abc.model.entity.Transfer;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -20,8 +21,15 @@ public interface AccountManager {
 
     Transaction depositMoneyToAccount(Account account, BigDecimal amount);
     Transaction withdrawMoneyFromAccount(Account account, BigDecimal amount);
-    void transferMoney(Customer customer, String account1, String account2, BigDecimal amount);
+    void transferMoney(Transfer transfer);
 
     Transaction addInterest(Account account);
 
+    public static class AttemptedAccountOverflow extends RuntimeException {
+
+    }
+
+    public static class AttemptedNegativeAmountTransfer extends RuntimeException {
+
+    }
 }
