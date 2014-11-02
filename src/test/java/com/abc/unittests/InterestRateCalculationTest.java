@@ -32,14 +32,14 @@ public class InterestRateCalculationTest {
     public void testInterestRateCalculator_interestRateForOneDay_1() {
         double oneDayInterestRate = InterestRateCalculator.calculateInterestRateForOneDay(5.0);
 
-        assertEquals(0.013368,oneDayInterestRate, DELTA);
+        assertEquals(0.013368061711346968,oneDayInterestRate, DELTA);
     }
 
     @Test
     public void testInterestRateCalculator_interestRateForOneDay_2() {
         double oneDayInterestRate = InterestRateCalculator.calculateInterestRateForOneDay(6.0);
 
-        assertEquals(0.015965,oneDayInterestRate, DELTA);
+        assertEquals(0.015965358745290814,oneDayInterestRate, DELTA);
     }
 
     @Test
