@@ -23,7 +23,7 @@ public class AccountBalanceManipulationTest {
 
     @Before
     public void clearAccountManager() {
-        accountManager.getAllAccounts().clear();
+        accountManager.deleteAllAccounts();
     }
 
     @Test

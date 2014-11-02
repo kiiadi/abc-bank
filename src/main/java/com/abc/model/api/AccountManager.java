@@ -18,6 +18,7 @@ public interface AccountManager {
     Account openCheckingAccount(Customer customer, String accountName);
     Account openSavingsAccount(Customer customer, String accountName);
     Account openMaxiSavingsAccount(Customer customer, String accountName);
+    void deleteAllAccounts();
 
     void depositMoneyToAccount(Account account, BigDecimal amount);
     void withdrawMoneyFromAccount(Account account, BigDecimal amount);

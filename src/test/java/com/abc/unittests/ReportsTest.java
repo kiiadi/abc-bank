@@ -54,14 +54,14 @@ public class ReportsTest {
         accountManager.depositMoneyToAccount(maxiSavingsAccountCustomer1, new BigDecimal("100.55"));
 
         //let's add the interest flow directly to make it clearer
-        maxiSavingsAccountCustomer1.getTransactions().add(new Transaction(new BigDecimal("1000"),
+        maxiSavingsAccountCustomer1.addTransaction(new Transaction(new BigDecimal("1000"),
                 Transaction.Type.INTEREST, new Date()));
 
         Customer customer2 = customerManager.addCustomer("Customer 2");
         Account customer2Account = accountManager.openCheckingAccount(customer2,"Checking Account 2");
 
         //again, manual insert for the interest transaction
-        customer2Account.getTransactions().add(new Transaction(new BigDecimal("500.11"),
+        customer2Account.addTransaction(new Transaction(new BigDecimal("500.11"),
                 Transaction.Type.INTEREST, new Date()));
 
         customerManager.addCustomer("Customer 3");

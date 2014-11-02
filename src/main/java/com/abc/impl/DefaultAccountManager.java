@@ -5,6 +5,7 @@ import com.abc.model.entity.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -12,7 +13,7 @@ import java.util.List;
  */
 public class DefaultAccountManager implements AccountManager {
 
-    private List<Account> allAccounts = new ArrayList<Account>();
+    private List<Account> allAccounts = Collections.synchronizedList(new ArrayList<Account>());
 
     @Override
     public Account openCheckingAccount(Customer customer, String accountName) {
@@ -30,6 +31,11 @@ public class DefaultAccountManager implements AccountManager {
     public Account openMaxiSavingsAccount(Customer customer, String accountName) {
         Account account = new MaxiSavingsAccount(accountName);
         return persistAccount(account,customer);
+    }
+
+    @Override
+    public void deleteAllAccounts() {
+        allAccounts.clear();
     }
 
     @Override
@@ -64,12 +70,12 @@ public class DefaultAccountManager implements AccountManager {
 
     @Override
     public List<Account> getAllAccounts() {
-        return allAccounts;
+        return new ArrayList<Account>(allAccounts);
     }
 
     private Account persistAccount(Account account, Customer customer) {
         allAccounts.add(account);
-        customer.getAccounts().add(account);
+        customer.addAccount(account);
         return account;
     }
 

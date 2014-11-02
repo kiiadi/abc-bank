@@ -33,7 +33,7 @@ public class AccountLifecycleTest {
 
         assertEquals(1, customer.getAccounts().size());
         Account newAccount = customer.getAccounts().get(0);
-        assertEquals(SavingsAccount.class, customer.getAccounts().get(0).getClass());
+        assertEquals(SavingsAccount.class, newAccount.getClass());
         assertEquals(accountName, newAccount.getName());
     }
 
@@ -45,7 +45,7 @@ public class AccountLifecycleTest {
 
         assertEquals(1, customer.getAccounts().size());
         Account newAccount = customer.getAccounts().get(0);
-        assertEquals(MaxiSavingsAccount.class, customer.getAccounts().get(0).getClass());
+        assertEquals(MaxiSavingsAccount.class, newAccount.getClass());
         assertEquals(accountName, newAccount.getName());
     }
 

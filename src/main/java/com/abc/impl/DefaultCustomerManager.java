@@ -4,6 +4,7 @@ import com.abc.model.api.CustomerManager;
 import com.abc.model.entity.Customer;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -11,7 +12,7 @@ import java.util.List;
  */
 public class DefaultCustomerManager implements CustomerManager {
 
-    private List<Customer> allCustomers = new ArrayList<Customer>();
+    private List<Customer> allCustomers = Collections.synchronizedList(new ArrayList<Customer>());
 
     @Override
     public Customer addCustomer(String name) {
@@ -22,6 +23,6 @@ public class DefaultCustomerManager implements CustomerManager {
 
     @Override
     public List<Customer> getAllCustomers() {
-        return allCustomers;
+        return new ArrayList<Customer>(allCustomers);
     }
 }

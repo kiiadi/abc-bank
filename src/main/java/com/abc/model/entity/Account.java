@@ -2,6 +2,7 @@ package com.abc.model.entity;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -11,10 +12,10 @@ import java.util.List;
 public abstract class Account {
 
     private String name;
-    private List<Transaction> transactions = new ArrayList<Transaction>();
+    private List<Transaction> transactions = Collections.synchronizedList(new ArrayList<Transaction>());
 
     public List<Transaction> getTransactions() {
-        return transactions;
+        return new ArrayList<Transaction>(transactions);
     }
 
     protected Account(String name) {
@@ -44,11 +45,17 @@ public abstract class Account {
         transactions.add(transaction);
     }
 
+    public void addTransaction(Transaction transaction) {
+        transactions.add(transaction);
+    }
+
     public BigDecimal getBalance() {
         BigDecimal balance = new BigDecimal("0");
 
-        for(Transaction transaction : transactions) {
-            balance = balance.add(transaction.toSignedAmount());
+        synchronized (transactions) {
+            for (Transaction transaction : transactions) {
+                balance = balance.add(transaction.toSignedAmount());
+            }
         }
 
         return balance;
@@ -57,9 +64,11 @@ public abstract class Account {
     public BigDecimal getTotalInterestReceived() {
         BigDecimal totalInterestReceived = new BigDecimal("0");
 
-        for(Transaction transaction : transactions) {
-            if(transaction.getType().equals(Transaction.Type.INTEREST)) {
-                totalInterestReceived = totalInterestReceived.add(transaction.toSignedAmount());
+        synchronized (transactions) {
+            for (Transaction transaction : transactions) {
+                if (transaction.getType().equals(Transaction.Type.INTEREST)) {
+                    totalInterestReceived = totalInterestReceived.add(transaction.toSignedAmount());
+                }
             }
         }
 
