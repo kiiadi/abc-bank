@@ -45,7 +45,7 @@ public class AccountBalanceManipulationTest {
     }
 
     //Few tests on withdrawal follows
-    @Test(expected = AccountManager.AttemptedAccountOverflow.class)
+    @Test(expected = AccountManager.AttemptedAccountOverdraft.class)
     public void withdrawMoneyFromAccount_askedForTooMuch() {
         Account account = accountManager.openCheckingAccount(new Customer("Customer 1"),"Account 1");
         BigDecimal amountOfMoneyToWithdraw = new BigDecimal("1000.11");
@@ -139,7 +139,7 @@ public class AccountBalanceManipulationTest {
         accountManager.transferMoney(transfer);
     }
 
-    @Test(expected = AccountManager.AttemptedAccountOverflow.class)
+    @Test(expected = AccountManager.AttemptedAccountOverdraft.class)
     public void moveMoneyFromOneAccountToAnother_askedForMoreThanBalance() {
         Customer customer = new Customer("Customer 1");
         String accountOneName = "Account 1";

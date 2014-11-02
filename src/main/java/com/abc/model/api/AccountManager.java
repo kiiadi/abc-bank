@@ -25,7 +25,7 @@ public interface AccountManager {
     void transferMoney(Transfer transfer);
     void addInterest(Account account);
 
-    public static class AttemptedAccountOverflow extends RuntimeException {
+    public static class AttemptedAccountOverdraft extends RuntimeException {
 
     }
 

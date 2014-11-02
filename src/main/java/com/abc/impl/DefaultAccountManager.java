@@ -48,7 +48,7 @@ public class DefaultAccountManager implements AccountManager {
         if(account.isThereEnoughMoneyToDebit(amount)) {
             account.debitAccount(amount);
         } else {
-            throw new AttemptedAccountOverflow();
+            throw new AttemptedAccountOverdraft();
         }
     }
 
