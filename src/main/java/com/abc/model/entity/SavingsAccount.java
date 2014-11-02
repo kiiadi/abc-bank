@@ -1,0 +1,44 @@
+package com.abc.model.entity;
+
+import com.abc.impl.helper.InterestRateCalculator;
+
+import java.math.BigDecimal;
+
+/**
+ * Created by alexandr koller on 31/10/2014.
+ */
+public class SavingsAccount extends Account {
+
+    private static final double FIRST_LAYER_INTEREST_RATE = 0.1;
+    private static final BigDecimal THRESHOLD = new BigDecimal("1000");
+    private static final double SECOND_LAYER_INTEREST_RATE = 0.2;
+
+    public SavingsAccount(String name) {
+        super(name);
+    }
+
+    @Override
+    public String getAccountType() {
+        return "Savings Account";
+    }
+
+    @Override
+    public BigDecimal calculateInterest() {
+        if(getBalance().compareTo(THRESHOLD) > 0) {
+            return calculateInterestUsingBothInterestRates();
+        } else {
+            return calculateInterestWithOneInterestRateOnly();
+        }
+    }
+
+    private BigDecimal calculateInterestUsingBothInterestRates() {
+        BigDecimal firstPartOfInterest = InterestRateCalculator.calculateInterestForOneDay(THRESHOLD, FIRST_LAYER_INTEREST_RATE);
+        BigDecimal amountOverThreshold = getBalance().subtract(THRESHOLD);
+        BigDecimal secondPartOfInterest = InterestRateCalculator.calculateInterestForOneDay(amountOverThreshold, SECOND_LAYER_INTEREST_RATE);
+        return firstPartOfInterest.add(secondPartOfInterest);
+    }
+
+    private BigDecimal calculateInterestWithOneInterestRateOnly() {
+        return InterestRateCalculator.calculateInterestForOneDay(getBalance(), FIRST_LAYER_INTEREST_RATE);
+    }
+}
