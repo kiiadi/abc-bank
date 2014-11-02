@@ -8,7 +8,7 @@ import java.util.Date;
 /**
  * Created by alexandr koller on 31/10/2014.
  */
-public class DefaultSystemSettings implements SystemSettings {
+public class DefaultDateProvider implements DateProvider {
 
     @Override
     public Date getSystemDate() {

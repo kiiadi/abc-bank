@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 public class InterestRateCalculator {
 
     //this would probably take a day count convention rather than just use 365 days per year
+    //it works with double rather than BigDecimal in order to maintain readability
     public static double calculateInterestRateForOneDay(double annualInterestRateInPercent) {
         double annualMultiplier = (annualInterestRateInPercent / 100) + 1;
         double dailyMultiplier = Math.pow(annualMultiplier,1.0/365.0);

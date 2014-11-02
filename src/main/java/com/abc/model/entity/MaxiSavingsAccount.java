@@ -1,9 +1,8 @@
 package com.abc.model.entity;
 
-import com.abc.impl.DefaultSystemSettings;
 import com.abc.impl.helper.DateTimeHelper;
 import com.abc.impl.helper.InterestRateCalculator;
-import com.abc.model.api.SystemSettings;
+import com.abc.model.api.DateProvider;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -16,14 +15,14 @@ public class MaxiSavingsAccount extends Account {
     private static final int NUMBER_OF_DAYS_NO_WITHDRAWALS_PREFERRED = 10;
     private static final double LOWER_INTEREST_RATE = 0.1;
     private static final double HIGHER_INTEREST_RATE = 5.0;
-    private SystemSettings systemSettings;
+    private DateProvider dateProvider;
 
     public MaxiSavingsAccount(String name) {
         super(name);
     }
 
-    public void setSystemSettings(SystemSettings systemSettings) {
-        this.systemSettings = systemSettings;
+    public void setDateProvider(DateProvider dateProvider) {
+        this.dateProvider = dateProvider;
     }
 
     @Override
@@ -45,7 +44,7 @@ public class MaxiSavingsAccount extends Account {
         if(dateOfLastWithdrawal == null) return false;
 
         Date dateForComparison = DateTimeHelper.pushDateForwardByNumberOfDays(dateOfLastWithdrawal, numberOfDaysToLookBack);
-        return !dateForComparison.before(systemSettings.getSystemDate());
+        return !dateForComparison.before(dateProvider.getSystemDate());
     }
 
     private Date dateOfLastWithdrawal() {

@@ -1,7 +1,7 @@
 package com.abc.dummy;
 
 import com.abc.impl.helper.DateTimeHelper;
-import com.abc.model.api.SystemSettings;
+import com.abc.model.api.DateProvider;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -9,7 +9,7 @@ import java.util.Date;
 /**
  * Created by alexandrkoller on 31/10/2014.
  */
-public class DummySystemSettings implements SystemSettings {
+public class DummyDateProvider implements DateProvider {
 
     @Override
     public Date getSystemDate() {

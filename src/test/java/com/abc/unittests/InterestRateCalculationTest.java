@@ -1,9 +1,9 @@
 package com.abc.unittests;
 
 
-import com.abc.dummy.DummySystemSettings;
+import com.abc.dummy.DummyDateProvider;
 import com.abc.impl.DefaultAccountManager;
-import com.abc.impl.DefaultSystemSettings;
+import com.abc.impl.DefaultDateProvider;
 import com.abc.impl.helper.InterestRateCalculator;
 import com.abc.model.api.AccountManager;
 import com.abc.model.entity.Account;
@@ -120,7 +120,7 @@ public class InterestRateCalculationTest {
 
         Account maxiSavingsAccount = accountManager.openMaxiSavingsAccount(customer,"Maxi Savings Account");
         //this manual injection should become unnecessary with the introduction of a DI framework
-        ((MaxiSavingsAccount)maxiSavingsAccount).setSystemSettings(new DefaultSystemSettings());
+        ((MaxiSavingsAccount)maxiSavingsAccount).setDateProvider(new DefaultDateProvider());
         accountManager.depositMoneyToAccount(maxiSavingsAccount, new BigDecimal("100000.00"));
         accountManager.withdrawMoneyFromAccount(maxiSavingsAccount, new BigDecimal("500.00"));
         accountManager.addInterest(maxiSavingsAccount);
@@ -139,7 +139,7 @@ public class InterestRateCalculationTest {
         accountManager.withdrawMoneyFromAccount(maxiSavingsAccount, new BigDecimal("500.00"));
 
         //this line will make the account think the withdrawal is old
-        ((MaxiSavingsAccount)maxiSavingsAccount).setSystemSettings(new DummySystemSettings());
+        ((MaxiSavingsAccount)maxiSavingsAccount).setDateProvider(new DummyDateProvider());
         accountManager.addInterest(maxiSavingsAccount);
         Transaction interestTransaction = getLastTransaction(maxiSavingsAccount);
 
