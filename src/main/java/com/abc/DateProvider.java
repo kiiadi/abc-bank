@@ -3,16 +3,32 @@ package com.abc;
 import java.util.Calendar;
 import java.util.Date;
 
+/**
+ * Utility class to get current time
+ * @author Rakesh
+ *
+ */
 public class DateProvider {
-    private static DateProvider instance = null;
+	/**
+	 * Date provider
+	 */
+	private static DateProvider instance = null;
 
-    public static DateProvider getInstance() {
-        if (instance == null)
-            instance = new DateProvider();
-        return instance;
-    }
+	/**
+	 * Static method to create an instance
+	 * @return Instance
+	 */
+	public static DateProvider getInstance() {
+		if (instance == null)
+			instance = new DateProvider();
+		return instance;
+	}
 
-    public Date now() {
-        return Calendar.getInstance().getTime();
-    }
+	/**
+	 * Get the current time
+	 * @return Current time
+	 */
+	public Date now() {
+		return Calendar.getInstance().getTime();
+	}
 }
