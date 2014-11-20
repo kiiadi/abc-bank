@@ -47,11 +47,38 @@ public class CustomerTest {
         assertEquals(2, oscar.getNumberOfAccounts());
     }
 
-    @Ignore
+    @Test
     public void testThreeAcounts() {
         Customer oscar = new Customer("Oscar")
                 .openAccount(new Account(Account.SAVINGS));
         oscar.openAccount(new Account(Account.CHECKING));
+        oscar.openAccount(new Account(Account.MAXI_SAVINGS));
         assertEquals(3, oscar.getNumberOfAccounts());
+    }
+
+    @Test
+    public void testTransferAmounts(){
+        Account savingAcct = new Account(Account.SAVINGS);
+        Account checkingAcct = new Account(Account.CHECKING);
+        checkingAcct.deposit(300);
+        savingAcct.deposit(100);
+        Customer oscar = new Customer("Oscar")
+                .openAccount(checkingAcct);
+        oscar.openAccount(savingAcct);
+
+        oscar.transfer(checkingAcct, savingAcct,200);
+        assertEquals("Statement for Oscar\n" +
+                "\n" +
+                "Checking Account\n" +
+                "  deposit $300.00\n" +
+                "  withdrawal $200.00\n" +
+                "Total $100.00\n" +
+                "\n" +
+                "Savings Account\n" +
+                "  deposit $100.00\n" +
+                "  deposit $200.00\n" +
+                "Total $300.00\n" +
+                "\n" +
+                "Total In All Accounts $400.00", oscar.getStatement());
     }
 }

@@ -26,6 +26,18 @@ public class BankTest {
 
         checkingAccount.deposit(100.0);
 
+        assertEquals(0, bank.totalInterestPaid(), DOUBLE_DELTA);
+    }
+
+    @Test
+    public void checkingAccountOneYear() {
+        Bank bank = new Bank();
+        Account checkingAccount = new Account(Account.CHECKING);
+        Customer bill = new Customer("Bill").openAccount(checkingAccount);
+        bank.addCustomer(bill);
+
+        checkingAccount.deposit(100.0, 365);
+
         assertEquals(0.1, bank.totalInterestPaid(), DOUBLE_DELTA);
     }
 
@@ -37,7 +49,18 @@ public class BankTest {
 
         checkingAccount.deposit(1500.0);
 
-        assertEquals(2.0, bank.totalInterestPaid(), DOUBLE_DELTA);
+        assertEquals(0, bank.totalInterestPaid(), DOUBLE_DELTA);
+    }
+
+    @Test
+    public void savings_account_one_year() {
+        Bank bank = new Bank();
+        Account checkingAccount = new Account(Account.SAVINGS);
+        bank.addCustomer(new Customer("Bill").openAccount(checkingAccount));
+
+        checkingAccount.deposit(1500.0, 365);
+
+        assertEquals(2, bank.totalInterestPaid(), DOUBLE_DELTA);
     }
 
     @Test
@@ -46,9 +69,9 @@ public class BankTest {
         Account checkingAccount = new Account(Account.MAXI_SAVINGS);
         bank.addCustomer(new Customer("Bill").openAccount(checkingAccount));
 
-        checkingAccount.deposit(3000.0);
+        checkingAccount.deposit(3000.0, 10);
 
-        assertEquals(170.0, bank.totalInterestPaid(), DOUBLE_DELTA);
+        assertEquals(3000.0*0.005*10/365, bank.totalInterestPaid(), DOUBLE_DELTA);
     }
 
 }
