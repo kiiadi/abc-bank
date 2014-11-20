@@ -75,4 +75,16 @@ public class Customer {
     private String toDollars(double d){
         return String.format("$%,.2f", abs(d));
     }
+
+    public void transfer(Account fromAccount, Account toAccount, double amount) {
+        if (this.accounts.indexOf(fromAccount)<0 ||
+                this.accounts.indexOf(toAccount)<0 ) {
+            throw new IllegalArgumentException("account not belong to customer");
+        }
+        if(amount<=0){
+            throw new IllegalArgumentException("transfer amount should be a positive number");
+        }
+        fromAccount.withdraw(amount);
+        toAccount.deposit(amount);
+    }
 }

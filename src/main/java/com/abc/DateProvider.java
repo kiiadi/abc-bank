@@ -15,4 +15,10 @@ public class DateProvider {
     public Date now() {
         return Calendar.getInstance().getTime();
     }
+
+    public Date daysAgo(int days){
+        Calendar now = Calendar.getInstance();
+        now.add(Calendar.DAY_OF_MONTH, -days);
+        return now.getTime();
+    }
 }

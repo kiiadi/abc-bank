@@ -1,6 +1,7 @@
 package com.abc;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class Account {
@@ -25,44 +26,74 @@ public class Account {
         }
     }
 
-public void withdraw(double amount) {
-    if (amount <= 0) {
-        throw new IllegalArgumentException("amount must be greater than zero");
-    } else {
-        transactions.add(new Transaction(-amount));
+    public void deposit(double amount, int daysAgo) {
+        if (amount <= 0) {
+            throw new IllegalArgumentException("amount must be greater than zero");
+        } else {
+            transactions.add(new Transaction(amount, daysAgo));
+        }
     }
-}
+
+    public void withdraw(double amount) {
+        if (amount <= 0) {
+            throw new IllegalArgumentException("amount must be greater than zero");
+        }
+        else {
+            transactions.add(new Transaction(-amount));
+        }
+    }
+    public void withdraw(double amount, int daysAgo) {
+        if (amount <= 0) {
+            throw new IllegalArgumentException("amount must be greater than zero");
+        } else {
+            transactions.add(new Transaction(-amount, daysAgo));
+        }
+    }
 
     public double interestEarned() {
-        double amount = sumTransactions();
+        return sumInterest();
+    }
+
+    public double annualInterest(double amount){
         switch(accountType){
             case SAVINGS:
                 if (amount <= 1000)
                     return amount * 0.001;
                 else
                     return 1 + (amount-1000) * 0.002;
-//            case SUPER_SAVINGS:
-//                if (amount <= 4000)
-//                    return 20;
             case MAXI_SAVINGS:
-                if (amount <= 1000)
-                    return amount * 0.02;
-                if (amount <= 2000)
-                    return 20 + (amount-1000) * 0.05;
-                return 70 + (amount-2000) * 0.1;
+                for(int i = transactions.size() -1; i>=0; i--){
+                    Transaction trans = transactions.get(i);
+                    if (trans.daysFromNow()<10){
+                        if (trans.isWithdraw()){
+                            return amount * 0.001;
+                        }
+                    }
+                    else {
+                        break;
+                    }
+                }
+                return amount * 0.005;
             default:
                 return amount * 0.001;
         }
     }
 
     public double sumTransactions() {
-       return checkIfTransactionsExist(true);
+        double amount = 0.0;
+        for (Transaction t: transactions) {
+            amount += t.amount;
+        }
+        return amount;
     }
 
-    private double checkIfTransactionsExist(boolean checkAll) {
+
+
+    public double sumInterest() {
         double amount = 0.0;
-        for (Transaction t: transactions)
-            amount += t.amount;
+        for (Transaction t: transactions) {
+            amount += annualInterest(t.amount) * t.daysFromNow() / 365;
+        }
         return amount;
     }
 
