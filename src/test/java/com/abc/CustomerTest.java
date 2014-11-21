@@ -54,4 +54,20 @@ public class CustomerTest {
         oscar.openAccount(new Account(Account.CHECKING));
         assertEquals(3, oscar.getNumberOfAccounts());
     }
+    // Tests transfer between accounts
+    // Expected: amount is subtracted from checking account, same amount added to savings account.
+	@Test
+    public void testTransferBtnAccounts(){
+    	Customer z = new Customer("Z");
+    	Account z_checking_acct = new Account(Account.CHECKING);
+    	z_checking_acct.deposit(1000);
+    	Account z_savings_acct = new Account(Account.SAVINGS);
+    	z.openAccount(z_checking_acct);
+    	z.openAccount(z_savings_acct);
+    	double amount = 1000;
+    	z.transferBetweenAccounts(z_checking_acct, z_savings_acct, amount);
+    	assertEquals(0, (int)z_checking_acct.getBalance());
+    	assertEquals(1000, (int)z_savings_acct.getBalance());
+    }
 }
+
