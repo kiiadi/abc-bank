@@ -2,7 +2,7 @@ package com.abc;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertTrue;
+import src.main.java.com.abc.Transaction;
 
 public class TransactionTest {
     @Test
