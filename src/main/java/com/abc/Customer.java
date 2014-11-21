@@ -75,4 +75,16 @@ public class Customer {
     private String toDollars(double d){
         return String.format("$%,.2f", abs(d));
     }
+
+    // transfers amount from account_from to account_to.
+    // returns false, if amount is more than account_from balance
+	public boolean transferBetweenAccounts(Account account_from,
+			Account account_to, double amount) {
+		if(account_from.getBalance() >= amount){
+			account_from.withdraw(amount);
+			account_to.deposit(amount);
+			return true;
+		}
+		return false;
+	}
 }
