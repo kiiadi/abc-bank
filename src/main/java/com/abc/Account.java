@@ -9,29 +9,45 @@ public class Account {
     public static final int SAVINGS = 1;
     public static final int MAXI_SAVINGS = 2;
 
+    private final String accountNumber;
     private final int accountType;
-    public List<Transaction> transactions;
+    private List<Transaction> transactions;  // Henry made it to private
 
-    public Account(int accountType) {
+    public Account(int accountType, String accountNumber) {
+    	this.accountNumber = accountNumber; 
         this.accountType = accountType;
         this.transactions = new ArrayList<Transaction>();
     }
 
-    public void deposit(double amount) {
+    //henry added synchronized
+    public synchronized void deposit(double amount) {
         if (amount <= 0) {
             throw new IllegalArgumentException("amount must be greater than zero");
         } else {
             transactions.add(new Transaction(amount));
         }
     }
+    
+    // Henry added this method and return a copy of the transactions, which is ok since transaction has a public amount only.
+	public List<Transaction> getTransactions() {
+		return new ArrayList<Transaction>(transactions);
+	}
 
-public void withdraw(double amount) {
-    if (amount <= 0) {
-        throw new IllegalArgumentException("amount must be greater than zero");
-    } else {
-        transactions.add(new Transaction(-amount));
-    }
-}
+	//henry added synchronized
+	public synchronized void  withdraw(double amount) {
+	    if (amount <= 0) {
+	        throw new IllegalArgumentException("amount must be greater than zero");
+	    } else {
+	    	if(!hasFund(amount))
+	    		throw new IllegalArgumentException("Not enough fund to withdraw.");
+	        transactions.add(new Transaction(-amount));
+	    }
+	}
+	
+	 private boolean hasFund(double amount){
+	    	return this.sumTransactions() > amount;
+	 }
+	    
 
     public double interestEarned() {
         double amount = sumTransactions();
@@ -69,5 +85,9 @@ public void withdraw(double amount) {
     public int getAccountType() {
         return accountType;
     }
+
+	public String getAccountNumber() {
+		return accountNumber;
+	}
 
 }
