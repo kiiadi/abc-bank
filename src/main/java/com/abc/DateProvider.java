@@ -31,6 +31,7 @@ public class DateProvider {
 	public Date rebateEligibleDate()
 	{
 		Date transactionDate = now();
-		return  new Date (transactionDate.getTime() - MAXI_SAVINGS_REBATE_WITHDRAWL_DAYS_LIMIT);
+		Date rebateDate = new Date (transactionDate.getTime() - MAXI_SAVINGS_REBATE_WITHDRAWL_DAYS_LIMIT);   
+		return rebateDate;
 	}
 }
