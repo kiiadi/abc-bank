@@ -1,6 +1,5 @@
 package com.abc.model;
 
-import java.util.Date;
 
 
 public interface Transaction {
@@ -9,6 +8,6 @@ public interface Transaction {
 	
 	public double getAmount();
 	
-	public Date getDateOfTransaction();
+	public String getDateOfTransaction();
 	
 }

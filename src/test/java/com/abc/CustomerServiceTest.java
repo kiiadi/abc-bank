@@ -28,8 +28,7 @@ public class CustomerServiceTest {
 	final CustomerService service = null;
 	@Autowired
 	final BankService bankService = null;
-	Customer customer = null;
-
+	
 	public CustomerServiceTest() {
 		super();
 	}

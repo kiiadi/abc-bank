@@ -1,63 +1,82 @@
 package com.abc;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
-import org.junit.Ignore;
+import java.util.Collection;
+
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.abc.controller.CustomerController;
+import com.abc.model.Customer;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration("classpath:application-context.xml")
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class CustomerControllerTest {
 	
-	@Test //Test customer statement generation
-    public void testApp(){
-
-       /** Account checkingAccount = new Account(Account.CHECKING);
-        Account savingsAccount = new Account(Account.SAVINGS);
-
-        Customer henry = new Customer("Henry").openAccount(checkingAccount).openAccount(savingsAccount);
-
-        checkingAccount.deposit(100.0);
-        savingsAccount.deposit(4000.0);
-        savingsAccount.withdraw(200.0);
-
-        assertEquals("Statement for Henry\n" +
-                "\n" +
-                "Checking Account\n" +
-                "  deposit $100.00\n" +
-                "Total $100.00\n" +
-                "\n" +
-                "Savings Account\n" +
-                "  deposit $4,000.00\n" +
-                "  withdrawal $200.00\n" +
-                "Total $3,800.00\n" +
-                "\n" +
-                "Total In All Accounts $3,900.00", henry.getStatement()); */
-    }
-
-    @Test
-    public void testOneAccount(){
-        /**Customer oscar = new Customer("Oscar").openAccount(new Account(Account.SAVINGS));
-        assertEquals(1, oscar.getNumberOfAccounts()); */
-    }
-
-    @Test
-    public void testTwoAccount(){
-       /** Customer oscar = new Customer("Oscar")
-                .openAccount(new Account(Account.SAVINGS));
-        oscar.openAccount(new Account(Account.CHECKING));
-        assertEquals(2, oscar.getNumberOfAccounts()); */
-    }
-
-    @Ignore
-    public void testThreeAcounts() {
-       /**  Customer oscar = new Customer("Oscar")
-                .openAccount(new Account(Account.SAVINGS));
-        oscar.openAccount(new Account(Account.CHECKING));
-        assertEquals(3, oscar.getNumberOfAccounts()); */
-    }
+	@Autowired
+	final CustomerController controller = null;
+	
+	@Test
+	public void get() {
+		final Customer act1 = this.controller.add("Ed");
+		try {
+			final Customer act = this.controller.get(act1.getUid());
+			assertNotNull(act);
+		} catch (Exception e) {
+			e.printStackTrace();
+			assertNotNull(null);
+		}
+	}
+	
+	@Test
+	public void add() {
+		final Customer act1 = this.controller.add("Ed");
+		assertNotNull(act1);
+	}
+	
+	@Test
+	public void delete() {
+		final Customer act1 = this.controller.add("Ed");
+		try {
+			this.controller.delete(act1.getUid());
+		} catch (Exception e) {
+			e.printStackTrace();
+			assertNotNull(null);
+		}
+	}
+	
+	@Test
+	public void getAll() {
+		try {
+			this.controller.add("Test Account");
+			
+			final Collection<Customer> acts = this.controller.getAll();
+			
+			assertTrue(acts.size() > 0);
+		} catch (Exception e) {
+			e.printStackTrace();
+			assertNotNull(null);
+		}
+		
+	}
+	
+	@Test
+	public void contains() {
+		try {
+			final Customer act = this.controller.add("Ed");
+			
+			assertTrue(this.controller.contains(act.getUid()));
+		} catch (Exception e) {
+			e.printStackTrace();
+			assertNotNull(null);
+		}
+	}
 }

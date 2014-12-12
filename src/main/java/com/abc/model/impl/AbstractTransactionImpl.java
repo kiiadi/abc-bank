@@ -1,16 +1,14 @@
 package com.abc.model.impl;
 
-import java.util.Date;
-
 import com.abc.model.Transaction;
 
 public abstract class AbstractTransactionImpl implements Transaction {
 
 	private long uid;
 	private double amount;
-	private Date date;
+	private String date;
 	
-	public AbstractTransactionImpl(final double amount, final long uid, final Date date) {
+	public AbstractTransactionImpl(final double amount, final long uid, final String date) {
 		this.date = date;
 		this.amount = amount;
 		this.uid = uid;
@@ -24,7 +22,7 @@ public abstract class AbstractTransactionImpl implements Transaction {
 		return this.amount;
 	}
 
-	public Date getDateOfTransaction() {
+	public String getDateOfTransaction() {
 		return date;
 	}
 	

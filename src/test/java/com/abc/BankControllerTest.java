@@ -1,51 +1,34 @@
 package com.abc;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.abc.controller.BankController;
+import com.abc.model.Bank;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration("classpath:application-context.xml")
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class BankControllerTest {
 	
-	 private static final double DOUBLE_DELTA = 1e-15;
-	 
-    @Test
-    public void checkingAccount() {
-       /** Bank bank = new Bank();
-        Account checkingAccount = new Account(Account.CHECKING);
-        Customer bill = new Customer("Bill").openAccount(checkingAccount);
-        bank.addCustomer(bill);
-
-        checkingAccount.deposit(100.0);
-
-        assertEquals(0.1, bank.totalInterestPaid(), DOUBLE_DELTA); */
-    }
-
-    @Test
-    public void savings_account() {
-       /**  Bank bank = new Bank();
-        Account checkingAccount = new Account(Account.SAVINGS);
-        bank.addCustomer(new Customer("Bill").openAccount(checkingAccount));
-
-        checkingAccount.deposit(1500.0);
-
-        assertEquals(2.0, bank.totalInterestPaid(), DOUBLE_DELTA); */
-    }
-
-    @Test
-    public void maxi_savings_account() {
-      /**  Bank bank = new Bank();
-        Account checkingAccount = new Account(Account.MAXI_SAVINGS);
-        bank.addCustomer(new Customer("Bill").openAccount(checkingAccount));
-
-        checkingAccount.deposit(3000.0);
-
-        assertEquals(170.0, bank.totalInterestPaid(), DOUBLE_DELTA); */
-    }
-
+	@Autowired
+	final BankController controller = null;
+	
+	@Test
+	public void getBank() {
+		Bank bank = null;
+		try {
+			bank = controller.getBank();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		assertNotNull(bank);
+	}
 }

@@ -1,11 +1,9 @@
 package com.abc.model.impl;
 
-import java.util.Date;
-
 
 public class WithdrawTransactionImpl extends AbstractTransactionImpl {
 
-	public WithdrawTransactionImpl(double amount, long uid, Date date) {
+	public WithdrawTransactionImpl(double amount, long uid, String date) {
 		super(amount, uid, date);
 	}
 
