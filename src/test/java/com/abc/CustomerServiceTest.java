@@ -76,7 +76,7 @@ public class CustomerServiceTest {
 		try {
 			Customer customer = this.bankService.getBankCustomers().get(0);
 			Account account = customer.getAccounts().get(2);
-			service.depositToAccount(customer, account, 10000.00);
+			service.depositToAccount(customer, account, 1500.00);
 
 			assertTrue(account.getTransactions().size() == 1);
 		} catch (Exception e) {
@@ -117,7 +117,7 @@ public class CustomerServiceTest {
 			Customer customer = this.bankService.getBankCustomers().get(0);
 			Account account = customer.getAccounts().get(2);
 			double amount = service.totalInterestEarned(customer, account);
-			assertTrue(amount > 10000.00);
+			assertTrue(amount > 1500.00);
 		} catch (Exception e) {
 
 			e.printStackTrace();
@@ -179,9 +179,9 @@ public class CustomerServiceTest {
 		try {
 			Customer customer = this.bankService.getBankCustomers().get(0);
 			Account account = customer.getAccounts().get(0);
-			service.withdrawFromAccount(customer, account, 1000.00);
+			service.withdrawFromAccount(customer, account, 200.00);
 
-			// assertTrue(account.getTransactions().size() == 2);
+			assertTrue(account.getTransactions().size() == 3);
 		} catch (Exception e) {
 			e.printStackTrace();
 			assertNotNull(null);

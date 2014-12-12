@@ -13,7 +13,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.abc.builder.AccountBuilder;
 import com.abc.model.Customer;
 import com.abc.model.Report;
-import com.abc.service.BankService;
 import com.abc.service.CustomerService;
 import com.abc.service.ManagerService;
 

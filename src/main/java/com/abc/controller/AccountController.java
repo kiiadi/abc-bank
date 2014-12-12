@@ -11,11 +11,24 @@ import com.abc.builder.AccountBuilder;
 import com.abc.model.Account;
 import com.abc.model.Transaction;
 
+/**
+ * A simple controller that performs CRUD operations on an Account
+ * 
+ * @author erieed
+ */
 public class AccountController {
+	//Builder for building account information
 	@Autowired
 	final AccountBuilder builder = null;
 	final Map<Long, Account> accounts = new HashMap<Long, Account>();
 
+	/**
+	 * Get the Account based off its id
+	 * 
+	 * @param id - uid of account
+	 * @return
+	 * @throws Exception
+	 */
 	public Account get(long id) throws Exception {
 		if (this.accounts.containsKey(id)) {
 			return this.accounts.get(id);
@@ -24,6 +37,13 @@ public class AccountController {
 		}
 	}
 
+	/**
+	 * Creates and account
+	 * 
+	 * @param name - name of account
+	 * @param type - type of account (Checking, Savings, Max Savings)
+	 * @return
+	 */
 	public Account add(final String name, final int type) {
 		final Account customer = builder.type(type).name(name).
 				transactions(new ArrayList<Transaction>()).createAccount();
@@ -31,6 +51,12 @@ public class AccountController {
 		return customer;
 	}
 
+	/**
+	 * Deletes the Account from the store
+	 * 
+	 * @param id - uid of account
+	 * @throws Exception
+	 */
 	public void delete(final long id) throws Exception {
 		// may need to delete accounts also??
 		if (this.accounts.containsKey(id)) {
@@ -40,10 +66,22 @@ public class AccountController {
 		}
 	}
 	
+	/**
+	 * Get all Accounts in the application
+	 * 
+	 * @return
+	 */
 	public Collection<Account> getAll() {
 		return this.accounts.values();
 	}
 	
+	/**
+	 * Helper method to add a Transaction to the Account
+	 * 
+	 * @param id - Account id
+	 * @param trans - transaction to add (assumes that Transaction is already in TransactionController)
+	 * @throws Exception
+	 */
 	public void addTransaction(final long id, final Transaction trans) throws Exception {
 		final Account account = this.accounts.get(id);
 		if(account != null) {
@@ -57,6 +95,13 @@ public class AccountController {
 		}
 	}
 	
+	/**
+	 * Delete a Transaction from the Account
+	 * 
+	 * @param id - uid of account
+	 * @param trans - transaction to delete
+	 * @throws Exception
+	 */
 	public void deleteTransaction(final long id, final Transaction trans) throws Exception {
 		final Account account = this.accounts.get(id);
 		if(account != null) {
@@ -70,6 +115,12 @@ public class AccountController {
 		}
 	}
 
+	/**
+	 * Checks to see if Account is apart of this store
+	 * 
+	 * @param uid - id of account
+	 * @return
+	 */
 	public boolean contains(long uid) {
 		return this.accounts.containsKey(uid);
 	}
