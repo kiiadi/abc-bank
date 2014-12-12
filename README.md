@@ -38,3 +38,18 @@ A dummy application for a bank; should provide various functions of a retail ban
 * A customer can transfer between their accounts
 * Change **Maxi-Savings accounts** to have an interest rate of 5% assuming no withdrawals in the past 10 days otherwise 0.1%
 * Interest rates should accrue daily (incl. weekends), rates above are per-annum
+
+### Design
+
+* Added a controller folder and classes for accessing transactions, customers, banks, and accounts.  Used Model, Controller design concept (no view :) )
+* Added interfaces and implementations of those interfaces for POJO's such as Account, Customer, etc..   Also added Builders in the builder folder following the Builder Pattern
+* Added Spring to help with Dependency Injection (no need for singletons and helps with testing in my opinion)
+* Used Visitor Pattern on Accounts for calculating interest
+* Used Find Bugs for catching bugs
+
+### TODO
+* Want to add Logging and use AOP to do it.  This way the logging code is separate from the business logic 
+* Implement a formatter for the Date in Transaction using SimpleFormatter
+* Implement DecimalFormatter for representing amount within Transactions (in java 9 a Money API will be introduced and will solve this issue in a OO way)
+
+
