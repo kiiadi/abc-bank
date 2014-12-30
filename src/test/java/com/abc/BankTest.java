@@ -2,6 +2,8 @@ package com.abc;
 
 import org.junit.Test;
 
+import com.abc.Account.AccountType;
+
 import static org.junit.Assert.assertEquals;
 
 public class BankTest {
@@ -11,16 +13,16 @@ public class BankTest {
     public void customerSummary() {
         Bank bank = new Bank();
         Customer john = new Customer("John");
-        john.openAccount(new Account(Account.CHECKING));
+        john.openAccount(new Account(AccountType.CHECKING));
         bank.addCustomer(john);
 
-        assertEquals("Customer Summary\n - John (1 account)", bank.customerSummary());
+        assertEquals("Customer Summary\n - John (1 account)", bank.getCustomerSummary());
     }
 
     @Test
     public void checkingAccount() {
         Bank bank = new Bank();
-        Account checkingAccount = new Account(Account.CHECKING);
+        Account checkingAccount = new Account(AccountType.CHECKING);
         Customer bill = new Customer("Bill").openAccount(checkingAccount);
         bank.addCustomer(bill);
 
@@ -32,7 +34,7 @@ public class BankTest {
     @Test
     public void savings_account() {
         Bank bank = new Bank();
-        Account checkingAccount = new Account(Account.SAVINGS);
+        Account checkingAccount = new Account(AccountType.SAVINGS);
         bank.addCustomer(new Customer("Bill").openAccount(checkingAccount));
 
         checkingAccount.deposit(1500.0);
@@ -43,12 +45,24 @@ public class BankTest {
     @Test
     public void maxi_savings_account() {
         Bank bank = new Bank();
-        Account checkingAccount = new Account(Account.MAXI_SAVINGS);
+        Account checkingAccount = new Account(AccountType.MAXI_SAVINGS);
         bank.addCustomer(new Customer("Bill").openAccount(checkingAccount));
 
         checkingAccount.deposit(3000.0);
 
         assertEquals(170.0, bank.totalInterestPaid(), DOUBLE_DELTA);
     }
+
+    @Test
+    public void testGetFirstCustomer() {
+        Bank bank = new Bank();
+        
+        assertEquals("No customers added yet!", bank.getFirstCustomer());
+        
+        bank.addCustomer(new Customer("Bill"));
+
+        assertEquals("Bill", bank.getFirstCustomer());
+    }
+
 
 }
