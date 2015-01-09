@@ -1,5 +1,6 @@
 package com.abc;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -31,7 +32,7 @@ public abstract class Account {
     private final Types accountType;
     public Types getAccountType() { return accountType; }
     
-    private List<Transaction> transactions;
+    protected List<Transaction> transactions;
     public List<Transaction> getTransactions() { return Collections.unmodifiableList(transactions); }
     
     private String customerId;
@@ -89,8 +90,8 @@ class CheckingAccount extends Account {
 
 class SavingsAccount extends Account {
 	private static final double firstTierMaxAmount = 1000; 
-	private static double firstTierRate = 0.001;
-	private static double secondTierRate = 0.002;
+	private static final double firstTierRate = 0.001;
+	private static final double secondTierRate = 0.002;
 	
 	public SavingsAccount() {
 		super(Types.SAVINGS);
@@ -110,29 +111,29 @@ class SavingsAccount extends Account {
 
 
 class MaxiSavingsAccount extends Account {
-	private static final double firstTierMaxAmount = 1000; 
-	private static double firstTierRate = 0.02;
-	private static final double secondTierMaxAmount = 2000; 
-	private static double secondTierRate = 0.05;
-	private static double thirdTierRate = 0.1;
-	
+	private static final int recentWidthdrawDays = 10;
+	private static final double reducedRateDueToRecentWithdraw = 0.001;
+	private static final double maxsavingsRate = 0.05;
 	public MaxiSavingsAccount() {
 		super(Types.MAXI_SAVINGS);
 	}
 	
     public double interestEarned() {
-        double amount = sumTransactions();
-        double interest = 0;
-        //be explicit with the rules for now, rather than alternative some looping approaches
-        if (amount > secondTierMaxAmount) {
-        	interest += (amount - secondTierMaxAmount) * thirdTierRate;
-        	amount = secondTierMaxAmount;
-        }
-        if (amount > firstTierMaxAmount) {
-        	interest += (amount - firstTierMaxAmount) * secondTierRate;
-        	amount = firstTierMaxAmount;
-        }
-    	interest += amount * firstTierRate;
-        return interest;
+    	double amount = sumTransactions();
+    	if (hasWithdrawRecently(recentWidthdrawDays)) {
+    		return amount * reducedRateDueToRecentWithdraw;
+    	}
+    	return amount * maxsavingsRate;
     }
+    
+    private boolean hasWithdrawRecently(int recentDays) {
+    	LocalDate cutoff = DateProvider.getInstance().now().minusDays(recentDays);
+    	for (Transaction transaction : transactions) {
+    		if (!transaction.getDate().isBefore(cutoff)) {
+    			return true;
+    		}
+    	}
+    	return false;
+    }
+
 }
