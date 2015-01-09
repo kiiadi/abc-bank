@@ -6,19 +6,15 @@ import java.util.List;
 
 public abstract class Account {
 	public enum Types {
-		CHECKING(0, "Checking", CheckingAccount.class),
-		SAVINGS(1, "Savings", SavingsAccount.class),
-		MAXI_SAVINGS(2, "Maxi Savings", MaxiSavingsAccount.class);
+		CHECKING("Checking", CheckingAccount.class),
+		SAVINGS("Savings", SavingsAccount.class),
+		MAXI_SAVINGS("Maxi Savings", MaxiSavingsAccount.class);
 		
-		private int id;
-		public int getId() { return id; }
-
 		private String label;
 		public String getLabel() {return label;}
 		Class<? extends Account> clazz;
 		
-		private Types(int id, String label, Class<? extends Account> clazz) {
-			this.id=id;
+		private Types(String label, Class<? extends Account> clazz) {
 			this.label=label;
 			this.clazz = clazz;
 		}
@@ -31,11 +27,16 @@ public abstract class Account {
 		}
 	}
 	
+	
     private final Types accountType;
+    public Types getAccountType() { return accountType; }
+    
     private List<Transaction> transactions;
-    public List<Transaction> getTransactions() {
-		return Collections.unmodifiableList(transactions);
-	}
+    public List<Transaction> getTransactions() { return Collections.unmodifiableList(transactions); }
+    
+    private String customerId;
+	public String getCustomerId() { return customerId;}
+	public void setCustomerId(String customerId) { this.customerId = customerId; }
 
 	protected Account(Types accountType) {
         this.accountType = accountType;
@@ -46,11 +47,6 @@ public abstract class Account {
         validateAmount(amount);
         transactions.add(new Transaction(amount));
     }
-
-	private void validateAmount(double amount) {
-		if (amount <= 0)
-            throw new IllegalArgumentException("amount must be greater than zero");
-	}
 
 	public void withdraw(double amount) {
 		validateAmount(amount);
@@ -65,10 +61,19 @@ public abstract class Account {
             amount += t.getAmount();
         return amount;
     }
-
-    public Types getAccountType() {
-        return accountType;
+    
+    public static void customerTransfer(Account from, Account to, double amount) {
+    	validateAmount(amount);
+    	if (!from.customerId.equals(to.customerId)) {
+    		throw new IllegalArgumentException("Tranfer currently is only allowed between accounts of a same customer.");
+    	}
+    	from.withdraw(amount);
+    	to.deposit(amount);
     }
+	private static void validateAmount(double amount) {
+		if (amount <= 0)
+            throw new IllegalArgumentException("amount must be greater than zero");
+	}
 }
 
 class CheckingAccount extends Account {
