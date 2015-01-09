@@ -3,16 +3,37 @@ package com.abc;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Account {
+public abstract class Account {
+	public enum Types {
+		CHECKING(0, "Checking", CheckingAccount.class),
+		SAVINGS(1, "Savings", SavingsAccount.class),
+		MAXI_SAVINGS(2, "Maxi Savings", MaxiSavingsAccount.class);
+		
+		private int id;
+		public int getId() { return id; }
 
-    public static final int CHECKING = 0;
-    public static final int SAVINGS = 1;
-    public static final int MAXI_SAVINGS = 2;
-
-    private final int accountType;
+		private String label;
+		public String getLabel() {return label;}
+		Class<? extends Account> clazz;
+		
+		private Types(int id, String label, Class<? extends Account> clazz) {
+			this.id=id;
+			this.label=label;
+			this.clazz = clazz;
+		}
+		public Account newInstance() {
+			try {
+				return clazz.newInstance();
+			} catch (InstantiationException | IllegalAccessException e) {
+				throw new RuntimeException(e);
+			}
+		}
+	}
+	
+    private final Types accountType;
     public List<Transaction> transactions;
 
-    public Account(int accountType) {
+    public Account(Types accountType) {
         this.accountType = accountType;
         this.transactions = new ArrayList<Transaction>();
     }
@@ -33,25 +54,8 @@ public class Account {
 	    }
 	}
 
-    public double interestEarned() {
-        double amount = sumTransactions();
-        switch(accountType){
-            case SAVINGS:
-                if (amount <= 1000)
-                    return amount * 0.001;
-                else
-                    return 1 + (amount-1000) * 0.002;
-            case MAXI_SAVINGS:
-                if (amount <= 1000)
-                    return amount * 0.02;
-                if (amount <= 2000)
-                    return 20 + (amount-1000) * 0.05;
-                return 70 + (amount-2000) * 0.1;
-            default:
-                return amount * 0.001;
-        }
-    }
-
+    public abstract double interestEarned();
+    
     public double sumTransactions() {
        return checkIfTransactionsExist(true);
     }
@@ -63,8 +67,68 @@ public class Account {
         return amount;
     }
 
-    public int getAccountType() {
+    public Types getAccountType() {
         return accountType;
     }
+}
 
+class CheckingAccount extends Account {
+	public CheckingAccount() {
+		super(Types.CHECKING);
+	}
+
+    public double interestEarned() {
+        double amount = sumTransactions();
+        return amount * 0.001;
+    }
+}
+
+class SavingsAccount extends Account {
+	private static final double firstTierMaxAmount = 1000; 
+	private static double firstTierRate = 0.001;
+	private static double secondTierRate = 0.002;
+	
+	public SavingsAccount() {
+		super(Types.SAVINGS);
+	}
+	
+    public double interestEarned() {
+        double amount = sumTransactions();
+        double interest = 0;
+        if (amount > firstTierMaxAmount) {
+        	interest += (amount - firstTierMaxAmount) * secondTierRate;
+        	amount = firstTierMaxAmount;
+        }
+    	interest += amount * firstTierRate;
+    	return interest;
+    }
+}
+
+
+class MaxiSavingsAccount extends Account {
+	private static final double firstTierMaxAmount = 1000; 
+	private static double firstTierRate = 0.02;
+	private static final double secondTierMaxAmount = 2000; 
+	private static double secondTierRate = 0.05;
+	private static double thirdTierRate = 0.1;
+	
+	public MaxiSavingsAccount() {
+		super(Types.MAXI_SAVINGS);
+	}
+	
+    public double interestEarned() {
+        double amount = sumTransactions();
+        double interest = 0;
+        //be explicit with the rules for now, rather than alternative some looping approaches
+        if (amount > secondTierMaxAmount) {
+        	interest += (amount - secondTierMaxAmount) * thirdTierRate;
+        	amount = secondTierMaxAmount;
+        }
+        if (amount > firstTierMaxAmount) {
+        	interest += (amount - firstTierMaxAmount) * secondTierRate;
+        	amount = firstTierMaxAmount;
+        }
+    	interest += amount * firstTierRate;
+        return interest;
+    }
 }

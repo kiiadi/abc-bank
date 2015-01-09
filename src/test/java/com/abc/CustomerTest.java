@@ -1,5 +1,8 @@
 package com.abc;
 
+import static com.abc.Account.Types.CHECKING;
+import static com.abc.Account.Types.MAXI_SAVINGS;
+import static com.abc.Account.Types.SAVINGS;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
@@ -8,8 +11,8 @@ public class CustomerTest {
 
     public void testCustomerStatementGeneration(){
 
-        Account checkingAccount = new Account(Account.CHECKING);
-        Account savingsAccount = new Account(Account.SAVINGS);
+        Account checkingAccount = CHECKING.newInstance();
+        Account savingsAccount = SAVINGS.newInstance();
 
         Customer henry = new Customer("Henry").openAccount(checkingAccount).openAccount(savingsAccount);
 
@@ -33,9 +36,9 @@ public class CustomerTest {
 
     @Test
     public void openAccounts_thenNumberOfAccountsIncrements() {
-        Customer oscar = new Customer("Oscar").openAccount(new Account(Account.SAVINGS));
-        oscar.openAccount(new Account(Account.CHECKING));
-        oscar.openAccount(new Account(Account.MAXI_SAVINGS));
+        Customer oscar = new Customer("Oscar").openAccount(SAVINGS.newInstance());
+        oscar.openAccount(CHECKING.newInstance());
+        oscar.openAccount(MAXI_SAVINGS.newInstance());
         assertEquals(3, oscar.getNumberOfAccounts());
     }
 }

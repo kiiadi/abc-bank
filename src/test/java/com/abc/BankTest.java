@@ -1,6 +1,8 @@
 package com.abc;
 
-import static com.abc.Account.*;
+import static com.abc.Account.Types.CHECKING;
+import static com.abc.Account.Types.MAXI_SAVINGS;
+import static com.abc.Account.Types.SAVINGS;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 
@@ -24,14 +26,14 @@ public class BankTest {
 
     @Test
     public void customerSummary_whenOneCustomerAndOneAccount_thenShowItInSeperateLine() {
-        prepareCustomerAccounts("John", asList(new Account(CHECKING)));
+        prepareCustomerAccounts("John", asList(CHECKING.newInstance()));
         assertEquals("Customer Summary\n - John (1 account)", bank.customerSummary());
     }
 
     @Test
     public void customerSummary_whenMoreCustomersZeroOrMoreAccounts_thenShowThemInSeperateLines() {
-        prepareCustomerAccounts("John", asList(new Account(CHECKING)));
-        prepareCustomerAccounts("Eric", asList(new Account(SAVINGS), new Account(CHECKING)));
+        prepareCustomerAccounts("John", asList(CHECKING.newInstance()));
+        prepareCustomerAccounts("Eric", asList(SAVINGS.newInstance(), CHECKING.newInstance()));
         prepareCustomerAccounts("Mary", asList());
         assertEquals("Customer Summary\n - John (1 account)\n - Eric (2 accounts)\n - Mary (0 account)", 
         		bank.customerSummary());
@@ -39,7 +41,7 @@ public class BankTest {
     
     @Test
     public void totalInterestPaid_givenCheckingAccountAndDeposit_thenPayFlatRate() {
-    	Account checkingAccount = new Account(CHECKING);
+    	Account checkingAccount = CHECKING.newInstance();
     	prepareCustomerAccounts("Bill", asList(checkingAccount));
         checkingAccount.deposit(100.0);
 
@@ -48,7 +50,7 @@ public class BankTest {
 
     @Test
     public void totalInterestPaid_givenSavingsAccountAndDeposit_thenPayByAmountTiers() {
-        Account savingAccount = new Account(SAVINGS);
+        Account savingAccount = SAVINGS.newInstance();
     	prepareCustomerAccounts("Bill", asList(savingAccount));
         savingAccount.deposit(1500.0);
 
@@ -57,7 +59,7 @@ public class BankTest {
 
     @Test
     public void totalInterestPaid_givenMaxiSavingsAccountAndDeposit_thenPayByAmountTiersWithHigherRates() {
-        Account maxiSavings = new Account(MAXI_SAVINGS);
+        Account maxiSavings = MAXI_SAVINGS.newInstance();
         prepareCustomerAccounts("Bill", asList(maxiSavings));
         maxiSavings.deposit(3000.0);
 
