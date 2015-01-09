@@ -26,6 +26,7 @@ public class Customer {
     public int getNumberOfAccounts() {
         return accounts.size();
     }
+    
 
     public double totalInterestEarned() {
         double total = 0;
