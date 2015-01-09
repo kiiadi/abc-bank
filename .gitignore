@@ -2,3 +2,5 @@
 target/
 bin/
 *.iml
+/.cache
+/.classpath
