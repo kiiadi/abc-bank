@@ -41,30 +41,37 @@ public class BankTest {
     
     @Test
     public void totalInterestPaid_givenCheckingAccountAndDeposit_thenPayFlatRate() {
-    	Account checkingAccount = CHECKING.newInstance();
-    	prepareCustomerAccounts("Bill", asList(checkingAccount));
-        checkingAccount.deposit(100.0);
+    	prepareCustomerAccounts("Bill", asList(deposite(100.0, CHECKING.newInstance())));
 
         assertAmount(0.1, bank.totalInterestPaid());
     }
 
     @Test
     public void totalInterestPaid_givenSavingsAccountAndDeposit_thenPayByAmountTiers() {
-        Account savingAccount = SAVINGS.newInstance();
-    	prepareCustomerAccounts("Bill", asList(savingAccount));
-        savingAccount.deposit(1500.0);
+        prepareCustomerAccounts("Bill", asList(deposite(1500.0, SAVINGS.newInstance())));
 
         assertAmount(1000*0.001+500*0.002, bank.totalInterestPaid());
     }
 
     @Test
     public void totalInterestPaid_givenMaxiSavingsAccountAndDeposit_thenPayByAmountTiersWithHigherRates() {
-        Account maxiSavings = MAXI_SAVINGS.newInstance();
-        prepareCustomerAccounts("Bill", asList(maxiSavings));
-        maxiSavings.deposit(3000.0);
+        prepareCustomerAccounts("Bill", asList(deposite(3000.0, MAXI_SAVINGS.newInstance())));
 
         assertAmount(1000*0.02+1000*0.05+1000*0.1, bank.totalInterestPaid());
     }
+    
+    @Test
+    public void totalInterestPaidReport_whenMoreCustomersZeroOrMoreAccounts_thenShowThemInSeperateLines() {
+        prepareCustomerAccounts("Bill", asList(deposite(100.0, CHECKING.newInstance())));
+        prepareCustomerAccounts("Eric", asList(
+        		deposite(100.0, CHECKING.newInstance()),
+        		deposite(100.0, CHECKING.newInstance())
+        		));
+        prepareCustomerAccounts("Mary", asList());
+        assertEquals("Total Interest Paid Summary: 0.30", 
+        		bank.totalInterestPaidSummary());
+    }
+    
 
 	private void prepareCustomerAccounts(String name, Collection<Account> accounts) {
 		Customer customer = new Customer(name);
@@ -72,6 +79,11 @@ public class BankTest {
 			customer.openAccount(account);
 		}
         bank.addCustomer(customer);
+	}
+	
+	private Account deposite(double amount, Account account) {
+		account.deposit(amount);
+		return account;
 	}
 	
 	private void assertAmount(double expect, double actual) {

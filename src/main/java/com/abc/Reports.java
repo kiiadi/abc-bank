@@ -6,6 +6,10 @@ public class Reports {
 	public static String customerSummary(List<Customer> customers) {
 		return new BankCustomerSummaryReport().report(customers);
 	}
+	
+	public static String totalInterestPaidSummary(Bank bank) {
+		return String.format("Total Interest Paid Summary: %.2f", bank.totalInterestPaid());
+	}
 }
 
 class BankCustomerSummaryReport {

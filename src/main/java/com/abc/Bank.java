@@ -24,4 +24,8 @@ public class Bank {
             total += c.totalInterestEarned();
         return total;
     }
+    
+    public String totalInterestPaidSummary() {
+    	return Reports.totalInterestPaidSummary(this);
+    }
 }
