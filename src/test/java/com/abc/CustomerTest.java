@@ -9,6 +9,7 @@ import org.junit.Test;
 
 public class CustomerTest {
 
+	@Test
     public void testCustomerStatementGeneration(){
 
         Account checkingAccount = CHECKING.newInstance();

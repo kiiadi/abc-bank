@@ -87,7 +87,6 @@ public class BankTest {
 	}
 	
 	private void assertAmount(double expect, double actual) {
-	    final double DOUBLE_DELTA = 1e-15;
-        assertEquals(expect, actual, DOUBLE_DELTA);
+	    assertEquals(expect, actual, 1e-15);
 	}
 }

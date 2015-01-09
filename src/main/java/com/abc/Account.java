@@ -1,6 +1,7 @@
 package com.abc;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public abstract class Account {
@@ -31,39 +32,37 @@ public abstract class Account {
 	}
 	
     private final Types accountType;
-    public List<Transaction> transactions;
+    private List<Transaction> transactions;
+    public List<Transaction> getTransactions() {
+		return Collections.unmodifiableList(transactions);
+	}
 
-    public Account(Types accountType) {
+	protected Account(Types accountType) {
         this.accountType = accountType;
         this.transactions = new ArrayList<Transaction>();
     }
 
     public void deposit(double amount) {
-        if (amount <= 0) {
-            throw new IllegalArgumentException("amount must be greater than zero");
-        } else {
-            transactions.add(new Transaction(amount));
-        }
+        validateAmount(amount);
+        transactions.add(new Transaction(amount));
     }
 
+	private void validateAmount(double amount) {
+		if (amount <= 0)
+            throw new IllegalArgumentException("amount must be greater than zero");
+	}
+
 	public void withdraw(double amount) {
-	    if (amount <= 0) {
-	        throw new IllegalArgumentException("amount must be greater than zero");
-	    } else {
-	        transactions.add(new Transaction(-amount));
-	    }
+		validateAmount(amount);
+        transactions.add(new Transaction(-amount));
 	}
 
     public abstract double interestEarned();
     
     public double sumTransactions() {
-       return checkIfTransactionsExist(true);
-    }
-
-    private double checkIfTransactionsExist(boolean checkAll) {
         double amount = 0.0;
         for (Transaction t: transactions)
-            amount += t.amount;
+            amount += t.getAmount();
         return amount;
     }
 
