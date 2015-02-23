@@ -18,19 +18,38 @@ public class Customer {
         return name;
     }
 
-    public Customer openAccount(Account account) {
+    public synchronized Customer openAccount(Account account) {
         accounts.add(account);
         return this;
     }
 
-    public int getNumberOfAccounts() {
+    public synchronized int getNumberOfAccounts() {
         return accounts.size();
     }
 
+    /**
+     * @param from
+     * @param to
+     * @param amount
+     * @since 0.2
+     */
+    public void transfer(int fromIdx, int toIdx, double amount) {
+    	Account fromAccount, toAccount;
+    	synchronized (this) {
+			fromAccount = accounts.get(fromIdx);
+			toAccount = accounts.get(toIdx);
+    	}
+    	fromAccount.withdraw(amount);
+    	toAccount.deposit(amount);
+    }
+    
     public double totalInterestEarned() {
         double total = 0;
-        for (Account a : accounts)
-            total += a.interestEarned();
+        //Should consider to make local copy for account list for better performance.
+        synchronized (this) {
+        	for (Account a : accounts)
+        		total += a.interestEarned();
+        }
         return total;
     }
 
@@ -38,9 +57,12 @@ public class Customer {
         String statement = null;
         statement = "Statement for " + name + "\n";
         double total = 0.0;
-        for (Account a : accounts) {
-            statement += "\n" + statementForAccount(a) + "\n";
-            total += a.sumTransactions();
+        //Should consider to make local copy for account list for better performance.
+        synchronized (this) {
+	        for (Account a : accounts) {
+	            statement += "\n" + statementForAccount(a) + "\n";
+	            total += a.sumTransactions();
+	        }
         }
         statement += "\nTotal In All Accounts " + toDollars(total);
         return statement;
@@ -64,7 +86,7 @@ public class Customer {
 
         //Now total up all the transactions
         double total = 0.0;
-        for (Transaction t : a.transactions) {
+        for (Transaction t : a.getTransactions()) {
             s += "  " + (t.amount < 0 ? "withdrawal" : "deposit") + " " + toDollars(t.amount) + "\n";
             total += t.amount;
         }

@@ -24,8 +24,10 @@ public class BankTest {
         Customer bill = new Customer("Bill").openAccount(checkingAccount);
         bank.addCustomer(bill);
 
+		TimeTuner timeTuner = TimeTuner.mock();
+		timeTuner.now("2014-12-01");
         checkingAccount.deposit(100.0);
-
+		timeTuner.now("2015-12-01");
         assertEquals(0.1, bank.totalInterestPaid(), DOUBLE_DELTA);
     }
 
@@ -35,8 +37,11 @@ public class BankTest {
         Account checkingAccount = new Account(Account.SAVINGS);
         bank.addCustomer(new Customer("Bill").openAccount(checkingAccount));
 
+		TimeTuner timeTuner = TimeTuner.mock();
+		timeTuner.now("2014-12-01");
         checkingAccount.deposit(1500.0);
 
+		timeTuner.now("2015-12-01");
         assertEquals(2.0, bank.totalInterestPaid(), DOUBLE_DELTA);
     }
 
@@ -46,9 +51,12 @@ public class BankTest {
         Account checkingAccount = new Account(Account.MAXI_SAVINGS);
         bank.addCustomer(new Customer("Bill").openAccount(checkingAccount));
 
+		TimeTuner timeTuner = TimeTuner.mock();
+		timeTuner.now("2014-12-01");
         checkingAccount.deposit(3000.0);
 
-        assertEquals(170.0, bank.totalInterestPaid(), DOUBLE_DELTA);
+		timeTuner.now("2015-12-01");
+        assertEquals(15.0, bank.totalInterestPaid(), DOUBLE_DELTA);
     }
 
 }

@@ -1,11 +1,11 @@
 package com.abc;
 
-import org.junit.Ignore;
-import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
 
+import org.junit.Test;
+
 public class CustomerTest {
+    private static final double DOUBLE_DELTA = 1e-15;
 
     @Test //Test customer statement generation
     public void testApp(){
@@ -47,11 +47,27 @@ public class CustomerTest {
         assertEquals(2, oscar.getNumberOfAccounts());
     }
 
-    @Ignore
+    @Test
     public void testThreeAcounts() {
         Customer oscar = new Customer("Oscar")
                 .openAccount(new Account(Account.SAVINGS));
         oscar.openAccount(new Account(Account.CHECKING));
+        // customer may open multiple accounts of the same type
+        oscar.openAccount(new Account(Account.SAVINGS));
         assertEquals(3, oscar.getNumberOfAccounts());
+    }
+
+    @Test
+    public void testTransfer() {
+        Account savingAccount = new Account(Account.SAVINGS);
+        Account checkingAccount = new Account(Account.CHECKING);
+		Customer customer = new Customer("Ying")
+                .openAccount(savingAccount)
+                .openAccount(checkingAccount);
+		savingAccount.deposit(100);
+		checkingAccount.deposit(150);
+		customer.transfer(1, 0, 50);
+		assertEquals(150, savingAccount.sumTransactions(), DOUBLE_DELTA);
+		assertEquals(100, checkingAccount.sumTransactions(), DOUBLE_DELTA);
     }
 }
