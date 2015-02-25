@@ -1,22 +1,27 @@
 package com.abc;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Bank {
-    private List<Customer> customers;
-
+    private List<Customer> _customers;
+    private TransactionManager _transactionManager = new TransactionManager();
+    
+    public TransactionManager getTransactionManager(){
+    return _transactionManager ;
+}
     public Bank() {
-        customers = new ArrayList<Customer>();
+        _customers = new ArrayList<Customer>();
     }
 
     public void addCustomer(Customer customer) {
-        customers.add(customer);
+        _customers.add(customer);
     }
 
     public String customerSummary() {
         String summary = "Customer Summary";
-        for (Customer c : customers)
+        for (Customer c : _customers)
             summary += "\n - " + c.getName() + " (" + format(c.getNumberOfAccounts(), "account") + ")";
         return summary;
     }
@@ -27,17 +32,17 @@ public class Bank {
         return number + " " + (number == 1 ? word : word + "s");
     }
 
-    public double totalInterestPaid() {
-        double total = 0;
-        for(Customer c: customers)
-            total += c.totalInterestEarned();
+    public BigDecimal totalInterestPaid() {
+        BigDecimal total = BigDecimal.ZERO;
+        for(Customer c: _customers)
+        	total = total.add(_transactionManager.totalInterestEarned(c));
         return total;
     }
 
     public String getFirstCustomer() {
         try {
-            customers = null;
-            return customers.get(0).getName();
+            _customers = null;
+            return _customers.get(0).getName();
         } catch (Exception e){
             e.printStackTrace();
             return "Error";
