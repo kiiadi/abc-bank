@@ -1,13 +1,12 @@
 package com.abc;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.lang.Math.abs;
-
 public class Customer {
-    private String name;
-    private List<Account> accounts;
+    private final String name;
+    private final List<Account> accounts;
 
     public Customer(String name) {
         this.name = name;
@@ -27,52 +26,57 @@ public class Customer {
         return accounts.size();
     }
 
-    public double totalInterestEarned() {
-        double total = 0;
+    public BigDecimal totalInterestEarned() {
+        BigDecimal total = new BigDecimal(0.0);
         for (Account a : accounts)
-            total += a.interestEarned();
+            total = total.add(a.interestEarned());
         return total;
     }
 
+    public void transfer(Account fromAccount, Account toAccount, BigDecimal amount) {
+
+        if(!accounts.contains(fromAccount) || !accounts.contains(toAccount)) {
+            throw new IllegalArgumentException("Account does not belong to the Customer");
+        }
+
+        if(amount.compareTo(fromAccount.sumTransactions()) > 0) {
+            throw new IllegalArgumentException("Not enough funds to transfer"+ amount + " from "+ fromAccount.sumTransactions());
+        }
+
+        fromAccount.withdraw(amount);
+        toAccount.deposit(amount);
+
+    }
+
     public String getStatement() {
-        String statement = null;
-        statement = "Statement for " + name + "\n";
-        double total = 0.0;
+        String statement  = "Statement for " + name + "\n";
+        BigDecimal total = new BigDecimal(0.0);
         for (Account a : accounts) {
             statement += "\n" + statementForAccount(a) + "\n";
-            total += a.sumTransactions();
+            total = total.add(a.sumTransactions());
         }
         statement += "\nTotal In All Accounts " + toDollars(total);
         return statement;
     }
 
     private String statementForAccount(Account a) {
-        String s = "";
 
        //Translate to pretty account type
-        switch(a.getAccountType()){
-            case Account.CHECKING:
-                s += "Checking Account\n";
-                break;
-            case Account.SAVINGS:
-                s += "Savings Account\n";
-                break;
-            case Account.MAXI_SAVINGS:
-                s += "Maxi Savings Account\n";
-                break;
-        }
+        StringBuilder s = new StringBuilder();
+        s.append(a.getAccountName()).append("\n");
+
 
         //Now total up all the transactions
-        double total = 0.0;
+        BigDecimal total = new BigDecimal(0.0);
         for (Transaction t : a.transactions) {
-            s += "  " + (t.amount < 0 ? "withdrawal" : "deposit") + " " + toDollars(t.amount) + "\n";
-            total += t.amount;
+            s.append("  ").append( (t.amount.signum() < 0 ? "withdrawal" : "deposit") ).append(" ").append(toDollars(t.amount)).append("\n");
+            total = total.add(t.amount);
         }
-        s += "Total " + toDollars(total);
-        return s;
+        s.append("Total ").append(toDollars(total));
+        return s.toString();
     }
 
-    private String toDollars(double d){
-        return String.format("$%,.2f", abs(d));
+    private String toDollars(BigDecimal d){
+        return String.format("$%,.2f", d.abs());
     }
 }
