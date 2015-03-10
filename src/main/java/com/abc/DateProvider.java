@@ -1,5 +1,14 @@
 package com.abc;
 
+
+/*
+ * 
+ * Alex Lerner updates ( AlecLerner@gmail.com
+ * 
+ */
+
+
+
 import java.util.Calendar;
 import java.util.Date;
 
@@ -12,7 +21,7 @@ public class DateProvider {
         return instance;
     }
 
-    public Date now() {
+    public static Date now() {
         return Calendar.getInstance().getTime();
     }
 }
