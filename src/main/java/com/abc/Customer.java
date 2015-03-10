@@ -1,78 +1,92 @@
 package com.abc;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.lang.Math.abs;
+
+/*
+ * 
+ * Alex Lerner updates ( AlecLerner@gmail.com
+ * 
+ */
+
 
 public class Customer {
-    private String name;
-    private List<Account> accounts;
+	private static final String EOL = "\n";
+	private static final String DEPOSIT = "deposit";
+	private static final String WITHDRAWAL = "withdrawal";
+	private String name;
+	private List<Account> accounts;
 
-    public Customer(String name) {
-        this.name = name;
-        this.accounts = new ArrayList<Account>();
-    }
+	public Customer(String name) {
+		this.name = name;
+		this.accounts = new ArrayList<Account>();
+	}
 
-    public String getName() {
-        return name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public Customer openAccount(Account account) {
-        accounts.add(account);
-        return this;
-    }
+	public Customer openAccount(Account account) {
+		accounts.add(account);
+		return this;
+	}
 
-    public int getNumberOfAccounts() {
-        return accounts.size();
-    }
+	public int getNumberOfAccounts() {
+		return accounts.size();
+	}
 
-    public double totalInterestEarned() {
-        double total = 0;
-        for (Account a : accounts)
-            total += a.interestEarned();
-        return total;
-    }
+	public BigDecimal totalInterestEarned() {
+		BigDecimal total = new BigDecimal(0);
+		for (Account a : accounts)
+			total = total.add( a.interestEarned() );
+		return total;
+	}
 
-    public String getStatement() {
-        String statement = null;
-        statement = "Statement for " + name + "\n";
-        double total = 0.0;
-        for (Account a : accounts) {
-            statement += "\n" + statementForAccount(a) + "\n";
-            total += a.sumTransactions();
-        }
-        statement += "\nTotal In All Accounts " + toDollars(total);
-        return statement;
-    }
+	public String getStatement() {
+		StringBuilder statement = new StringBuilder();
+		statement.append("Statement for ").append(name).append(EOL);
+				BigDecimal total = new BigDecimal(0);
+				for (Account a : accounts) {
+					statement.append(EOL).append(statementForAccount(a)).append(EOL);
+					total = total.add( a.sumTransactions() );
+				}
+				statement.append("\nTotal In All Accounts ").append(toDollars(total));
+				return statement.toString();
+	}
 
-    private String statementForAccount(Account a) {
-        String s = "";
+	private static String statementForAccount(Account a) {
+		StringBuilder s = new StringBuilder();
 
-       //Translate to pretty account type
-        switch(a.getAccountType()){
-            case Account.CHECKING:
-                s += "Checking Account\n";
-                break;
-            case Account.SAVINGS:
-                s += "Savings Account\n";
-                break;
-            case Account.MAXI_SAVINGS:
-                s += "Maxi Savings Account\n";
-                break;
-        }
+		s.append(a.getAccountDescription()).append(EOL);
 
-        //Now total up all the transactions
-        double total = 0.0;
-        for (Transaction t : a.transactions) {
-            s += "  " + (t.amount < 0 ? "withdrawal" : "deposit") + " " + toDollars(t.amount) + "\n";
-            total += t.amount;
-        }
-        s += "Total " + toDollars(total);
-        return s;
-    }
+		//Now total up all the transactions
 
-    private String toDollars(double d){
-        return String.format("$%,.2f", abs(d));
-    }
+		BigDecimal total = new BigDecimal(0);
+		for (Transaction t : a.getTransactions()) {
+			s.append("  ").append((t.getAmount().intValue() < 0 ? WITHDRAWAL : DEPOSIT)).append(" ").append(toDollars(t.getAmount())).append(EOL);
+			total = total.add(t.getAmount());
+		}
+		s.append("Total ").append(toDollars(total));
+		return s.toString();
+	}
+
+	private static String toDollars(BigDecimal d){
+		return String.format("$%,.2f", d.abs());
+	}
+
+	public static void tansfer(Account fromAccount, Account toAccount, double amount) throws Exception {
+		if ( (fromAccount == null) || ( toAccount == null) || fromAccount == toAccount ) {
+			throw new IllegalArgumentException("account can't be null or equal");
+		}
+
+		if ( fromAccount.sumTransactions().compareTo(new BigDecimal( amount)) == -1 ) {
+			throw new Exception( amount + " exceeds amount of " + fromAccount.getAccountDescription());
+		}
+
+		fromAccount.withdraw(amount);
+		toAccount.deposit(amount);
+	}
+
 }
