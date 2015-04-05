@@ -26,7 +26,15 @@ public class Bank {
     private String format(int number, String word) {
         return new StringBuilder(String.valueOf(number)).append(" ").append(number == 1 ? word : word + "s").toString();
     }
-
+    
+    // This will be set as daily job for calculating and applying interest rate 
+    public void applyInterest()
+    {
+    	for (Customer c : customers)
+    	{
+    		c.applyInterest();
+    	}
+    }
     public double totalInterestPaid() {
         double total = 0;
         for(Customer c: customers)

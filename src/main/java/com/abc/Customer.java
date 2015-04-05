@@ -34,7 +34,13 @@ public class Customer {
 			total += a.interestEarned();
 		return total;
 	}
-
+	
+	public void applyInterest()
+	{
+		for(Account a : accounts)
+			a.applyInterest();
+	}
+	
 	public void transferAmount(Account from, Account to, double amount) {
 		if( from.getCustomerName() == null )
 			throw new IllegalArgumentException(
