@@ -1,16 +1,31 @@
 package com.abc;
 
-import java.util.Calendar;
-import java.util.Date;
+import org.joda.time.DateTime;
+
+import com.abc.BankConstants.TransactionType;
 
 public class Transaction {
-    public final double amount;
+	private final double amount;
+	private final DateTime transactionDate;
+	private final TransactionType transactionType;
+	
+	public Transaction(TransactionType transactionType, double amount) {
+		this(transactionType, amount,DateProvider.now());
+	}
+	public Transaction(TransactionType transactionType, double amount , DateTime dateTime) {
+		this.amount = amount;
+		this.transactionDate = dateTime;
+		this.transactionType = transactionType;
+	}
+	public double getAmount() {
+		return amount;
+	}
 
-    private Date transactionDate;
+	public DateTime getTransactionDate() {
+		return transactionDate;
+	}
 
-    public Transaction(double amount) {
-        this.amount = amount;
-        this.transactionDate = DateProvider.getInstance().now();
-    }
-
+	public TransactionType getTransactionType() {
+		return transactionType;
+	}
 }

@@ -1,18 +1,14 @@
 package com.abc;
 
-import java.util.Calendar;
-import java.util.Date;
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+
 
 public class DateProvider {
-    private static DateProvider instance = null;
-
-    public static DateProvider getInstance() {
-        if (instance == null)
-            instance = new DateProvider();
-        return instance;
-    }
-
-    public Date now() {
-        return Calendar.getInstance().getTime();
-    }
+	public static DateTime now() {
+		return new DateTime();
+	}
+	public static int getDiffInDays(DateTime date) {
+		return Days.daysBetween( date ,new DateTime()).getDays();
+	}
 }
