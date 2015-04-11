@@ -1,0 +1,37 @@
+package com.abc;
+
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.util.Date;
+
+
+public class MaxiSavingAccount extends Account {
+	private static final BigDecimal INTREST_RATE_FOR_WITHDRAWL_IN_DAYS = new BigDecimal("0.001");
+	private static final BigDecimal INTREST_RATE_OTHERWISE = new BigDecimal("0.05");
+    private static final int NUM_OF_DAYS = 10;
+
+	public MaxiSavingAccount(String accountNumber) {
+		super(Account.MAXI_SAVINGS, accountNumber);
+		// TODO Auto-generated constructor stub
+	}
+
+    public BigDecimal interestEarned() {
+    	Transaction t = getLastWithdrawlTransaction();
+    	BigDecimal currentBalance = sumTransactions();
+    	
+    	if(t!=null){
+	    	Date today = DateProvider.getInstance().now();
+	    	Date tDate = t.getTransactionDate();
+	    	
+	    	long diff = today.getTime() - tDate.getTime();
+	    	long days = diff / (1000 * 60 * 60 * 24);
+	    	
+	    	//check transaction was in last 10 days
+	    	if(days<NUM_OF_DAYS){
+	    		return currentBalance.multiply(INTREST_RATE_FOR_WITHDRAWL_IN_DAYS).divide(NUM_OF_DAYS_YEAR, MathContext.DECIMAL128);
+	    	}
+    	}
+    	
+    	return currentBalance.multiply(INTREST_RATE_OTHERWISE).divide(NUM_OF_DAYS_YEAR, MathContext.DECIMAL128);
+    }
+}
