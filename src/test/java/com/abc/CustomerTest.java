@@ -47,6 +47,18 @@ public class CustomerTest {
         assertEquals(2, oscar.getNumberOfAccounts());
     }
 
+    @Test
+    public void testTransfer(){
+    	Account savings = new Account(Account.SAVINGS);
+        Account checking = new Account(Account.CHECKING);
+    	Customer oscar = new Customer("Oscar").openAccount(savings);
+        oscar.openAccount(checking);
+        checking.deposit(1000);
+        checking.transferTo(savings, 100);
+        assertEquals(900, checking.sumTransactions(), Double.MIN_VALUE);
+        assertEquals(100, savings.sumTransactions(), Double.MIN_VALUE);
+    }
+
     @Ignore
     public void testThreeAcounts() {
         Customer oscar = new Customer("Oscar")

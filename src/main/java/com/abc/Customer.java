@@ -1,13 +1,17 @@
 package com.abc;
 
+import static java.lang.Math.abs;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import static java.lang.Math.abs;
+import com.abc.utils.BankUtils;
 
 public class Customer {
     private String name;
     private List<Account> accounts;
+    private ReentrantReadWriteLock accountsLock = new ReentrantReadWriteLock();
 
     public Customer(String name) {
         this.name = name;
@@ -19,7 +23,12 @@ public class Customer {
     }
 
     public Customer openAccount(Account account) {
-        accounts.add(account);
+    	try {
+    		accountsLock.writeLock().lock();
+    		accounts.add(account);
+    	} finally {
+    		accountsLock.writeLock().unlock();
+    	}
         return this;
     }
 
@@ -29,8 +38,13 @@ public class Customer {
 
     public double totalInterestEarned() {
         double total = 0;
-        for (Account a : accounts)
-            total += a.interestEarned();
+    	try {
+    		accountsLock.readLock().lock();
+	        for (Account a : accounts)
+	            total += a.interestEarned();
+    	} finally {
+    		accountsLock.readLock().unlock();
+    	}
         return total;
     }
 
@@ -38,41 +52,16 @@ public class Customer {
         String statement = null;
         statement = "Statement for " + name + "\n";
         double total = 0.0;
-        for (Account a : accounts) {
-            statement += "\n" + statementForAccount(a) + "\n";
-            total += a.sumTransactions();
-        }
-        statement += "\nTotal In All Accounts " + toDollars(total);
+    	try {
+    		accountsLock.readLock().lock();
+	        for (Account a : accounts) {
+	            statement += "\n" + a.statementForAccount() + "\n";
+	            total += a.sumTransactions();
+	        }
+    	} finally {
+    		accountsLock.readLock().unlock();
+    	}
+        statement += "\nTotal In All Accounts " + BankUtils.toDollars(total);
         return statement;
-    }
-
-    private String statementForAccount(Account a) {
-        String s = "";
-
-       //Translate to pretty account type
-        switch(a.getAccountType()){
-            case Account.CHECKING:
-                s += "Checking Account\n";
-                break;
-            case Account.SAVINGS:
-                s += "Savings Account\n";
-                break;
-            case Account.MAXI_SAVINGS:
-                s += "Maxi Savings Account\n";
-                break;
-        }
-
-        //Now total up all the transactions
-        double total = 0.0;
-        for (Transaction t : a.transactions) {
-            s += "  " + (t.amount < 0 ? "withdrawal" : "deposit") + " " + toDollars(t.amount) + "\n";
-            total += t.amount;
-        }
-        s += "Total " + toDollars(total);
-        return s;
-    }
-
-    private String toDollars(double d){
-        return String.format("$%,.2f", abs(d));
     }
 }
