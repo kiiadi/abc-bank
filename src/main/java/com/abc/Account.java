@@ -33,8 +33,15 @@ public void withdraw(double amount) {
     }
 }
 
-    public double interestEarned() {
+   public double interestEarned() {
+        private Date lastTransactionDate;
+        private Date currentDate;
+        
+        currentDate = DateProvider.getInstance().now();
         double amount = sumTransactions();
+        
+        lastTransactionDate = transactions.get(transactions.size() -1).getTransactionDate();
+        
         switch(accountType){
             case SAVINGS:
                 if (amount <= 1000)
@@ -42,15 +49,16 @@ public void withdraw(double amount) {
                 else
                     return 1 + (amount-1000) * 0.002;
 //            case SUPER_SAVINGS:
-//                if (amount <= 4000)
-//                    return 20;
-            case MAXI_SAVINGS:
-                if (amount <= 1000)
-                    return amount * 0.02;
-                if (amount <= 2000)
-                    return 20 + (amount-1000) * 0.05;
-                return 70 + (amount-2000) * 0.1;
-            default:
+
+case MAXI_SAVINGS:
+                if ((currentDate -10) > lastTransactionDate )
+                    return amount * 0.05;
+                else
+                    return amount * 0.01;
+            
+                
+
+default:
                 return amount * 0.001;
         }
     }
