@@ -49,4 +49,4 @@ TestOneAccount, testTwoAccount, testThreeAcounts
 Here the number of days is calculated manually.  However, the same could be accomplished by using joda time, 
 Interval/Period methods and this has not implemented for quick turnaround.
 * Interest rates should accrue daily (incl. weekends), rates above are per-annum 
---see in src\test\java\com\abc\AccountTest.java  - method testSpecialInterestonMaxi()
+--see in src\test\java\com\abc\AccountTest.java  - method testSpecialInterestonMaxi
