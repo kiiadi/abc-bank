@@ -2,17 +2,30 @@ package com.abc;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class DateProvider {
-    private static DateProvider instance = null;
+	private static volatile DateProvider instance = null;
+	private static ReentrantLock instanceLock = new ReentrantLock();
 
-    public static DateProvider getInstance() {
-        if (instance == null)
-            instance = new DateProvider();
-        return instance;
-    }
+	private DateProvider() {
 
-    public Date now() {
-        return Calendar.getInstance().getTime();
-    }
+	}
+
+	public static DateProvider getInstance() {
+		if (instance == null)
+			try {
+				instanceLock.lock();
+				if (instance == null) {
+					instance = new DateProvider();
+				}
+			} finally {
+				instanceLock.unlock();
+			}
+		return instance;
+	}
+
+	public Date now() {
+		return Calendar.getInstance().getTime();
+	}
 }
