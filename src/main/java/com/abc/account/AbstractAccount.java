@@ -9,7 +9,7 @@ import com.abc.util.BankUtils;
 public abstract class AbstractAccount implements Account {
 
 	private final AccountType accountType;
-	private List<Transaction> transactions;
+	protected List<Transaction> transactions;
 
 	public AbstractAccount(AccountType accountType) {
 		this.accountType = accountType;
