@@ -5,7 +5,8 @@ import java.util.List;
 
 public class Bank {
     private List<Customer> customers;
-
+    private int idCount = 0;
+    
     public Bank() {
         customers = new ArrayList<Customer>();
     }
@@ -36,7 +37,8 @@ public class Bank {
 
     public String getFirstCustomer() {
         try {
-            customers = null;
+        	//Setting customers to null will erase the customer list.
+            //customers = null;
             return customers.get(0).getName();
         } catch (Exception e){
             e.printStackTrace();
