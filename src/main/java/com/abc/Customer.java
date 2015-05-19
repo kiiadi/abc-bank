@@ -1,17 +1,20 @@
 package com.abc;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Math.abs;
 
 public class Customer {
+    public static final String EOL = "\n";
+
     private String name;
     private List<Account> accounts;
 
     public Customer(String name) {
         this.name = name;
-        this.accounts = new ArrayList<Account>();
+        this.accounts = new ArrayList<>();
     }
 
     public String getName() {
@@ -27,52 +30,43 @@ public class Customer {
         return accounts.size();
     }
 
-    public double totalInterestEarned() {
-        double total = 0;
-        for (Account a : accounts)
-            total += a.interestEarned();
+    public BigDecimal totalInterestEarned() {
+        BigDecimal total = BigDecimal.ZERO;
+        for (Account a : accounts) {
+            total = total.add(a.interestEarned());
+        }
         return total;
     }
 
+    /**
+     * print statement for all customers
+     * @return
+     */
     public String getStatement() {
-        String statement = null;
-        statement = "Statement for " + name + "\n";
-        double total = 0.0;
+        String statement = "Statement for " + name + EOL;
+        BigDecimal total = BigDecimal.ZERO;
         for (Account a : accounts) {
-            statement += "\n" + statementForAccount(a) + "\n";
-            total += a.sumTransactions();
+            statement += EOL + statementForAccount(a) + EOL;
+            total = total.add(a.getBalance());
         }
         statement += "\nTotal In All Accounts " + toDollars(total);
         return statement;
     }
 
-    private String statementForAccount(Account a) {
-        String s = "";
-
-       //Translate to pretty account type
-        switch(a.getAccountType()){
-            case Account.CHECKING:
-                s += "Checking Account\n";
-                break;
-            case Account.SAVINGS:
-                s += "Savings Account\n";
-                break;
-            case Account.MAXI_SAVINGS:
-                s += "Maxi Savings Account\n";
-                break;
-        }
+    private String statementForAccount(Account account) {
+        StringBuilder s = new StringBuilder(account.getLabel()).append(EOL);
 
         //Now total up all the transactions
-        double total = 0.0;
-        for (Transaction t : a.transactions) {
-            s += "  " + (t.amount < 0 ? "withdrawal" : "deposit") + " " + toDollars(t.amount) + "\n";
-            total += t.amount;
+        BigDecimal total = BigDecimal.ZERO;
+        for (Transaction transaction : account.getTransactions()) {
+            s.append("  " + (transaction.getAmount().compareTo(BigDecimal.ONE) < 0 ? "withdrawal" : "deposit") + " " + toDollars(transaction.getAmount()) + EOL);
+            total = total.add(transaction.getAmount());
         }
-        s += "Total " + toDollars(total);
-        return s;
+        s.append("Total " + toDollars(total));
+        return s.toString();
     }
 
-    private String toDollars(double d){
-        return String.format("$%,.2f", abs(d));
+    private String toDollars(BigDecimal d){
+        return String.format("$%,.2f", abs(d.doubleValue()));
     }
 }
