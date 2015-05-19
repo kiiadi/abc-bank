@@ -1,5 +1,6 @@
 package com.abc;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,13 +8,17 @@ public class Bank {
     private List<Customer> customers;
 
     public Bank() {
-        customers = new ArrayList<Customer>();
+        customers = new ArrayList<>();
     }
 
     public void addCustomer(Customer customer) {
         customers.add(customer);
     }
 
+    /**
+     * build summary for all customers
+     * @return
+     */
     public String customerSummary() {
         String summary = "Customer Summary";
         for (Customer c : customers)
@@ -27,20 +32,19 @@ public class Bank {
         return number + " " + (number == 1 ? word : word + "s");
     }
 
-    public double totalInterestPaid() {
-        double total = 0;
-        for(Customer c: customers)
-            total += c.totalInterestEarned();
-        return total;
+    /**
+     * get total interest paid for all customers
+     * @return
+     */
+    public BigDecimal totalInterestPaid() {
+        BigDecimal total = BigDecimal.ZERO;
+            for (Customer c : customers) {
+                total = total.add(c.totalInterestEarned());
+            }
+            return total;
     }
 
-    public String getFirstCustomer() {
-        try {
-            customers = null;
-            return customers.get(0).getName();
-        } catch (Exception e){
-            e.printStackTrace();
-            return "Error";
-        }
+    public Customer getFirstCustomer() {
+        return customers.isEmpty() ? null : customers.get(0);
     }
 }

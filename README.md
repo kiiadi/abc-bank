@@ -38,3 +38,12 @@ A dummy application for a bank; should provide various functions of a retail ban
 * A customer can transfer between their accounts
 * Change **Maxi-Savings accounts** to have an interest rate of 5% assuming no withdrawals in the past 10 days otherwise 0.1%
 * Interest rates should accrue daily (incl. weekends), rates above are per-annum
+
+
+### Solution Summary
+
+* Separate accountType concerns from Account to it's own concrete implementations such as **CheckingAccount, SavingAccount, MaxiSavingAccount**.
+* Make **deposit, withdraw, and transfer** functionality **thread safe**.
+* Fix issues in **DataProvider** to make it **singleton**.
+* Make **Account** class **immutable** such that it doesn't leak it's state to the outside world unintentionally. deposit(), withdraw(), transfer() change state in a controlled manner which is intentional.
+* Use **BigDecimal** instead of **double** for accuracy since we are dealing with money.
