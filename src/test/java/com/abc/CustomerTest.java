@@ -75,7 +75,6 @@ public class CustomerTest {
     public void transferFromInvalidAccount() {
         Account savingsAccount = new SavingsAccount();
         customer.openAccount(savingsAccount);
-
         customer.transfer(50.0, new CheckingAccount(), savingsAccount);
     }
 
@@ -83,8 +82,6 @@ public class CustomerTest {
     public void transferToInvalidAccount() {
         Account checkingAccount = new CheckingAccount();
         customer.openAccount(checkingAccount);
-        checkingAccount.deposit(100.0);
-
         customer.transfer(50.0, checkingAccount, new SavingsAccount());
     }
 
