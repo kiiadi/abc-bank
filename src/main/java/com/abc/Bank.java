@@ -15,16 +15,20 @@ public class Bank {
     }
 
     public String customerSummary() {
-        String summary = "Customer Summary";
+        StringBuilder summary = new StringBuilder("Customer Summary");
         for (Customer customer : customers) {
-            summary += "\n - " + customer.getName() + " (" + format(customer.getNumberOfAccounts(), "account") + ')';
+            summary.append("\n - ")
+                    .append(customer.getName())
+                    .append(" (")
+                    .append(format(customer.getNumberOfAccounts(), "account"))
+                    .append(')');
         }
-        return summary;
+        return summary.toString();
     }
 
     //Make sure correct plural of word is created based on the number passed in:
     //If number passed in is 1 just return the word otherwise add an 's' at the end
-    private String format(int number, String word) {
+    private static String format(int number, String word) {
         return number + " " + (number == 1 ? word : word + "s");
     }
 

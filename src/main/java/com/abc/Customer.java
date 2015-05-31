@@ -36,38 +36,44 @@ public class Customer {
     }
 
     public String getStatement() {
-        String statement = "Statement for " + name + '\n';
+        StringBuilder statement = new StringBuilder("Statement for ").append(name).append('\n');
         double total = 0.0;
         for (Account account : accounts) {
-            statement += '\n' + statementForAccount(account) + '\n';
+            statement.append('\n')
+                     .append(statementForAccount(account))
+                     .append('\n');
             total += account.getBalance();
         }
-        statement += "\nTotal In All Accounts " + formatToDollars(total);
-        return statement;
+        statement.append("\nTotal In All Accounts ").append(formatToDollars(total));
+        return statement.toString();
     }
 
     private String statementForAccount(Account account) {
-        String statement = "";
+        StringBuilder statement = new StringBuilder();
 
         //Translate to pretty account type
         switch (account.getAccountType()) {
             case Account.CHECKING:
-                statement += "Checking Account\n";
+                statement.append("Checking Account\n");
                 break;
             case Account.SAVINGS:
-                statement += "Savings Account\n";
+                statement.append("Savings Account\n");
                 break;
             case Account.MAXI_SAVINGS:
-                statement += "Maxi Savings Account\n";
+                statement.append("Maxi Savings Account\n");
                 break;
         }
 
         //Now display all the transactions
         for (Transaction transaction : account.getTransactions()) {
-            statement += "  " + (transaction.amount < 0 ? "withdrawal" : "deposit") + ' ' + formatToDollars(transaction.amount) + '\n';
+            statement.append("  ")
+                     .append(transaction.amount < 0 ? "withdrawal" : "deposit")
+                     .append(' ')
+                     .append(formatToDollars(transaction.amount))
+                     .append('\n');
         }
-        statement += "Total " + formatToDollars(account.getBalance());
-        return statement;
+        statement.append("Total ").append(formatToDollars(account.getBalance()));
+        return statement.toString();
     }
 
     private static String formatToDollars(double d) {
