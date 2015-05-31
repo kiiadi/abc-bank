@@ -1,13 +1,12 @@
 package com.abc;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import static java.lang.Math.abs;
+import java.util.Collection;
+import java.util.Collections;
 
 public class Customer {
     private final String name;
-    private final List<Account> accounts;
+    private final Collection<Account> accounts;
 
     public Customer(String name) {
         this.name = name;
@@ -22,8 +21,8 @@ public class Customer {
         accounts.add(account);
     }
 
-    public int getNumberOfAccounts() {
-        return accounts.size();
+    public Collection<Account> getAccounts() {
+        return Collections.unmodifiableCollection(accounts);
     }
 
     public double totalInterestEarned() {
@@ -32,37 +31,5 @@ public class Customer {
             total += account.interestEarned();
         }
         return total;
-    }
-
-    public String getStatement() {
-        StringBuilder statement = new StringBuilder("Statement for ").append(name).append('\n');
-        double total = 0.0;
-        for (Account account : accounts) {
-            statement.append('\n')
-                     .append(statementForAccount(account))
-                     .append('\n');
-            total += account.getBalance();
-        }
-        statement.append("\nTotal In All Accounts ").append(formatToDollars(total));
-        return statement.toString();
-    }
-
-    private String statementForAccount(Account account) {
-        StringBuilder statement = new StringBuilder(account.getName()).append(" Account\n");
-
-        //Now display all the transactions
-        for (Transaction transaction : account.getTransactions()) {
-            statement.append("  ")
-                     .append(transaction.amount < 0 ? "withdrawal" : "deposit")
-                     .append(' ')
-                     .append(formatToDollars(transaction.amount))
-                     .append('\n');
-        }
-        statement.append("Total ").append(formatToDollars(account.getBalance()));
-        return statement.toString();
-    }
-
-    private static String formatToDollars(double d) {
-        return String.format("$%,.2f", abs(d));
     }
 }

@@ -20,7 +20,7 @@ public class Bank {
             summary.append("\n - ")
                     .append(customer.getName())
                     .append(" (")
-                    .append(format(customer.getNumberOfAccounts(), "account"))
+                    .append(format(customer.getAccounts().size(), "account"))
                     .append(')');
         }
         return summary.toString();
