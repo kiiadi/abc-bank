@@ -2,7 +2,7 @@ package com.abc.account;
 
 import java.util.Collection;
 
-import com.abc.Transaction;
+import com.abc.transaction.Transaction;
 
 public interface Account {
 

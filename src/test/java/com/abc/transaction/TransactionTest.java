@@ -1,6 +1,5 @@
 package com.abc.transaction;
 
-import com.abc.Transaction;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;

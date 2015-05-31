@@ -4,7 +4,6 @@ import com.abc.account.Account;
 import com.abc.account.CheckingAccount;
 import com.abc.account.MaxiSavingsAccount;
 import com.abc.account.SavingsAccount;
-import com.abc.transaction.Bank;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;

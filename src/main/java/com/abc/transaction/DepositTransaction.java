@@ -1,7 +1,5 @@
 package com.abc.transaction;
 
-import com.abc.AbstractTransaction;
-
 public class DepositTransaction extends AbstractTransaction {
 
     public DepositTransaction(double amount) {

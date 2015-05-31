@@ -1,10 +1,8 @@
-package com.abc.transaction;
+package com.abc;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-
-import com.abc.Customer;
 
 public class Bank {
     private final Collection<Customer> customers;

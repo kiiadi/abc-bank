@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 import com.abc.transaction.DepositTransaction;
-import com.abc.Transaction;
+import com.abc.transaction.Transaction;
 import com.abc.transaction.WithdrawalTransaction;
 
 public abstract class AbstractAccount implements Account {

@@ -1,4 +1,4 @@
-package com.abc;
+package com.abc.transaction;
 
 import java.util.Calendar;
 import java.util.Date;
