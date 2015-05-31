@@ -4,6 +4,7 @@ import java.util.Date;
 
 public abstract class AbstractTransaction implements Transaction {
 
+    private static final DateProvider DATE_PROVIDER = new DefaultDateProvider();
     private final String name;
     private final Date date;
     private final double amount;
@@ -11,7 +12,7 @@ public abstract class AbstractTransaction implements Transaction {
     protected AbstractTransaction(String name, double amount) {
         this.name = name;
         this.amount = validate(amount);
-        date = DateProvider.getInstance().now();
+        date = DATE_PROVIDER.now();
     }
 
     public String getName() {

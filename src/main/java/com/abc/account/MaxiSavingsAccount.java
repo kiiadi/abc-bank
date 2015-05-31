@@ -3,16 +3,26 @@ package com.abc.account;
 import java.util.Calendar;
 import java.util.Date;
 
+import com.abc.transaction.DateProvider;
+import com.abc.transaction.DefaultDateProvider;
 import com.abc.transaction.Transaction;
 import com.abc.transaction.WithdrawalTransaction;
 
 public class MaxiSavingsAccount extends AbstractAccount {
-    public MaxiSavingsAccount() {
+
+    private final DateProvider dateProvider;
+
+    public MaxiSavingsAccount(DateProvider dateProvider) {
         super("Maxi Savings");
+        this.dateProvider = dateProvider;
+    }
+
+    public MaxiSavingsAccount() {
+        this(new DefaultDateProvider());
     }
 
     public double interestEarned() {
-        double rate = isAnyWithdrawalAfter(daysAgo(10)) ? 0.001 : 0.05;
+        double rate = isAnyWithdrawalAfter(dateProvider.now(-10)) ? 0.001 : 0.05;
         return getBalance() * rate;
     }
 
@@ -24,11 +34,5 @@ public class MaxiSavingsAccount extends AbstractAccount {
             }
         }
         return false;
-    }
-
-    private Date daysAgo(int days) {
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DAY_OF_YEAR, -days);
-        return cal.getTime();
     }
 }

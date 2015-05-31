@@ -1,9 +1,8 @@
 package com.abc.account;
 
-import java.util.Calendar;
 import java.util.Date;
 
-import com.abc.transaction.DateProvider;
+import com.abc.transaction.DefaultDateProvider;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -31,19 +30,17 @@ public class MaxiSavingsAccountTest extends AccountTest {
 
     @Test
     public void interestEarnedWithWithdrawalOver10Days() {
-        DateProvider.setInstance(new FrozenDateProvider(daysAgo(11)));
+        Account account = new MaxiSavingsAccount(new FrozenDateProvider(daysInFuture(10)));
         account.deposit(4000.0);
         account.withdraw(1000.0);
         assertThat(account.interestEarned(), equalTo(150.0));
     }
 
-    private Date daysAgo(int days) {
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DAY_OF_YEAR, -days);
-        return cal.getTime();
+    private Date daysInFuture(int days) {
+        return new DefaultDateProvider().now(days);
     }
 
-    private static class FrozenDateProvider extends DateProvider {
+    private static class FrozenDateProvider extends DefaultDateProvider {
 
         private final Date date;
 
@@ -51,7 +48,6 @@ public class MaxiSavingsAccountTest extends AccountTest {
             this.date = date;
         }
 
-        @Override
         public Date now() {
             return date;
         }
