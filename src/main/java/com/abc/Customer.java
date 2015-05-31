@@ -36,42 +36,41 @@ public class Customer {
     }
 
     public String getStatement() {
-        String statement = null;
-        statement = "Statement for " + name + '\n';
+        String statement = "Statement for " + name + '\n';
         double total = 0.0;
-        for (Account a : accounts) {
-            statement += '\n' + statementForAccount(a) + '\n';
-            total += a.getBalance();
+        for (Account account : accounts) {
+            statement += '\n' + statementForAccount(account) + '\n';
+            total += account.getBalance();
         }
-        statement += "\nTotal In All Accounts " + toDollars(total);
+        statement += "\nTotal In All Accounts " + formatToDollars(total);
         return statement;
     }
 
-    private String statementForAccount(Account a) {
-        String s = "";
+    private String statementForAccount(Account account) {
+        String statement = "";
 
         //Translate to pretty account type
-        switch (a.getAccountType()) {
+        switch (account.getAccountType()) {
             case Account.CHECKING:
-                s += "Checking Account\n";
+                statement += "Checking Account\n";
                 break;
             case Account.SAVINGS:
-                s += "Savings Account\n";
+                statement += "Savings Account\n";
                 break;
             case Account.MAXI_SAVINGS:
-                s += "Maxi Savings Account\n";
+                statement += "Maxi Savings Account\n";
                 break;
         }
 
         //Now display all the transactions
-        for (Transaction t : a.getTransactions()) {
-            s += "  " + (t.amount < 0 ? "withdrawal" : "deposit") + ' ' + toDollars(t.amount) + '\n';
+        for (Transaction transaction : account.getTransactions()) {
+            statement += "  " + (transaction.amount < 0 ? "withdrawal" : "deposit") + ' ' + formatToDollars(transaction.amount) + '\n';
         }
-        s += "Total " + toDollars(a.getBalance());
-        return s;
+        statement += "Total " + formatToDollars(account.getBalance());
+        return statement;
     }
 
-    private String toDollars(double d){
+    private static String formatToDollars(double d) {
         return String.format("$%,.2f", abs(d));
     }
 }
