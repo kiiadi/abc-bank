@@ -10,12 +10,14 @@ public class TransactionTest {
     public void deposit() {
         Transaction transaction = new DepositTransaction(5);
         assertThat(transaction.getAmount(), equalTo(5.0));
+        assertThat(transaction.applyTo(2), equalTo(7.0));
     }
 
     @Test
     public void withdrawal() {
         Transaction transaction = new WithdrawalTransaction(5);
-        assertThat(transaction.getAmount(), equalTo(-5.0));
+        assertThat(transaction.getAmount(), equalTo(5.0));
+        assertThat(transaction.applyTo(8), equalTo(3.0));
     }
 
 }

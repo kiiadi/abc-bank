@@ -9,4 +9,6 @@ public interface Transaction {
     double getAmount();
 
     Date getDate();
+
+    double applyTo(double balance);
 }
