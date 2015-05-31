@@ -48,20 +48,7 @@ public class Customer {
     }
 
     private String statementForAccount(Account account) {
-        StringBuilder statement = new StringBuilder();
-
-        //Translate to pretty account type
-        switch (account.getAccountType()) {
-            case Account.CHECKING:
-                statement.append("Checking Account\n");
-                break;
-            case Account.SAVINGS:
-                statement.append("Savings Account\n");
-                break;
-            case Account.MAXI_SAVINGS:
-                statement.append("Maxi Savings Account\n");
-                break;
-        }
+        StringBuilder statement = new StringBuilder(account.getName()).append(" Account\n");
 
         //Now display all the transactions
         for (Transaction transaction : account.getTransactions()) {
