@@ -7,6 +7,6 @@ public class WithdrawalTransaction extends AbstractTransaction {
     }
 
     public double applyTo(double balance) {
-        return balance - amount;
+        return balance - getAmount();
     }
 }

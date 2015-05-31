@@ -5,10 +5,17 @@ import java.util.Date;
 
 public class DateProvider {
 
-    private DateProvider() {
+    private static DateProvider instance = new DateProvider();
+
+    public static DateProvider getInstance() {
+        return instance;
     }
 
-    public static Date now() {
+    public static void setInstance(DateProvider dateProvider) {
+        instance = dateProvider;
+    }
+
+    public Date now() {
         return Calendar.getInstance().getTime();
     }
 }

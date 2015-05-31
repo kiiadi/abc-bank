@@ -29,6 +29,6 @@ public class BankTest {
         Bank bank = new Bank();
         bank.addCustomer(john);
 
-        assertThat(bank.totalInterestPaid(), equalTo(172.1));
+        assertThat(bank.totalInterestPaid(), equalTo(152.1));
     }
 }
