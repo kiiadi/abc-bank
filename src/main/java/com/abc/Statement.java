@@ -29,9 +29,9 @@ public class Statement {
         //Now display all the transactions
         for (Transaction transaction : account.getTransactions()) {
             statement.append("  ")
-                     .append(transaction.amount < 0 ? "withdrawal" : "deposit")
+                     .append(transaction.getName())
                      .append(' ')
-                     .append(formatToDollars(transaction.amount))
+                     .append(formatToDollars(transaction.getAmount()))
                      .append('\n');
         }
         statement.append("Total ").append(formatToDollars(account.getBalance()));

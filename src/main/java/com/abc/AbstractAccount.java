@@ -20,12 +20,12 @@ public abstract class AbstractAccount implements Account {
 
     public void deposit(double amount) {
         validate(amount);
-        transactions.add(new Transaction(amount));
+        transactions.add(new DepositTransaction(amount));
     }
 
     public void withdraw(double amount) {
         validate(amount);
-        transactions.add(new Transaction(-amount));
+        transactions.add(new WithdrawalTransaction(amount));
     }
 
     private static void validate(double amount) {
@@ -37,7 +37,7 @@ public abstract class AbstractAccount implements Account {
     public double getBalance() {
         double total = 0.0;
         for (Transaction transaction : transactions) {
-            total += transaction.amount;
+            total += transaction.getAmount();
         }
         return total;
     }

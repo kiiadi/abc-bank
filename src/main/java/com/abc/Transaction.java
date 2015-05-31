@@ -2,14 +2,11 @@ package com.abc;
 
 import java.util.Date;
 
-public class Transaction {
-    public final double amount;
+public interface Transaction {
 
-    private final Date transactionDate;
+    String getName();
 
-    public Transaction(double amount) {
-        this.amount = amount;
-        transactionDate = DateProvider.now();
-    }
+    double getAmount();
 
+    Date getDate();
 }
