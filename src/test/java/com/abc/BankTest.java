@@ -41,6 +41,16 @@ public class BankTest {
     }
 
     @Test
+    public void customerSummaryForOneCustomerTwoAccounts() {
+        Customer john = new Customer("John");
+        john.openAccount(new Account(Account.CHECKING));
+        john.openAccount(new Account(Account.SAVINGS));
+        bank.addCustomer(john);
+
+        assertEquals("Customer Summary\n - John (2 accounts)", bank.customerSummary());
+    }
+
+    @Test
     public void checkingAccount() {
         Account checkingAccount = new Account(Account.CHECKING);
         Customer bill = new Customer("Bill").openAccount(checkingAccount);
