@@ -4,15 +4,11 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class DateProvider {
-    private static DateProvider instance = null;
 
-    public static DateProvider getInstance() {
-        if (instance == null)
-            instance = new DateProvider();
-        return instance;
+    private DateProvider() {
     }
 
-    public Date now() {
+    public static Date now() {
         return Calendar.getInstance().getTime();
     }
 }
