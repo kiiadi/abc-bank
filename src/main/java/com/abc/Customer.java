@@ -63,13 +63,11 @@ public class Customer {
                 break;
         }
 
-        //Now total up all the transactions
-        double total = 0.0;
+        //Now display all the transactions
         for (Transaction t : a.getTransactions()) {
             s += "  " + (t.amount < 0 ? "withdrawal" : "deposit") + ' ' + toDollars(t.amount) + '\n';
-            total += t.amount;
         }
-        s += "Total " + toDollars(total);
+        s += "Total " + toDollars(a.getBalance());
         return s;
     }
 
