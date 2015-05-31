@@ -25,6 +25,14 @@ public class Customer {
         return Collections.unmodifiableCollection(accounts);
     }
 
+    public void transfer(double amount, Account from, Account to) {
+        if (!(accounts.contains(from) && accounts.contains(to))) {
+            throw new IllegalStateException("account is not one of the customers accounts");
+        }
+        from.withdraw(amount);
+        to.deposit(amount);
+    }
+
     public double totalInterestEarned() {
         double total = 0;
         for (Account account : accounts) {
