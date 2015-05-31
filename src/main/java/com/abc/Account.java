@@ -1,6 +1,8 @@
 package com.abc;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class Account {
@@ -10,11 +12,11 @@ public class Account {
     public static final int MAXI_SAVINGS = 2;
 
     private final int accountType;
-    public List<Transaction> transactions;
+    private final List<Transaction> transactions;
 
     public Account(int accountType) {
         this.accountType = accountType;
-        this.transactions = new ArrayList<Transaction>();
+        transactions = new ArrayList<Transaction>();
     }
 
     public void deposit(double amount) {
@@ -53,6 +55,10 @@ public class Account {
             default:
                 return amount * 0.001;
         }
+    }
+
+    public Collection<Transaction> getTransactions() {
+        return Collections.unmodifiableList(transactions);
     }
 
     public double sumTransactions() {
