@@ -2,10 +2,11 @@ package com.abc.account;
 
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertEquals;
 
 public class CheckingAccountTest extends AccountTest {
+
+    private static final double DOUBLE_DELTA = 1.0e-15;
 
     @Override
     protected Account createAccount() {
@@ -15,6 +16,6 @@ public class CheckingAccountTest extends AccountTest {
     @Test
     public void interestEarned() {
         account.deposit(100.0);
-        assertThat(account.interestEarned(), equalTo(0.1));
+        assertEquals(0.1, account.interestEarned(), DOUBLE_DELTA);
     }
 }

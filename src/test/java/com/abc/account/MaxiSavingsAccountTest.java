@@ -5,10 +5,11 @@ import java.util.Date;
 import com.abc.transaction.DefaultDateProvider;
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertEquals;
 
 public class MaxiSavingsAccountTest extends AccountTest {
+
+    private static final double DOUBLE_DELTA = 1.0e-15;
 
     @Override
     protected Account createAccount() {
@@ -18,14 +19,14 @@ public class MaxiSavingsAccountTest extends AccountTest {
     @Test
     public void interestEarned() {
         account.deposit(3000.0);
-        assertThat(account.interestEarned(), equalTo(150.0));
+        assertEquals(150.0, account.interestEarned(), DOUBLE_DELTA);
     }
 
     @Test
     public void interestEarnedWithWithdrawalWithin10Days() {
         account.deposit(4000.0);
         account.withdraw(1000.0);
-        assertThat(account.interestEarned(), equalTo(3.0));
+        assertEquals(3.0, account.interestEarned(), DOUBLE_DELTA);
     }
 
     @Test
@@ -33,7 +34,7 @@ public class MaxiSavingsAccountTest extends AccountTest {
         Account account = new MaxiSavingsAccount(new FrozenDateProvider(daysInFuture(11)));
         account.deposit(4000.0);
         account.withdraw(1000.0);
-        assertThat(account.interestEarned(), equalTo(150.0));
+        assertEquals(150.0, account.interestEarned(), DOUBLE_DELTA);
     }
 
     private Date daysInFuture(int days) {

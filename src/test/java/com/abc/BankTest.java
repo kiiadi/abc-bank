@@ -6,10 +6,11 @@ import com.abc.account.MaxiSavingsAccount;
 import com.abc.account.SavingsAccount;
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertEquals;
 
 public class BankTest {
+
+    private static final double DOUBLE_DELTA = 1.0e-15;
 
     @Test
     public void totalInterestPaid() {
@@ -29,6 +30,6 @@ public class BankTest {
         Bank bank = new Bank();
         bank.addCustomer(john);
 
-        assertThat(bank.totalInterestPaid(), equalTo(152.1));
+        assertEquals(152.1, bank.totalInterestPaid(), DOUBLE_DELTA);
     }
 }

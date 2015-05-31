@@ -13,6 +13,8 @@ import static org.junit.Assert.assertThat;
 
 public class CustomerTest {
 
+    private static final double DOUBLE_DELTA = 1.0e-15;
+
     private Customer customer;
 
     @Before
@@ -51,7 +53,7 @@ public class CustomerTest {
         customer.openAccount(savingsAccount);
         savingsAccount.deposit(1500.0);
 
-        assertThat(customer.totalInterestEarned(), equalTo(2.1));
+        assertEquals(2.1, customer.totalInterestEarned(), DOUBLE_DELTA);
     }
 
     @Test
