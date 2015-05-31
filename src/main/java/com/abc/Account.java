@@ -36,7 +36,7 @@ public class Account {
     }
 
     public double interestEarned() {
-        double amount = sumTransactions();
+        double amount = getBalance();
         switch (accountType) {
             case SAVINGS:
                 if (amount <= 1000) {
@@ -61,16 +61,12 @@ public class Account {
         return Collections.unmodifiableList(transactions);
     }
 
-    public double sumTransactions() {
-       return checkIfTransactionsExist(true);
-    }
-
-    private double checkIfTransactionsExist(boolean checkAll) {
-        double amount = 0.0;
-        for (Transaction t: transactions) {
-            amount += t.amount;
+    public double getBalance() {
+        double total = 0.0;
+        for (Transaction transaction : transactions) {
+            total += transaction.amount;
         }
-        return amount;
+        return total;
     }
 
     public int getAccountType() {
