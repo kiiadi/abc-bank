@@ -1,17 +1,25 @@
 package com.abc;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
 public class CustomerTest {
 
+    private Customer customer;
+
+    @Before
+    public void init() {
+        customer = new Customer("Henry");
+    }
+
     @Test
     public void statement() {
         Account checkingAccount = new Account(Account.CHECKING);
         Account savingsAccount = new Account(Account.SAVINGS);
-
-        Customer henry = new Customer("Henry").openAccount(checkingAccount).openAccount(savingsAccount);
+        customer.openAccount(checkingAccount);
+        customer.openAccount(savingsAccount);
 
         checkingAccount.deposit(100.0);
         savingsAccount.deposit(4000.0);
@@ -28,29 +36,27 @@ public class CustomerTest {
                 "  withdrawal $200.00\n" +
                 "Total $3,800.00\n" +
                 '\n' +
-                "Total In All Accounts $3,900.00", henry.getStatement());
+                "Total In All Accounts $3,900.00", customer.getStatement());
     }
 
     @Test
     public void openOneAccount(){
-        Customer oscar = new Customer("Oscar").openAccount(new Account(Account.SAVINGS));
-        assertEquals(1, oscar.getNumberOfAccounts());
+        customer.openAccount(new Account(Account.SAVINGS));
+        assertEquals(1, customer.getNumberOfAccounts());
     }
 
     @Test
     public void openTwoAccounts() {
-        Customer oscar = new Customer("Oscar")
-                .openAccount(new Account(Account.SAVINGS));
-        oscar.openAccount(new Account(Account.CHECKING));
-        assertEquals(2, oscar.getNumberOfAccounts());
+        customer.openAccount(new Account(Account.SAVINGS));
+        customer.openAccount(new Account(Account.CHECKING));
+        assertEquals(2, customer.getNumberOfAccounts());
     }
 
     @Test
     public void openThreeAccounts() {
-        Customer oscar = new Customer("Oscar")
-                .openAccount(new Account(Account.SAVINGS));
-        oscar.openAccount(new Account(Account.CHECKING));
-        oscar.openAccount(new Account(Account.MAXI_SAVINGS));
-        assertEquals(3, oscar.getNumberOfAccounts());
+        customer.openAccount(new Account(Account.SAVINGS));
+        customer.openAccount(new Account(Account.CHECKING));
+        customer.openAccount(new Account(Account.MAXI_SAVINGS));
+        assertEquals(3, customer.getNumberOfAccounts());
     }
 }
