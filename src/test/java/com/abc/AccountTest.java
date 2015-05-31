@@ -45,4 +45,25 @@ public class AccountTest {
         account.withdraw(-100);
     }
 
+    @Test
+    public void checkingAccountInterest() {
+        Account account = new Account(Account.CHECKING);
+        account.deposit(100.0);
+        assertThat(account.interestEarned(), equalTo(0.1));
+    }
+
+    @Test
+    public void savingsAccountInterest() {
+        Account account = new Account(Account.SAVINGS);
+        account.deposit(1500.0);
+        assertThat(account.interestEarned(), equalTo(2.0));
+    }
+
+    @Test
+    public void maxiSavingsAccountInterest() {
+        Account account = new Account(Account.MAXI_SAVINGS);
+        account.deposit(3000.0);
+        assertThat(account.interestEarned(), equalTo(170.0));
+    }
+
 }
