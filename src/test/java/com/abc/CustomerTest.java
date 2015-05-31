@@ -3,7 +3,9 @@ package com.abc;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 public class CustomerTest {
 
@@ -58,5 +60,18 @@ public class CustomerTest {
         customer.openAccount(new Account(Account.CHECKING));
         customer.openAccount(new Account(Account.MAXI_SAVINGS));
         assertEquals(3, customer.getNumberOfAccounts());
+    }
+
+    @Test
+    public void totalInterestEarned() {
+        Account checkingAccount = new Account(Account.CHECKING);
+        customer.openAccount(checkingAccount);
+        checkingAccount.deposit(100.0);
+
+        Account savingsAccount = new Account(Account.SAVINGS);
+        customer.openAccount(savingsAccount);
+        savingsAccount.deposit(1500.0);
+
+        assertThat(customer.totalInterestEarned(), equalTo(2.1));
     }
 }
