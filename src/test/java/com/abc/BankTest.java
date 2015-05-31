@@ -1,5 +1,6 @@
 package com.abc;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -7,9 +8,15 @@ import static org.junit.Assert.assertEquals;
 public class BankTest {
     private static final double DOUBLE_DELTA = 1.0e-15;
 
+    private Bank bank;
+
+    @Before
+    public void init() {
+        bank = new Bank();
+    }
+
     @Test
-    public void customerSummary() {
-        Bank bank = new Bank();
+    public void customerSummaryForOneCustomer() {
         Customer john = new Customer("John");
         john.openAccount(new Account(Account.CHECKING));
         bank.addCustomer(john);
@@ -18,8 +25,23 @@ public class BankTest {
     }
 
     @Test
+    public void customerSummaryForTwoCustomers() {
+        Customer john = new Customer("John");
+        john.openAccount(new Account(Account.CHECKING));
+        bank.addCustomer(john);
+
+        Account checkingAccount = new Account(Account.CHECKING);
+        Customer bill = new Customer("Bill").openAccount(checkingAccount);
+        bank.addCustomer(bill);
+
+        assertEquals("Customer Summary\n"
+                + " - John (1 account)\n"
+                + " - Bill (1 account)",
+                bank.customerSummary());
+    }
+
+    @Test
     public void checkingAccount() {
-        Bank bank = new Bank();
         Account checkingAccount = new Account(Account.CHECKING);
         Customer bill = new Customer("Bill").openAccount(checkingAccount);
         bank.addCustomer(bill);
@@ -31,7 +53,6 @@ public class BankTest {
 
     @Test
     public void savingsAccount() {
-        Bank bank = new Bank();
         Account checkingAccount = new Account(Account.SAVINGS);
         bank.addCustomer(new Customer("Bill").openAccount(checkingAccount));
 
@@ -42,7 +63,6 @@ public class BankTest {
 
     @Test
     public void maxiSavingsAccount() {
-        Bank bank = new Bank();
         Account checkingAccount = new Account(Account.MAXI_SAVINGS);
         bank.addCustomer(new Customer("Bill").openAccount(checkingAccount));
 
