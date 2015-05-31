@@ -23,7 +23,7 @@ public class Statement {
         return statement.toString();
     }
 
-    private String statementForAccount(Account account) {
+    private static String statementForAccount(Account account) {
         StringBuilder statement = new StringBuilder(account.getName()).append(" Account\n");
 
         //Now display all the transactions
