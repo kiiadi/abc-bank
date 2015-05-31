@@ -1,6 +1,5 @@
 package com.abc.account;
 
-import java.util.Calendar;
 import java.util.Date;
 
 import com.abc.transaction.DateProvider;
@@ -9,6 +8,9 @@ import com.abc.transaction.Transaction;
 import com.abc.transaction.WithdrawalTransaction;
 
 public class MaxiSavingsAccount extends AbstractAccount {
+
+    private static final InterestCalculator BONUS_INTEREST = new InterestCalculator(5.0);
+    private static final InterestCalculator PENALTY_INTEREST = new InterestCalculator(0.1);
 
     private final DateProvider dateProvider;
 
@@ -22,8 +24,8 @@ public class MaxiSavingsAccount extends AbstractAccount {
     }
 
     public double interestEarned() {
-        double rate = isAnyWithdrawalAfter(dateProvider.now(-10)) ? 0.001 : 0.05;
-        return getBalance() * rate;
+        InterestCalculator interest = isAnyWithdrawalAfter(dateProvider.now(-10)) ? PENALTY_INTEREST : BONUS_INTEREST;
+        return interest.calculate(getBalance());
     }
 
     private boolean isAnyWithdrawalAfter(Date date) {

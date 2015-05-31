@@ -30,7 +30,7 @@ public class MaxiSavingsAccountTest extends AccountTest {
 
     @Test
     public void interestEarnedWithWithdrawalOver10Days() {
-        Account account = new MaxiSavingsAccount(new FrozenDateProvider(daysInFuture(10)));
+        Account account = new MaxiSavingsAccount(new FrozenDateProvider(daysInFuture(11)));
         account.deposit(4000.0);
         account.withdraw(1000.0);
         assertThat(account.interestEarned(), equalTo(150.0));
