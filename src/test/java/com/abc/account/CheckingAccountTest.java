@@ -1,4 +1,4 @@
-package com.abc;
+package com.abc.account;
 
 import org.junit.Test;
 

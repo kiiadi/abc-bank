@@ -1,20 +1,20 @@
-package com.abc;
+package com.abc.account;
 
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
-public class MaxiSavingsAccountTest extends AccountTest {
+public class SavingsAccountTest extends AccountTest {
 
     @Override
     protected Account createAccount() {
-        return new MaxiSavingsAccount();
+        return new SavingsAccount();
     }
 
     @Test
     public void interestEarned() {
-        account.deposit(3000.0);
-        assertThat(account.interestEarned(), equalTo(170.0));
+        account.deposit(1500.0);
+        assertThat(account.interestEarned(), equalTo(2.0));
     }
 }

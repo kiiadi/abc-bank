@@ -1,5 +1,9 @@
 package com.abc;
 
+import com.abc.account.Account;
+import com.abc.account.CheckingAccount;
+import com.abc.account.MaxiSavingsAccount;
+import com.abc.account.SavingsAccount;
 import org.junit.Before;
 import org.junit.Test;
 

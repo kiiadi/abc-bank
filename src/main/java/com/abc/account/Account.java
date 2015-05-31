@@ -1,6 +1,8 @@
-package com.abc;
+package com.abc.account;
 
 import java.util.Collection;
+
+import com.abc.Transaction;
 
 public interface Account {
 

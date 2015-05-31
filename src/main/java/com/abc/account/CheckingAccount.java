@@ -1,4 +1,4 @@
-package com.abc;
+package com.abc.account;
 
 public class CheckingAccount extends AbstractAccount {
     public CheckingAccount() {

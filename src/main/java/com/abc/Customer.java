@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
+import com.abc.account.Account;
+
 public class Customer {
     private final String name;
     private final Collection<Account> accounts;
