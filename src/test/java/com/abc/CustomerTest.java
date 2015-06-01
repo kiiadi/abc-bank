@@ -1,57 +1,88 @@
 package com.abc;
 
-import org.junit.Ignore;
+import com.abc.account.Account;
+import com.abc.account.CheckingAccount;
+import com.abc.account.MaxiSavingsAccount;
+import com.abc.account.SavingsAccount;
+import org.junit.Before;
 import org.junit.Test;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 public class CustomerTest {
 
-    @Test //Test customer statement generation
-    public void testApp(){
+    private static final double DOUBLE_DELTA = 1.0e-15;
 
-        Account checkingAccount = new Account(Account.CHECKING);
-        Account savingsAccount = new Account(Account.SAVINGS);
+    private Customer customer;
 
-        Customer henry = new Customer("Henry").openAccount(checkingAccount).openAccount(savingsAccount);
+    @Before
+    public void init() {
+        customer = new Customer("Henry");
+    }
 
+    @Test
+    public void openOneAccount(){
+        customer.openAccount(new SavingsAccount());
+        assertEquals(1, customer.getAccounts().size());
+    }
+
+    @Test
+    public void openTwoAccounts() {
+        customer.openAccount(new SavingsAccount());
+        customer.openAccount(new CheckingAccount());
+        assertEquals(2, customer.getAccounts().size());
+    }
+
+    @Test
+    public void openThreeAccounts() {
+        customer.openAccount(new SavingsAccount());
+        customer.openAccount(new CheckingAccount());
+        customer.openAccount(new MaxiSavingsAccount());
+        assertEquals(3, customer.getAccounts().size());
+    }
+
+    @Test
+    public void totalInterestEarned() {
+        Account checkingAccount = new CheckingAccount();
+        customer.openAccount(checkingAccount);
         checkingAccount.deposit(100.0);
-        savingsAccount.deposit(4000.0);
-        savingsAccount.withdraw(200.0);
 
-        assertEquals("Statement for Henry\n" +
-                "\n" +
-                "Checking Account\n" +
-                "  deposit $100.00\n" +
-                "Total $100.00\n" +
-                "\n" +
-                "Savings Account\n" +
-                "  deposit $4,000.00\n" +
-                "  withdrawal $200.00\n" +
-                "Total $3,800.00\n" +
-                "\n" +
-                "Total In All Accounts $3,900.00", henry.getStatement());
+        Account savingsAccount = new SavingsAccount();
+        customer.openAccount(savingsAccount);
+        savingsAccount.deposit(1500.0);
+
+        assertEquals(2.1, customer.totalInterestEarned(), DOUBLE_DELTA);
     }
 
     @Test
-    public void testOneAccount(){
-        Customer oscar = new Customer("Oscar").openAccount(new Account(Account.SAVINGS));
-        assertEquals(1, oscar.getNumberOfAccounts());
+    public void transfer() {
+        Account checkingAccount = new CheckingAccount();
+        customer.openAccount(checkingAccount);
+        checkingAccount.deposit(100.0);
+
+        Account savingsAccount = new SavingsAccount();
+        customer.openAccount(savingsAccount);
+
+        customer.transfer(10.0, checkingAccount, savingsAccount);
+
+        assertThat(checkingAccount.getBalance(), equalTo(90.0));
+        assertThat(savingsAccount.getBalance(), equalTo(10.0));
     }
 
-    @Test
-    public void testTwoAccount(){
-        Customer oscar = new Customer("Oscar")
-                .openAccount(new Account(Account.SAVINGS));
-        oscar.openAccount(new Account(Account.CHECKING));
-        assertEquals(2, oscar.getNumberOfAccounts());
+    @Test(expected = IllegalStateException.class)
+    public void transferFromInvalidAccount() {
+        Account savingsAccount = new SavingsAccount();
+        customer.openAccount(savingsAccount);
+        customer.transfer(50.0, new CheckingAccount(), savingsAccount);
     }
 
-    @Ignore
-    public void testThreeAcounts() {
-        Customer oscar = new Customer("Oscar")
-                .openAccount(new Account(Account.SAVINGS));
-        oscar.openAccount(new Account(Account.CHECKING));
-        assertEquals(3, oscar.getNumberOfAccounts());
+    @Test(expected = IllegalStateException.class)
+    public void transferToInvalidAccount() {
+        Account checkingAccount = new CheckingAccount();
+        customer.openAccount(checkingAccount);
+        customer.transfer(50.0, checkingAccount, new SavingsAccount());
     }
+
 }
