@@ -6,7 +6,7 @@ import com.abc.Utils;
 import java.util.List;
 
 public class AccountStatementGenerator {
-  private String statement;
+  private final StringBuilder statement = new StringBuilder();
 
   public AccountStatementGenerator(Account account) {
     addDescription(account.getAccountType());
@@ -16,19 +16,27 @@ public class AccountStatementGenerator {
   private void addTransactions(List<Transaction> transactions) {
     double total = 0.0;
     for (Transaction transaction : transactions) {
-      statement += "  " + transaction.getType().getLabel() + " " + Utils.toDollars(transaction.getAmount()) + "\n";
+      statement
+        .append("  ")
+        .append(transaction.getType().getLabel())
+        .append(" ")
+        .append(Utils.toDollars(transaction.getAmount()))
+        .append("\n");
+
       total += transaction.getAmount();
     }
-    statement += "Total " + Utils.toDollars(total);
+    statement
+      .append("Total ")
+      .append(Utils.toDollars(total));
   }
 
   private void addDescription(AccountType accountType) {
-    AccountTypeDescriptor descriptor = new AccountTypeDescriptor();
-    AccountType.Utils.visit(accountType, descriptor);
-    statement = descriptor.getDescription() + "\n";
+    statement
+      .append(accountType.getLabel())
+      .append("\n");
   }
 
   public String getStatement() {
-    return statement;
+    return statement.toString();
   }
 }

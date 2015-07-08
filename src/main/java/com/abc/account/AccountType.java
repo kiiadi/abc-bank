@@ -1,9 +1,19 @@
 package com.abc.account;
 
 public enum AccountType {
-  CHECKING,
-  SAVINGS,
-  MAXI_SAVINGS;
+  CHECKING("Checking Account"),
+  SAVINGS("Savings Account"),
+  MAXI_SAVINGS("Maxi Savings Account");
+
+  private final String label;
+
+  AccountType(String label) {
+    this.label = label;
+  }
+
+  public String getLabel() {
+    return label;
+  }
 
   public interface AccountTypeVisitor {
     void visitChecking();

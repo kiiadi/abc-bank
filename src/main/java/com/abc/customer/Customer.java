@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Customer {
-  private String name;
-  private List<Account> accounts;
+  private final String name;
+  private final List<Account> accounts;
 
   public Customer(String name) {
     this.name = name;

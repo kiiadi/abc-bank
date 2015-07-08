@@ -3,17 +3,24 @@ package com.abc.customer;
 import java.util.List;
 
 public class CustomersSummaryGenerator {
-  private String summary;
+  private final StringBuilder summary = new StringBuilder();
 
   public CustomersSummaryGenerator(List<Customer> customers) {
-    summary = "Customer Summary";
+    summary.append("Customer Summary");
 
     addCustomersSummary(customers);
   }
 
   private void addCustomersSummary(List<Customer> customers) {
     for (Customer c : customers) {
-      summary += "\n - " + c.getName() + " (" + format(c.getNumberOfAccounts(), "account") + ")";
+      summary
+        .append("\n")
+        .append(" - ")
+        .append(c.getName())
+        .append(" ")
+        .append("(")
+        .append(format(c.getNumberOfAccounts(), "account"))
+        .append(")");
     }
   }
 
@@ -24,6 +31,6 @@ public class CustomersSummaryGenerator {
   }
 
   public String getSummary() {
-    return summary;
+    return summary.toString();
   }
 }
