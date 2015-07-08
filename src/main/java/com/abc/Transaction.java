@@ -25,13 +25,17 @@ public class Transaction implements Comparable<Transaction> {
   private final Date date;
   private final TransactionType type;
 
-  public Transaction(double amount) {
+  public Transaction(double amount, TransactionType type) {
     this.amount = amount;
-    this.type = (amount < 0 ? TransactionType.WITHDRAWAL : TransactionType.DEPOSIT);
+    this.type = type;
     this.date = DateProvider.getInstance().now();
   }
 
   public double getAmount() {
+    if (TransactionType.WITHDRAWAL.equals(type)) {
+      return -amount;
+    }
+
     return amount;
   }
 

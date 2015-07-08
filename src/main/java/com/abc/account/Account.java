@@ -29,7 +29,7 @@ public class Account {
       throw new IllegalArgumentException("amount must be greater than zero");
     }
     else {
-      transactions.add(new Transaction(amount));
+      transactions.add(new Transaction(amount,  Transaction.TransactionType.DEPOSIT));
     }
   }
 
@@ -38,7 +38,7 @@ public class Account {
       throw new IllegalArgumentException("amount must be greater than zero");
     }
     else {
-      transactions.add(new Transaction(-amount));
+      transactions.add(new Transaction(amount, Transaction.TransactionType.WITHDRAWAL));
     }
   }
 
