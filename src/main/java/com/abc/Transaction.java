@@ -1,16 +1,53 @@
 package com.abc;
 
-import java.util.Calendar;
 import java.util.Date;
 
-public class Transaction {
-    public final double amount;
+public class Transaction implements Comparable<Transaction> {
+  public enum TransactionType {
+    WITHDRAWAL("withdrawal"),
+    DEPOSIT("deposit");
 
-    private Date transactionDate;
+    private final String label;
 
-    public Transaction(double amount) {
-        this.amount = amount;
-        this.transactionDate = DateProvider.getInstance().now();
+    TransactionType(String label) {
+
+      this.label = label;
     }
 
+    public String getLabel() {
+      return label;
+    }
+
+  }
+
+  private final double amount;
+
+  private final Date date;
+  private final TransactionType type;
+
+  public Transaction(double amount, TransactionType type) {
+    this.amount = amount;
+    this.type = type;
+    this.date = DateProvider.getInstance().now();
+  }
+
+  public double getAmount() {
+    if (TransactionType.WITHDRAWAL.equals(type)) {
+      return -amount;
+    }
+
+    return amount;
+  }
+
+  public Date getDate() {
+    return date;
+  }
+
+  public TransactionType getType() {
+    return type;
+  }
+
+  public int compareTo(Transaction that) {
+    return this.date.compareTo(that.date);
+  }
 }
