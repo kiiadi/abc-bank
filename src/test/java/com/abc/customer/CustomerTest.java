@@ -53,4 +53,14 @@ public class CustomerTest extends AbstractTestCase {
 
     assertEquals(2, oscar.getNumberOfAccounts());
   }
+
+  @Test
+  public void account_number_three() {
+    Customer oscar = new Customer("Oscar");
+    oscar.openAccount(new Account(AccountType.SAVINGS));
+    oscar.openAccount(new Account(AccountType.CHECKING));
+    oscar.openAccount(new Account(AccountType.MAXI_SAVINGS));
+
+    assertEquals(3, oscar.getNumberOfAccounts());
+  }
 }
