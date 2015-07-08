@@ -32,26 +32,18 @@ public class AccountInterestCalculatorTest extends AbstractTestCase {
   }
 
   @Test
-  public void maxi_savings_interest_lesser_than_1000() {
-    AccountInterestCalculator calculator = new AccountInterestCalculator(800);
+  public void maxi_savings_interest_no_withdraw_in_the_past_10_Days() {
+    AccountInterestCalculator calculator = new AccountInterestCalculator(1000, true);
     AccountType.Utils.visit(AccountType.MAXI_SAVINGS, calculator);
 
-    assertEquals(16., calculator.getInterest(), DOUBLE_DELTA);
+    assertEquals(50., calculator.getInterest(), DOUBLE_DELTA);
   }
 
   @Test
-  public void maxi_savings_interest_lesser_than_2000() {
-    AccountInterestCalculator calculator = new AccountInterestCalculator(1500);
+  public void maxi_savings_interest_withdraw_in_the_past_10_Days() {
+    AccountInterestCalculator calculator = new AccountInterestCalculator(1000, false);
     AccountType.Utils.visit(AccountType.MAXI_SAVINGS, calculator);
 
-    assertEquals(45., calculator.getInterest(), DOUBLE_DELTA);
-  }
-
-  @Test
-  public void maxi_savings_interest_greater_than_2000() {
-    AccountInterestCalculator calculator = new AccountInterestCalculator(2500);
-    AccountType.Utils.visit(AccountType.MAXI_SAVINGS, calculator);
-
-    assertEquals(120., calculator.getInterest(), DOUBLE_DELTA);
+    assertEquals(10., calculator.getInterest(), DOUBLE_DELTA);
   }
 }

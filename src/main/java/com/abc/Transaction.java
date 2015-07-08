@@ -2,7 +2,7 @@ package com.abc;
 
 import java.util.Date;
 
-public class Transaction {
+public class Transaction implements Comparable<Transaction> {
   public enum TransactionType {
     WITHDRAWAL("withdrawal"),
     DEPOSIT("deposit");
@@ -17,9 +17,11 @@ public class Transaction {
     public String getLabel() {
       return label;
     }
+
   }
 
   private final double amount;
+
   private final Date date;
   private final TransactionType type;
 
@@ -39,5 +41,9 @@ public class Transaction {
 
   public TransactionType getType() {
     return type;
+  }
+
+  public int compareTo(Transaction that) {
+    return this.date.compareTo(that.date);
   }
 }

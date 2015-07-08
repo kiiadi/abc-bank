@@ -2,10 +2,16 @@ package com.abc.account;
 
 public class AccountInterestCalculator implements AccountType.AccountTypeVisitor {
   private final double amount;
+  private final boolean noWithdrawInThePast10Days;
   private double interest;
 
-  public AccountInterestCalculator(double amount) {
+  public AccountInterestCalculator(double amount, boolean noWithdrawInThePast10Days) {
     this.amount = amount;
+    this.noWithdrawInThePast10Days = noWithdrawInThePast10Days;
+  }
+
+  public AccountInterestCalculator(double amount) {
+    this(amount, false);
   }
 
   public void visitChecking() {
@@ -22,15 +28,11 @@ public class AccountInterestCalculator implements AccountType.AccountTypeVisitor
   }
 
   public void visitMaxiSavings() {
-    if (amount <= 1000) {
-      interest = amount * 0.02;
-
-    }
-    else if (amount <= 2000) {
-      interest = 20 + (amount - 1000) * 0.05;
+    if (noWithdrawInThePast10Days) {
+      interest = amount * 0.05;
     }
     else {
-      interest = 70 + (amount - 2000) * 0.1;
+      interest = amount * 0.01;
     }
   }
 

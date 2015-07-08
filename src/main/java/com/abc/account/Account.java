@@ -3,6 +3,8 @@ package com.abc.account;
 import com.abc.Transaction;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 public class Account {
@@ -42,8 +44,9 @@ public class Account {
 
   public double interestEarned() {
     double amount = getTotalTransactions();
+    boolean noWithdrawInThePast10Days = isNoWithdrawInThePast10Days();
 
-    AccountInterestCalculator calculator = new AccountInterestCalculator(amount);
+    AccountInterestCalculator calculator = new AccountInterestCalculator(amount, noWithdrawInThePast10Days);
 
     AccountType.Utils.visit(accountType, calculator);
 
@@ -71,5 +74,33 @@ public class Account {
 
     return accountType == account.accountType;
 
+  }
+
+  private boolean isNoWithdrawInThePast10Days() {
+    List<Transaction> withdrawTransactions = getWithdrawTransactions();
+    if (withdrawTransactions.isEmpty()) {
+      return true;
+    }
+
+    Collections.sort(withdrawTransactions, Collections.reverseOrder());
+
+    Calendar calendar = Calendar.getInstance();
+    calendar.setTime(withdrawTransactions.get(0).getDate());
+    calendar.add(Calendar.DAY_OF_YEAR, 10);
+
+    return (Calendar.getInstance().compareTo(calendar) >= 0);
+
+  }
+
+  private List<Transaction> getWithdrawTransactions() {
+    List<Transaction> withdrawTransactions = new ArrayList<Transaction>();
+
+    for (Transaction transaction : transactions) {
+      if(Transaction.TransactionType.WITHDRAWAL.equals(transaction.getType())){
+        withdrawTransactions.add(transaction);
+      }
+    }
+
+    return withdrawTransactions;
   }
 }
