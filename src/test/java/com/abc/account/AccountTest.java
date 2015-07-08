@@ -72,7 +72,6 @@ public class AccountTest extends AbstractTestCase {
     assertEquals(10., account.interestEarned(), DOUBLE_DELTA);
   }
 
-
   @Test
   public void account_interest_earned_on_maxi_savings_when_withdraw_in_the_past_10_Days_with_2_transactions() {
 
@@ -102,4 +101,5 @@ public class AccountTest extends AbstractTestCase {
 
       return calendar.getTime();
     }
-  }}
+  }
+}

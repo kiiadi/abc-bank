@@ -29,7 +29,7 @@ public class Account {
       throw new IllegalArgumentException("amount must be greater than zero");
     }
     else {
-      transactions.add(new Transaction(amount,  Transaction.TransactionType.DEPOSIT));
+      transactions.add(new Transaction(amount, Transaction.TransactionType.DEPOSIT));
     }
   }
 
@@ -96,7 +96,7 @@ public class Account {
     List<Transaction> withdrawTransactions = new ArrayList<Transaction>();
 
     for (Transaction transaction : transactions) {
-      if(Transaction.TransactionType.WITHDRAWAL.equals(transaction.getType())){
+      if (Transaction.TransactionType.WITHDRAWAL.equals(transaction.getType())) {
         withdrawTransactions.add(transaction);
       }
     }

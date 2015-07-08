@@ -64,7 +64,6 @@ public class CustomerTest extends AbstractTestCase {
     assertEquals(3, oscar.getNumberOfAccounts());
   }
 
-
   @Test(expected = IllegalArgumentException.class)
   public void transfer_exception_invalid_from_account() {
     Customer oscar = new Customer("Oscar");
@@ -77,7 +76,6 @@ public class CustomerTest extends AbstractTestCase {
     oscar.transfer(100., maxiSavingsAccount, savingsAccount);
   }
 
-
   @Test(expected = IllegalArgumentException.class)
   public void transfer_exception_invalid_to_account() {
     Customer oscar = new Customer("Oscar");
@@ -89,7 +87,6 @@ public class CustomerTest extends AbstractTestCase {
 
     oscar.transfer(100., savingsAccount, maxiSavingsAccount);
   }
-
 
   @Test
   public void transfer_valid() {
@@ -106,7 +103,7 @@ public class CustomerTest extends AbstractTestCase {
 
     oscar.transfer(500., savingsAccount, maxiSavingsAccount);
 
-    assertEquals(500., savingsAccount.getTotalTransactions(), DOUBLE_DELTA );
+    assertEquals(500., savingsAccount.getTotalTransactions(), DOUBLE_DELTA);
     assertEquals(1000., maxiSavingsAccount.getTotalTransactions(), DOUBLE_DELTA);
   }
 }
