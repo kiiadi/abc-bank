@@ -50,4 +50,17 @@ public class Customer {
 
     return statement;
   }
+
+  public void transfer(double amount, Account from, Account to) {
+    if (!accounts.contains(from)) {
+      throw new IllegalArgumentException("'from' account is not one of the customers accounts");
+    }
+
+    if (!accounts.contains(to)) {
+      throw new IllegalArgumentException("'to' account is not one of the customers accounts");
+    }
+
+    from.withdraw(amount);
+    to.deposit(amount);
+  }
 }
