@@ -1,9 +1,11 @@
 package com.abc;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static java.lang.Math.abs;
+
+import java.util.List;
+import java.util.Vector;
+
+import com.abc.accounts.Account;
 
 public class Customer {
     private String name;
@@ -11,7 +13,7 @@ public class Customer {
 
     public Customer(String name) {
         this.name = name;
-        this.accounts = new ArrayList<Account>();
+        this.accounts = new Vector<Account>();
     }
 
     public String getName() {
@@ -22,16 +24,13 @@ public class Customer {
         accounts.add(account);
         return this;
     }
-
+    
     public int getNumberOfAccounts() {
         return accounts.size();
     }
 
     public double totalInterestEarned() {
-        double total = 0;
-        for (Account a : accounts)
-            total += a.interestEarned();
-        return total;
+        return accounts.stream().mapToDouble(a -> a.interestEarned()).sum();
     }
 
     public String getStatement() {
@@ -47,25 +46,12 @@ public class Customer {
     }
 
     private String statementForAccount(Account a) {
-        String s = "";
-
-       //Translate to pretty account type
-        switch(a.getAccountType()){
-            case Account.CHECKING:
-                s += "Checking Account\n";
-                break;
-            case Account.SAVINGS:
-                s += "Savings Account\n";
-                break;
-            case Account.MAXI_SAVINGS:
-                s += "Maxi Savings Account\n";
-                break;
-        }
+        String s = a.accountTypeString() + "\n";
 
         //Now total up all the transactions
         double total = 0.0;
         for (Transaction t : a.transactions) {
-            s += "  " + (t.amount < 0 ? "withdrawal" : "deposit") + " " + toDollars(t.amount) + "\n";
+            s += "  " + (t.isWithdrawal() ? "withdrawal" : "deposit") + " " + toDollars(t.amount) + "\n";
             total += t.amount;
         }
         s += "Total " + toDollars(total);
