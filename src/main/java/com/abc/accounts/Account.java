@@ -1,9 +1,9 @@
 package com.abc.accounts;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Vector;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
@@ -15,7 +15,7 @@ public abstract class Account {
     public List<Transaction> transactions;
 
     public Account() {
-        this.transactions = new ArrayList<Transaction>();
+        this.transactions = new Vector<Transaction>();
     }
 
     public void deposit(double amount) {
@@ -78,21 +78,13 @@ public abstract class Account {
         RunningBalance prb = prevBal.get();
         RunningBalance current = null;
         if(prb == null) {
-            current = new RunningBalance(t.getTransactionDate(), t.amount, daysAgo(t.getTransactionDate()));
+            current = new RunningBalance(t.getTransactionDate(), t.amount, daysBetween(new Date(), t.getTransactionDate()));
         } else {
             prb.numberOfDays = daysBetween(p.getTransactionDate(), t.getTransactionDate());
             current = new RunningBalance(t.getTransactionDate(), t.amount + prb.amount, 0);
         }
         prevBal.set(current);
         return current;
-    }
-    
-    private int daysAgo(Date previous) {
-        Calendar now = Calendar.getInstance();
-        Calendar with = Calendar.getInstance();
-        with.setTime(previous);
-        
-        return now.get(Calendar.DAY_OF_YEAR) - with.get(Calendar.DAY_OF_YEAR);
     }
     
     private int daysBetween(Date from, Date to) {

@@ -1,7 +1,7 @@
 package com.abc;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import com.abc.accounts.Account;
 
@@ -9,7 +9,7 @@ public class Bank {
     private List<Customer> customers;
 
     public Bank() {
-        customers = new ArrayList<Customer>();
+        customers = new Vector<Customer>();
     }
 
     public void addCustomer(Customer customer) {

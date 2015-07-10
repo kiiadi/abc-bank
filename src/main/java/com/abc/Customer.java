@@ -1,11 +1,11 @@
 package com.abc;
 
-import java.util.ArrayList;
+import static java.lang.Math.abs;
+
 import java.util.List;
+import java.util.Vector;
 
 import com.abc.accounts.Account;
-
-import static java.lang.Math.abs;
 
 public class Customer {
     private String name;
@@ -13,7 +13,7 @@ public class Customer {
 
     public Customer(String name) {
         this.name = name;
-        this.accounts = new ArrayList<Account>();
+        this.accounts = new Vector<Account>();
     }
 
     public String getName() {
