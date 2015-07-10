@@ -1,8 +1,13 @@
 package com.abc.accounts;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
+import com.abc.DateProvider;
 import com.abc.Transaction;
 
 public abstract class Account {
@@ -31,23 +36,90 @@ public abstract class Account {
 
 
     public double sumTransactions() {
-        return checkIfTransactionsExist(true);
+        return transactions.stream().mapToDouble(t->t.amount).sum();
     }
 
-    private double checkIfTransactionsExist(boolean checkAll) {
-        double amount = 0.0;
-        for (Transaction t : transactions)
-            amount += t.amount;
-        return amount;
-    }
-    
     boolean hasWithdrawlInLast10Days() {
-        //TODO: quick and dirty - does not take into account midnight. fix later.
-        long inLast10Days = System.currentTimeMillis() - 86_400_000 * 10;
-        return transactions.stream().filter( t -> (t.isWithdrawl() && t.getTransactionDate().getTime() > inLast10Days)).count() > 0;
+        Date daysAgo = DateProvider.daysAgo(10);
+        return transactions.stream().filter( t -> (t.isWithdrawal() && t.getTransactionDate().after(daysAgo))).count() > 0;
     }
 
     public abstract String accountTypeString();
-    public abstract double interestEarned();
+    public abstract double getAnnualRateForBalance(double balance);
+    
+    public double interestEarned() {
+        List<RunningBalance> runningBalance = getRunningBalance();
+        
+        return runningBalance.stream().mapToDouble( r ->  calculateInterest(r) ).sum();
+    }
+
+    
+    protected double calculateInterest(RunningBalance r) {
+        double interest =  r.amount * Math.pow( (1 + getAnnualRateForBalance(r.amount)/365), Math.max(r.numberOfDays, 1)) - r.amount;
+        return interest;
+    }
+    
+    
+    private List<RunningBalance> getRunningBalance(){
+        
+        AtomicReference<Transaction> prevTran = new AtomicReference<>();
+        AtomicReference<RunningBalance> prevBal = new AtomicReference<>();
+        return transactions.stream()
+                .sorted((t1, t2) -> Long.compare(t1.getTransactionDate().getTime(),
+                                                 t2.getTransactionDate().getTime()))
+                .map(t -> createRunningBalance(prevTran, prevBal, t))
+                .collect(Collectors.toList());
+        
+    }
+
+    private RunningBalance createRunningBalance(AtomicReference<Transaction> prevTran, AtomicReference<RunningBalance> prevBal,
+            Transaction t) {
+        Transaction p = prevTran.getAndSet(t);
+        RunningBalance prb = prevBal.get();
+        RunningBalance current = null;
+        if(prb == null) {
+            current = new RunningBalance(t.getTransactionDate(), t.amount, daysAgo(t.getTransactionDate()));
+        } else {
+            prb.numberOfDays = daysBetween(p.getTransactionDate(), t.getTransactionDate());
+            current = new RunningBalance(t.getTransactionDate(), t.amount + prb.amount, 0);
+        }
+        prevBal.set(current);
+        return current;
+    }
+    
+    private int daysAgo(Date previous) {
+        Calendar now = Calendar.getInstance();
+        Calendar with = Calendar.getInstance();
+        with.setTime(previous);
+        
+        return now.get(Calendar.DAY_OF_YEAR) - with.get(Calendar.DAY_OF_YEAR);
+    }
+    
+    private int daysBetween(Date from, Date to) {
+        Calendar past = Calendar.getInstance();
+        past.setTime(from);
+        Calendar present = Calendar.getInstance();
+        present.setTime(to);
+        
+        return present.get(Calendar.DAY_OF_YEAR) - past.get(Calendar.DAY_OF_YEAR);
+    }
+    
+    // tracks the running balance of the account
+    class RunningBalance{
+        Date transactionDate;
+        double amount;
+        int numberOfDays;
+        public RunningBalance(Date tDate, double amt, int numDays) {
+            transactionDate = tDate;
+            amount = amt;
+            numberOfDays = numDays;
+        }
+        @Override
+        public String toString() {
+            return "RunningBalance [transactionDate=" + transactionDate + ", amount=" + amount + ", numberOfDays="
+                    + numberOfDays + "]";
+        }
+        
+    }
 
 }

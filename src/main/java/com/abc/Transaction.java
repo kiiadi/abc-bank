@@ -5,7 +5,8 @@ import java.util.Date;
 public class Transaction {
     public final double amount;
 
-    private Date transactionDate;
+    //TODO: hack for testing.
+    protected Date transactionDate;
 
     public Transaction(double amount) {
         this.amount = amount;
@@ -16,8 +17,8 @@ public class Transaction {
         return transactionDate;
     }
 
-    //could be better - to allow for adjustments.
-    public boolean isWithdrawl() {
+    //TODO: allow for adjustments?
+    public boolean isWithdrawal() {
         return amount < 0;
     }
 

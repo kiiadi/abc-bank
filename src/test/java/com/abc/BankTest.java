@@ -1,8 +1,8 @@
 package com.abc;
 
 import static org.junit.Assert.assertEquals;
-
-import java.util.Date;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -12,7 +12,7 @@ import com.abc.accounts.MaxiSavingsAccount;
 import com.abc.accounts.SavingsAccount;
 
 public class BankTest {
-    private static final double DOUBLE_DELTA = 1e-15;
+    private static final double DOUBLE_DELTA = 1e-12;
 
     @Test
     public void customerSummaryTest() {
@@ -28,24 +28,24 @@ public class BankTest {
     public void checkingAccountTest() {
         Bank bank = new Bank();
         Customer bill = new Customer("Bill");
-        Account checkingAccount = openSavingsAccount(bill);
+        Account checkingAccount = openCheckingAccount(bill);
 
         bank.addCustomer(bill);
 
         checkingAccount.deposit(100.0);
 
-        assertEquals(0.1, bank.totalInterestPaid(), DOUBLE_DELTA);
+        assertEquals(100 * .001/365, bank.totalInterestPaid(), DOUBLE_DELTA);
     }
 
     @Test
     public void savingsAccountTest() {
         Bank bank = new Bank();
-        Account checkingAccount = new SavingsAccount();
-        bank.addCustomer(new Customer("Bill").openAccount(checkingAccount));
+        Account savings = new SavingsAccount();
+        bank.addCustomer(new Customer("Bill").openAccount(savings));
 
-        checkingAccount.deposit(1500.0);
+        savings.deposit(1500.0);
 
-        assertEquals(2.0, bank.totalInterestPaid(), DOUBLE_DELTA);
+        assertEquals(500*0.002/365 + 1000 * 0.001/365, bank.totalInterestPaid(), DOUBLE_DELTA);
     }
 
     @Test
@@ -56,7 +56,7 @@ public class BankTest {
 
         checkingAccount.deposit(3000.0);
 
-        assertEquals(150.0, bank.totalInterestPaid(), DOUBLE_DELTA);
+        assertEquals(3000 * .05/365, bank.totalInterestPaid(), DOUBLE_DELTA);
     }
     
     @Test(expected=IllegalArgumentException.class)
@@ -77,7 +77,8 @@ public class BankTest {
 
         savings.deposit(1000.0);
         checking.deposit(300.0);
-        bank.transfer(savings, checking, 100.0);
+        boolean state = bank.transfer(savings, checking, 100.0);
+        assertTrue(state);
         
         assertEquals(900, savings.sumTransactions(), DOUBLE_DELTA);
         assertEquals(400, checking.sumTransactions(), DOUBLE_DELTA);
@@ -95,8 +96,8 @@ public class BankTest {
         savings.deposit(1000.0);
         checking.deposit(300.0);
         
-        bank.transfer(savings, checking, 1001.0);
-        
+        boolean state = bank.transfer(savings, checking, 1001.0);
+        assertFalse(state);
         assertEquals(1000, savings.sumTransactions(), DOUBLE_DELTA);
         assertEquals(300, checking.sumTransactions(), DOUBLE_DELTA);
     }
@@ -125,8 +126,7 @@ public class BankTest {
         
         savings.deposit(1000.0);
         checking.deposit(300.0);
-        //interest: 1000*.1 + 300*.1
-        assertEquals(1.3, bank.totalInterestPaid(), DOUBLE_DELTA);
+        assertEquals(1000*.001/365 + 300*.001/365, bank.totalInterestPaid(), DOUBLE_DELTA);
         
     }
     
@@ -143,7 +143,7 @@ public class BankTest {
         savings.deposit(2000.0);
         checking.deposit(300.0);
         //interest: 1000*0.001 + 1000 * 0.002 + 300*0.001
-        assertEquals(3.3, bank.totalInterestPaid(), DOUBLE_DELTA);
+        assertEquals(1000*0.001/365 + 1000 * 0.002/365 + 300*0.001/365, bank.totalInterestPaid(), DOUBLE_DELTA);
         
     }
     
@@ -161,7 +161,7 @@ public class BankTest {
         checking.deposit(300.0);
         
         //interest: 2000*0.05 + 300*0.001
-        assertEquals(100.3, bank.totalInterestPaid(), DOUBLE_DELTA);
+        assertEquals(2000*0.05/365 + 300*0.001/365, bank.totalInterestPaid(), DOUBLE_DELTA);
         
     }
 
@@ -183,23 +183,30 @@ public class BankTest {
         
         maxi.deposit(2000.0);
         checking.deposit(300.0);
+        maxi.transactions.add(getTransaction(900, 5)); 
+        maxi.transactions.add(getTransaction(-300, 3));
+
+        /*
+         * account has the following:
+         *  900 - 5days ago
+         *  600 - 2 days ago
+         *  2600 - now
+         *  
+         *  Held balances and approx interest are
+         *  900 - 3 days : 900 * (1+0.001/365)^2 - 900
+         *  600 - 2 days : 600 * (1+0.001/365)^3 - 600
+         *  2600 - 1 day : 2600  * 0.001/365
+         */
+        double maxiInterest = 2600  * 0.001/365 + 600 * Math.pow((1+0.001/365), 3) - 600 + 900 * Math.pow(1 + 0.001/365, 2) - 900;
         
-        Transaction testTransaction = new Transaction(-300) {
-            @Override
-            public Date getTransactionDate() {
-                long inLast10Days = System.currentTimeMillis() - 86_400_000 * 3;
-                return new Date(inLast10Days);
-            }
-        };
+        assertEquals(maxiInterest + 300*0.001/365, bank.totalInterestPaid(), DOUBLE_DELTA);
         
-        
-        maxi.transactions.add(testTransaction);
-        System.out.println(maxi.transactions);
-        System.out.println(checking.transactions);
-        
-        //interest: 1700*0.001 + 300*0.001
-        assertEquals(2.0, bank.totalInterestPaid(), DOUBLE_DELTA);
-        
+    }
+
+    private Transaction getTransaction(double amount, int daysAgo) {
+        Transaction base = new Transaction(amount) ;
+        base.transactionDate = DateProvider.daysAgo(daysAgo);
+        return base;
     }
 
     
