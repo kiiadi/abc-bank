@@ -72,16 +72,34 @@ public abstract class Account {
         
     }
 
+    /**
+     * RunningBalance is the account balance as of a date, and how many days that balance
+     * has been held.
+     * For example: if account transactions were as follows:
+     *    1.  day0  - deposit 200
+     *    2.  day+3 - deposit 100
+     *    3.  day+5 - deposit 10
+     *    4.  day+6 - withdraw 100
+     *    5.  day+7 - deposit 40
+     *    
+     * If today is day+10, the running balances will be:
+     * 
+     *    1.  day0  - 200 - 3 days
+     *    2.  day+3 - 300 - 2 days
+     *    3.  day+5 - 310 - 1 day
+     *    4.  day+6 - 210 - 1 day
+     *    5.  day+7 - 250 - 3 days
+     */
     private RunningBalance createRunningBalance(AtomicReference<Transaction> prevTran, AtomicReference<RunningBalance> prevBal,
             Transaction t) {
-        Transaction p = prevTran.getAndSet(t);
-        RunningBalance prb = prevBal.get();
+        Transaction prevTx = prevTran.getAndSet(t);
+        RunningBalance prevRb = prevBal.get();
         RunningBalance current = null;
-        if(prb == null) {
+        if(prevRb == null) {
             current = new RunningBalance(t.getTransactionDate(), t.amount, daysBetween(new Date(), t.getTransactionDate()));
         } else {
-            prb.numberOfDays = daysBetween(p.getTransactionDate(), t.getTransactionDate());
-            current = new RunningBalance(t.getTransactionDate(), t.amount + prb.amount, daysBetween(new Date(), t.getTransactionDate()));
+            prevRb.numberOfDays = daysBetween(prevTx.getTransactionDate(), t.getTransactionDate());
+            current = new RunningBalance(t.getTransactionDate(), t.amount + prevRb.amount, daysBetween(new Date(), t.getTransactionDate()));
         }
         prevBal.set(current);
         return current;
