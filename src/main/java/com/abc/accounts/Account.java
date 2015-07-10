@@ -81,7 +81,7 @@ public abstract class Account {
             current = new RunningBalance(t.getTransactionDate(), t.amount, daysBetween(new Date(), t.getTransactionDate()));
         } else {
             prb.numberOfDays = daysBetween(p.getTransactionDate(), t.getTransactionDate());
-            current = new RunningBalance(t.getTransactionDate(), t.amount + prb.amount, 0);
+            current = new RunningBalance(t.getTransactionDate(), t.amount + prb.amount, daysBetween(new Date(), t.getTransactionDate()));
         }
         prevBal.set(current);
         return current;
