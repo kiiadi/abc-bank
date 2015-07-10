@@ -3,6 +3,8 @@ package com.abc;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.abc.accounts.Account;
+
 import static java.lang.Math.abs;
 
 public class Customer {
@@ -22,7 +24,7 @@ public class Customer {
         accounts.add(account);
         return this;
     }
-
+    
     public int getNumberOfAccounts() {
         return accounts.size();
     }
@@ -47,20 +49,7 @@ public class Customer {
     }
 
     private String statementForAccount(Account a) {
-        String s = "";
-
-       //Translate to pretty account type
-        switch(a.getAccountType()){
-            case Account.CHECKING:
-                s += "Checking Account\n";
-                break;
-            case Account.SAVINGS:
-                s += "Savings Account\n";
-                break;
-            case Account.MAXI_SAVINGS:
-                s += "Maxi Savings Account\n";
-                break;
-        }
+        String s = a.accountTypeString() + "\n";
 
         //Now total up all the transactions
         double total = 0.0;

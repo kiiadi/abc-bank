@@ -12,7 +12,7 @@ public class DateProvider {
         return instance;
     }
 
-    public Date now() {
+    public synchronized Date now() {
         return Calendar.getInstance().getTime();
     }
 }

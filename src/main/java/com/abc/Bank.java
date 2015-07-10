@@ -3,6 +3,8 @@ package com.abc;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.abc.accounts.Account;
+
 public class Bank {
     private List<Customer> customers;
 
@@ -42,5 +44,18 @@ public class Bank {
             e.printStackTrace();
             return "Error";
         }
+    }
+    
+    public boolean transfer(Account from, Account to, double amount) {
+        if (amount <= 0) {
+            throw new IllegalArgumentException("amount must be greater than zero");
+        } 
+        try {
+            from.withdraw(amount);
+            to.deposit(amount);
+        } catch(IllegalArgumentException e) {
+            return false;
+        }
+        return true;
     }
 }
