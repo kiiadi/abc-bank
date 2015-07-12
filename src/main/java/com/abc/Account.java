@@ -5,23 +5,19 @@ import java.util.List;
 
 public class Account {
 
-    public static final int CHECKING = 0;
-    public static final int SAVINGS = 1;
-    public static final int MAXI_SAVINGS = 2;
-
-    private final int accountType;
+    private AccountType accountType;
     public List<Transaction> transactions;
 
-    public Account(int accountType) {
+    public Account(AccountType accountType) {
         this.accountType = accountType;
         this.transactions = new ArrayList<Transaction>();
     }
 
-    public void deposit(double amount) {
+    public void deposit(double amount, TransactionType transactionType) {
         if (amount <= 0) {
             throw new IllegalArgumentException("amount must be greater than zero");
         } else {
-            transactions.add(new Transaction(amount));
+            transactions.add(new Transaction(amount, transactionType));
         }
     }
 
@@ -29,11 +25,11 @@ public void withdraw(double amount) {
     if (amount <= 0) {
         throw new IllegalArgumentException("amount must be greater than zero");
     } else {
-        transactions.add(new Transaction(-amount));
+        transactions.add(new Transaction(-amount, TransactionType.WITHDRAW));
     }
 }
 
-    public double interestEarned() {
+    public double computeInterest() {
         double amount = sumTransactions();
         switch(accountType){
             case SAVINGS:
@@ -56,17 +52,23 @@ public void withdraw(double amount) {
     }
 
     public double sumTransactions() {
-       return checkIfTransactionsExist(true);
-    }
-
-    private double checkIfTransactionsExist(boolean checkAll) {
         double amount = 0.0;
         for (Transaction t: transactions)
-            amount += t.amount;
+            amount += t.getAmount();
         return amount;
     }
 
-    public int getAccountType() {
+    public double interestEarned() {
+        double amount = 0.0;
+        for(Transaction t : transactions) {
+            if(t.getTransactionType().equals(TransactionType.INTEREST)) {
+                amount += t.getAmount();
+            }
+        }
+        return amount;
+    }
+
+    public AccountType getAccountType() {
         return accountType;
     }
 
