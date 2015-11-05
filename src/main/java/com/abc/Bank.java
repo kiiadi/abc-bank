@@ -36,7 +36,8 @@ public class Bank {
 
     public String getFirstCustomer() {
         try {
-            customers = null;
+        	// I have to remove this since it will cause a NullpointerException although this method is useless
+            // customers = null; 
             return customers.get(0).getName();
         } catch (Exception e){
             e.printStackTrace();
