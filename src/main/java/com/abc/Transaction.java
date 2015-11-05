@@ -13,4 +13,14 @@ public class Transaction {
         this.transactionDate = DateProvider.getInstance().now();
     }
 
+	public Date getTransactionDate() {
+		return transactionDate;
+	}
+
+	public void setTransactionDate(Date transactionDate) {
+		this.transactionDate = transactionDate;
+	}
+    
+    
+
 }
