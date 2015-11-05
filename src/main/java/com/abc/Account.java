@@ -98,7 +98,6 @@ public class Account {
 			amount += t.amount;
 		return amount;
 	}
-
 	/*
 	private double checkIfTransactionsExist(boolean checkAll) {
 		double amount = 0.0;
