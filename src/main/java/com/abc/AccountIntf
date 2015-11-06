@@ -1,0 +1,14 @@
+package com.abc;
+
+public interface AccountIntf {
+			public void deposit(double amount);
+		
+			public void withdraw(double amount);
+		
+			public double interestEarned();
+		
+			public double sumTransactions();
+		
+			public int getAccountType();
+
+}
