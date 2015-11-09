@@ -1,5 +1,4 @@
 package com.abc;
-
 import java.util.Calendar;
 import java.util.Date;
 
@@ -10,6 +9,10 @@ public class DateProvider {
         if (instance == null)
             instance = new DateProvider();
         return instance;
+    }
+	
+	public static void setInstance(DateProvider obj){
+    	instance = obj;
     }
 
     public Date now() {
