@@ -1,73 +1,71 @@
 package com.abc;
 
-import java.util.ArrayList;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-public class Account {
+public abstract class Account  {
 
     public static final int CHECKING = 0;
     public static final int SAVINGS = 1;
     public static final int MAXI_SAVINGS = 2;
 
-    private final int accountType;
     public List<Transaction> transactions;
 
-    public Account(int accountType) {
-        this.accountType = accountType;
-        this.transactions = new ArrayList<Transaction>();
+    protected Account()
+    {
+        this.transactions = new CopyOnWriteArrayList<Transaction>();
     }
 
-    public void deposit(double amount) {
-        if (amount <= 0) {
+    public static Account getAccount(int accountType){
+        switch (accountType) {
+            case SAVINGS:
+                return new SavingsAccount();
+            case CHECKING:
+                return new CheckingAccount();
+            default:
+                return new MaxiSavingsAccount();
+        }
+    }
+
+    public void deposit(BigDecimal amount) {
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("amount must be greater than zero");
         } else {
             transactions.add(new Transaction(amount));
         }
     }
 
-public void withdraw(double amount) {
-    if (amount <= 0) {
-        throw new IllegalArgumentException("amount must be greater than zero");
-    } else {
-        transactions.add(new Transaction(-amount));
-    }
-}
-
-    public double interestEarned() {
-        double amount = sumTransactions();
-        switch(accountType){
-            case SAVINGS:
-                if (amount <= 1000)
-                    return amount * 0.001;
-                else
-                    return 1 + (amount-1000) * 0.002;
-//            case SUPER_SAVINGS:
-//                if (amount <= 4000)
-//                    return 20;
-            case MAXI_SAVINGS:
-                if (amount <= 1000)
-                    return amount * 0.02;
-                if (amount <= 2000)
-                    return 20 + (amount-1000) * 0.05;
-                return 70 + (amount-2000) * 0.1;
-            default:
-                return amount * 0.001;
+    public void withdraw(BigDecimal amount) {
+        amount.setScale(2, RoundingMode.HALF_UP);
+        BigDecimal sum = sumTransactions().setScale(2, RoundingMode.HALF_UP);
+        if (amount.compareTo(sum) > 0)
+            throw new IllegalArgumentException("Insufficient balance");
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("amount must be greater than zero");
+        } else {
+            transactions.add(new Transaction(amount.negate()));
         }
     }
 
-    public double sumTransactions() {
-       return checkIfTransactionsExist(true);
+    public abstract BigDecimal interestEarned();
+
+    public BigDecimal sumTransactions() {
+        return checkIfTransactionsExist(true);
     }
 
-    private double checkIfTransactionsExist(boolean checkAll) {
-        double amount = 0.0;
-        for (Transaction t: transactions)
-            amount += t.amount;
+    private BigDecimal checkIfTransactionsExist(boolean checkAll) {
+        BigDecimal amount = BigDecimal.ZERO;
+        for (Transaction t : transactions)
+            amount = amount.add(t.amount);
         return amount;
     }
 
-    public int getAccountType() {
-        return accountType;
-    }
+    public abstract int getAccountType();
 
+    public void transfer(BigDecimal amount, Account objectAccount){
+        this.withdraw(amount);
+        objectAccount.deposit(amount);
+    }
 }

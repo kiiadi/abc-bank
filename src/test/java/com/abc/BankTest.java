@@ -2,6 +2,9 @@ package com.abc;
 
 import org.junit.Test;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 import static org.junit.Assert.assertEquals;
 
 public class BankTest {
@@ -11,7 +14,7 @@ public class BankTest {
     public void customerSummary() {
         Bank bank = new Bank();
         Customer john = new Customer("John");
-        john.openAccount(new Account(Account.CHECKING));
+        john.openAccount( Account.getAccount(Account.CHECKING));
         bank.addCustomer(john);
 
         assertEquals("Customer Summary\n - John (1 account)", bank.customerSummary());
@@ -20,35 +23,35 @@ public class BankTest {
     @Test
     public void checkingAccount() {
         Bank bank = new Bank();
-        Account checkingAccount = new Account(Account.CHECKING);
+        Account checkingAccount = Account.getAccount(Account.CHECKING);
         Customer bill = new Customer("Bill").openAccount(checkingAccount);
         bank.addCustomer(bill);
 
-        checkingAccount.deposit(100.0);
+        checkingAccount.deposit(new BigDecimal(100.0));
 
-        assertEquals(0.1, bank.totalInterestPaid(), DOUBLE_DELTA);
+        assertEquals(new BigDecimal(0.1).setScale(2, RoundingMode.HALF_UP), bank.totalInterestPaid().setScale(2,RoundingMode.HALF_UP));
     }
 
     @Test
     public void savings_account() {
         Bank bank = new Bank();
-        Account checkingAccount = new Account(Account.SAVINGS);
+        Account checkingAccount =  Account.getAccount(Account.SAVINGS);
         bank.addCustomer(new Customer("Bill").openAccount(checkingAccount));
 
-        checkingAccount.deposit(1500.0);
+        checkingAccount.deposit(new BigDecimal(1500.0));
 
-        assertEquals(2.0, bank.totalInterestPaid(), DOUBLE_DELTA);
+        assertEquals(new BigDecimal(2.0).setScale(2, RoundingMode.HALF_UP), bank.totalInterestPaid().setScale(2, RoundingMode.HALF_UP));
     }
 
     @Test
     public void maxi_savings_account() {
         Bank bank = new Bank();
-        Account checkingAccount = new Account(Account.MAXI_SAVINGS);
+        Account checkingAccount =  Account.getAccount(Account.MAXI_SAVINGS);
         bank.addCustomer(new Customer("Bill").openAccount(checkingAccount));
 
-        checkingAccount.deposit(3000.0);
+        checkingAccount.deposit(new BigDecimal(3000.0));
 
-        assertEquals(170.0, bank.totalInterestPaid(), DOUBLE_DELTA);
+        assertEquals(new BigDecimal(153.80).setScale(2, RoundingMode.HALF_UP), bank.totalInterestPaid().setScale(2, RoundingMode.HALF_UP));
     }
 
 }

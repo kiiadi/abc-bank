@@ -1,13 +1,15 @@
 package com.abc;
 
-import java.util.ArrayList;
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Bank {
     private List<Customer> customers;
 
-    public Bank() {
-        customers = new ArrayList<Customer>();
+    public Bank()
+    {
+        customers = new CopyOnWriteArrayList<Customer>();
     }
 
     public void addCustomer(Customer customer) {
@@ -15,10 +17,10 @@ public class Bank {
     }
 
     public String customerSummary() {
-        String summary = "Customer Summary";
+        StringBuilder summary = new StringBuilder().append("Customer Summary");
         for (Customer c : customers)
-            summary += "\n - " + c.getName() + " (" + format(c.getNumberOfAccounts(), "account") + ")";
-        return summary;
+            summary.append("\n - ").append(c.getName()).append(" (").append(format(c.getNumberOfAccounts(), "account")).append(")");
+        return summary.toString();
     }
 
     //Make sure correct plural of word is created based on the number passed in:
@@ -27,10 +29,10 @@ public class Bank {
         return number + " " + (number == 1 ? word : word + "s");
     }
 
-    public double totalInterestPaid() {
-        double total = 0;
+    public BigDecimal totalInterestPaid() {
+        BigDecimal total = BigDecimal.ZERO;
         for(Customer c: customers)
-            total += c.totalInterestEarned();
+            total = total.add(c.totalInterestEarned());
         return total;
     }
 
