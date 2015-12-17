@@ -5,7 +5,7 @@ import java.math.RoundingMode;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public abstract class Account {
+public abstract class Account  {
 
     public static final int CHECKING = 0;
     public static final int SAVINGS = 1;
@@ -38,8 +38,8 @@ public abstract class Account {
     }
 
     public void withdraw(BigDecimal amount) {
-        amount.setScale(8, RoundingMode.HALF_UP);
-        BigDecimal sum = sumTransactions().setScale(8, RoundingMode.HALF_UP);
+        amount.setScale(2, RoundingMode.HALF_UP);
+        BigDecimal sum = sumTransactions().setScale(2, RoundingMode.HALF_UP);
         if (amount.compareTo(sum) > 0)
             throw new IllegalArgumentException("Insufficient balance");
         if (amount.compareTo(BigDecimal.ZERO) <= 0) {
@@ -68,5 +68,4 @@ public abstract class Account {
         this.withdraw(amount);
         objectAccount.deposit(amount);
     }
-
 }

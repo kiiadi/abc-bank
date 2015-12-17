@@ -16,7 +16,6 @@ public class DateProvider {
         return LazyHolder.INSTANCE;
     }
 
-
     public Date now() {
         return calendar.getTime();
     }

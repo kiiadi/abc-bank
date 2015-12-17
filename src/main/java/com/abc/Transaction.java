@@ -9,9 +9,19 @@ public final class Transaction {
 
     private final Date transactionDate;
 
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public Date getTransactionDate() {
+        return transactionDate;
+    }
+
     public Transaction(BigDecimal amount) {
         this.amount = amount;
         this.transactionDate = DateProvider.getInstance().now();
     }
+
+
 
 }

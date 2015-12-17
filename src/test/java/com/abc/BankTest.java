@@ -29,7 +29,7 @@ public class BankTest {
 
         checkingAccount.deposit(new BigDecimal(100.0));
 
-        assertEquals(new BigDecimal(0.1).setScale(8, RoundingMode.HALF_UP), bank.totalInterestPaid().setScale(8,RoundingMode.HALF_UP));
+        assertEquals(new BigDecimal(0.1).setScale(2, RoundingMode.HALF_UP), bank.totalInterestPaid().setScale(2,RoundingMode.HALF_UP));
     }
 
     @Test
@@ -40,7 +40,7 @@ public class BankTest {
 
         checkingAccount.deposit(new BigDecimal(1500.0));
 
-        assertEquals(new BigDecimal(2.0).setScale(8, RoundingMode.HALF_UP), bank.totalInterestPaid().setScale(8, RoundingMode.HALF_UP));
+        assertEquals(new BigDecimal(2.0).setScale(2, RoundingMode.HALF_UP), bank.totalInterestPaid().setScale(2, RoundingMode.HALF_UP));
     }
 
     @Test
@@ -51,7 +51,7 @@ public class BankTest {
 
         checkingAccount.deposit(new BigDecimal(3000.0));
 
-        assertEquals(new BigDecimal(170.0).setScale(8, RoundingMode.HALF_UP), bank.totalInterestPaid().setScale(8, RoundingMode.HALF_UP));
+        assertEquals(new BigDecimal(153.80).setScale(2, RoundingMode.HALF_UP), bank.totalInterestPaid().setScale(2, RoundingMode.HALF_UP));
     }
 
 }
