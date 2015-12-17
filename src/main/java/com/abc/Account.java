@@ -5,18 +5,28 @@ import java.math.RoundingMode;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class Account {
+public abstract class Account {
 
     public static final int CHECKING = 0;
     public static final int SAVINGS = 1;
     public static final int MAXI_SAVINGS = 2;
 
-    private final int accountType;
     public List<Transaction> transactions;
 
-    public Account(int accountType) {
-        this.accountType = accountType;
+    protected Account()
+    {
         this.transactions = new CopyOnWriteArrayList<Transaction>();
+    }
+
+    public static Account getAccount(int accountType){
+        switch (accountType) {
+            case SAVINGS:
+                return new SavingsAccount();
+            case CHECKING:
+                return new CheckingAccount();
+            default:
+                return new MaxiSavingsAccount();
+        }
     }
 
     public void deposit(BigDecimal amount) {
@@ -35,30 +45,7 @@ public class Account {
         }
     }
 
-    public BigDecimal interestEarned() {
-        BigDecimal amount = sumTransactions().setScale(8, RoundingMode.HALF_UP);
-        BigDecimal thousand = new BigDecimal(1000).setScale(8, RoundingMode.HALF_UP);
-        BigDecimal twoThousand = new BigDecimal(2000).setScale(8, RoundingMode.HALF_UP);
-
-        switch (accountType) {
-            case SAVINGS:
-                if (amount.compareTo(thousand) <= 0)
-                    return amount.multiply( new BigDecimal(0.001));
-                else
-                    return BigDecimal.ONE.add(amount.subtract(thousand).multiply(new BigDecimal(0.002)));  // 1 + (amount - 1000) * 0.002
-//            case SUPER_SAVINGS:
-//                if (amount <= 4000)
-//                    return 20;
-            case MAXI_SAVINGS:
-                if (amount.compareTo(thousand) <= 0)
-                    return amount.multiply(new BigDecimal(0.02));
-                if (amount.compareTo(twoThousand) <= 0)
-                    return new BigDecimal(20).add(amount.subtract(thousand).multiply(new BigDecimal(0.05)));  // 20 + (amount - 1000) * 0.05
-                return new BigDecimal(70).add(amount.subtract(twoThousand).multiply(new BigDecimal(0.1))); //70 + (amount -2000) *0.1
-            default:
-                return amount.multiply(new BigDecimal(0.001));
-        }
-    }
+    public abstract BigDecimal interestEarned();
 
     public BigDecimal sumTransactions() {
         return checkIfTransactionsExist(true);
@@ -71,8 +58,6 @@ public class Account {
         return amount;
     }
 
-    public int getAccountType() {
-        return accountType;
-    }
+    public abstract int getAccountType();
 
 }
