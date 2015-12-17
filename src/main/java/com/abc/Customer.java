@@ -1,9 +1,13 @@
 package com.abc;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Currency;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import static java.lang.Math.abs;
 
 public class Customer {
     private String name;
@@ -27,20 +31,20 @@ public class Customer {
         return accounts.size();
     }
 
-    public double totalInterestEarned() {
-        double total = 0;
+    public BigDecimal totalInterestEarned() {
+        BigDecimal total = BigDecimal.ZERO;
         for (Account a : accounts)
-            total += a.interestEarned();
+            total = total.add(a.interestEarned());
         return total;
     }
 
     public String getStatement() {
         String statement = null;
         statement = "Statement for " + name + "\n";
-        double total = 0.0;
+        BigDecimal total = BigDecimal.ZERO;
         for (Account a : accounts) {
             statement += "\n" + statementForAccount(a) + "\n";
-            total += a.sumTransactions();
+            total = total.add(a.sumTransactions());
         }
         statement += "\nTotal In All Accounts " + toDollars(total);
         return statement;
@@ -63,16 +67,21 @@ public class Customer {
         }
 
         //Now total up all the transactions
-        double total = 0.0;
+        BigDecimal total = BigDecimal.ZERO;
         for (Transaction t : a.transactions) {
-            s += "  " + (t.amount < 0 ? "withdrawal" : "deposit") + " " + toDollars(t.amount) + "\n";
-            total += t.amount;
+            s += "  " + (t.amount.compareTo(BigDecimal.ZERO) < 0 ? "withdrawal" : "deposit") + " " + toDollars(t.amount) + "\n";
+            total = total.add(t.amount);
         }
         s += "Total " + toDollars(total);
         return s;
     }
 
-    private String toDollars(double d){
-        return String.format("$%,.2f", abs(d));
+    private String toDollars(BigDecimal d){
+        NumberFormat df = DecimalFormat.getCurrencyInstance();
+        df.setMaximumFractionDigits(2);
+        df.setMinimumFractionDigits(2);
+        df.setGroupingUsed(true);
+        df.setCurrency(Currency.getInstance(Locale.US));
+        return df.format(d.abs());
     }
 }
