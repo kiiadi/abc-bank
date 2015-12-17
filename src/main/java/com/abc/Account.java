@@ -38,6 +38,10 @@ public abstract class Account {
     }
 
     public void withdraw(BigDecimal amount) {
+        amount.setScale(8, RoundingMode.HALF_UP);
+        BigDecimal sum = sumTransactions().setScale(8, RoundingMode.HALF_UP);
+        if (amount.compareTo(sum) > 0)
+            throw new IllegalArgumentException("Insufficient balance");
         if (amount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("amount must be greater than zero");
         } else {
@@ -59,5 +63,10 @@ public abstract class Account {
     }
 
     public abstract int getAccountType();
+
+    public void transfer(BigDecimal amount, Account objectAccount){
+        this.withdraw(amount);
+        objectAccount.deposit(amount);
+    }
 
 }
