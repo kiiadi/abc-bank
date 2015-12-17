@@ -4,15 +4,20 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class DateProvider {
-    private static DateProvider instance = null;
+    private Calendar calendar = Calendar.getInstance();
 
-    public static DateProvider getInstance() {
-        if (instance == null)
-            instance = new DateProvider();
-        return instance;
+    private DateProvider(){}
+
+    private static class LazyHolder {
+        private static final DateProvider INSTANCE = new DateProvider();
     }
 
+    public static DateProvider getInstance() {
+        return LazyHolder.INSTANCE;
+    }
+
+
     public Date now() {
-        return Calendar.getInstance().getTime();
+        return calendar.getTime();
     }
 }
