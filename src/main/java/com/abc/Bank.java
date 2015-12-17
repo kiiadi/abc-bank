@@ -1,13 +1,14 @@
 package com.abc;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Bank {
     private List<Customer> customers;
 
-    public Bank() {
-        customers = new ArrayList<Customer>();
+    public Bank()
+    {
+        customers = new CopyOnWriteArrayList<Customer>();
     }
 
     public void addCustomer(Customer customer) {

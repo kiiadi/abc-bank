@@ -1,7 +1,7 @@
 package com.abc;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Account {
 
@@ -14,7 +14,7 @@ public class Account {
 
     public Account(int accountType) {
         this.accountType = accountType;
-        this.transactions = new ArrayList<Transaction>();
+        this.transactions = new CopyOnWriteArrayList<Transaction>();
     }
 
     public void deposit(double amount) {

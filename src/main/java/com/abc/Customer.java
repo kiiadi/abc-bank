@@ -1,7 +1,7 @@
 package com.abc;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import static java.lang.Math.abs;
 
@@ -11,7 +11,7 @@ public class Customer {
 
     public Customer(String name) {
         this.name = name;
-        this.accounts = new ArrayList<Account>();
+        this.accounts = new CopyOnWriteArrayList<Account>();
     }
 
     public String getName() {
