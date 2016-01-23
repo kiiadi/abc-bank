@@ -12,9 +12,53 @@ public class BankTest {
         Bank bank = new Bank();
         Customer john = new Customer("John");
         john.openAccount(new Account(Account.CHECKING));
+        john.openAccount(new Account(Account.SAVINGS));
         bank.addCustomer(john);
 
-        assertEquals("Customer Summary\n - John (1 account)", bank.customerSummary());
+        assertEquals("Customer Summary\n - John (2 accounts)", bank.customerSummary());
+    }
+
+    @Test
+    public void testTwoCustomerSummary() {
+        Bank bank = new Bank();
+        Customer cust = new Customer("John")
+                .openAccount(new Account(Account.CHECKING))
+                .openAccount(new Account(Account.SAVINGS));
+        bank.addCustomer(cust);
+
+        cust = new Customer("Kyle")
+                .openAccount(new Account(Account.CHECKING));
+        bank.addCustomer(cust);
+
+        assertEquals("Customer Summary\n - John (2 accounts)\n - Kyle (1 account)", bank.customerSummary());
+    }
+
+    @Test
+    public void testInterestPaid() {
+        Bank bank = new Bank();
+        Account checkingsAccount = new Account(Account.CHECKING);
+        Account savingsAccount = new Account(Account.SAVINGS);
+        Account maxiSavingsAccount = new Account(Account.MAXI_SAVINGS);
+        Customer john = new Customer("John")
+                .openAccount(checkingsAccount)
+                .openAccount(savingsAccount);
+        bank.addCustomer(john);
+
+        john.deposit(1000.0, checkingsAccount.getAccountNumber());
+        john.deposit(2000.0, savingsAccount.getAccountNumber());
+
+        Customer kyle = new Customer("Kyle")
+                .openAccount(maxiSavingsAccount);
+        bank.addCustomer(kyle);
+        kyle.deposit(3000.0, maxiSavingsAccount.getAccountNumber());
+
+        for (Customer c : bank.getCustomers()) {
+            for (Account a : c.getAccounts()) {
+                a.interestEarned();
+            }
+        }
+
+        assertEquals(174.00, bank.totalInterestPaid(), 0);
     }
 
     @Test

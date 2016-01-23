@@ -23,6 +23,30 @@ public class Customer {
         return this;
     }
 
+    //customer is able to deposit funds
+    public void deposit(double amount, int accountNumber) {
+        boolean accountFound = false;
+        for (Account a : accounts) { //TODO: improve performance using Map instead
+            if (a.getAccountNumber() == accountNumber) {
+                accountFound = true;
+                a.deposit(amount);
+            }
+        }
+        if (!accountFound) throw new IllegalArgumentException("Account number not found: " + accountNumber);
+    }
+
+    //customer is able to withdraw funds
+    public void withdraw(double amount, int accountNumber) {
+        boolean accountFound = false;
+        for (Account a : accounts) { //TODO: improve performance using Map instead
+            if (a.getAccountNumber() == accountNumber) {
+                accountFound = true;
+                a.withdraw(amount);
+            }
+        }
+        if (!accountFound) throw new IllegalArgumentException("Account number not found: " + accountNumber);
+    }
+
     public int getNumberOfAccounts() {
         return accounts.size();
     }
@@ -34,8 +58,19 @@ public class Customer {
         return total;
     }
 
+    public void transferBetweenAccounts(double amount, int fromAccountNumber, int toAccountNumber) {
+        boolean accountFound = false;
+
+        //withdraw
+        this.withdraw(amount, fromAccountNumber);
+
+        //deposit
+        this.deposit(amount, toAccountNumber);
+
+    }
+
     public String getStatement() {
-        String statement = null;
+        String statement;
         statement = "Statement for " + name + "\n";
         double total = 0.0;
         for (Account a : accounts) {
@@ -74,5 +109,9 @@ public class Customer {
 
     private String toDollars(double d){
         return String.format("$%,.2f", abs(d));
+    }
+
+    public List<Account> getAccounts() {
+        return accounts;
     }
 }
