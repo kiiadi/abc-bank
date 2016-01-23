@@ -53,9 +53,17 @@ public class Customer {
 
     public double totalInterestEarned() {
         double total = 0;
+        accrueInterest();
         for (Account a : accounts)
-            total += a.interestEarned();
+            total += a.getTotalInterestEarned();
         return total;
+    }
+
+    public void accrueInterest() {
+        for (Account a : accounts) {
+            a.setTotalInterestEarned(a.getTotalInterestEarned() + a.interestEarned());
+            a.deposit(a.interestEarned());
+        }
     }
 
     public void transferBetweenAccounts(double amount, int fromAccountNumber, int toAccountNumber) {

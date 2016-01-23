@@ -2,6 +2,8 @@ package com.abc;
 
 import org.junit.Test;
 
+import java.util.Calendar;
+
 import static org.junit.Assert.assertEquals;
 
 public class BankTest {
@@ -35,10 +37,18 @@ public class BankTest {
 
     @Test
     public void testInterestPaid() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.YEAR, -1);
         Bank bank = new Bank();
+
         Account checkingsAccount = new Account(Account.CHECKING);
         Account savingsAccount = new Account(Account.SAVINGS);
         Account maxiSavingsAccount = new Account(Account.MAXI_SAVINGS);
+
+        checkingsAccount.setDateInterestAccruedLast(calendar.getTime());
+        savingsAccount.setDateInterestAccruedLast(calendar.getTime());
+        maxiSavingsAccount.setDateInterestAccruedLast(calendar.getTime());
+
         Customer john = new Customer("John")
                 .openAccount(checkingsAccount)
                 .openAccount(savingsAccount);
@@ -52,13 +62,21 @@ public class BankTest {
         bank.addCustomer(kyle);
         kyle.deposit(3000.0, maxiSavingsAccount.getAccountNumber());
 
-        for (Customer c : bank.getCustomers()) {
-            for (Account a : c.getAccounts()) {
-                a.interestEarned();
-            }
-        }
+        assertEquals(154.00, bank.totalInterestPaid(), 0);
 
-        assertEquals(174.00, bank.totalInterestPaid(), 0);
+        assertEquals("Statement for John\n" +
+                "\n" +
+                "Checking Account\n" +
+                "  deposit $1,000.00\n" +
+                "  deposit $1.00\n" +
+                "Total $1,001.00\n" +
+                "\n" +
+                "Savings Account\n" +
+                "  deposit $2,000.00\n" +
+                "  deposit $3.00\n" +
+                "Total $2,003.00\n" +
+                "\n" +
+                "Total In All Accounts $3,004.00", john.getStatement());
     }
 
     @Test
@@ -67,6 +85,11 @@ public class BankTest {
         Account checkingAccount = new Account(Account.CHECKING);
         Customer bill = new Customer("Bill").openAccount(checkingAccount);
         bank.addCustomer(bill);
+
+        //Test for annual interest
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.YEAR, -1);
+        checkingAccount.setDateInterestAccruedLast(calendar.getTime());
 
         checkingAccount.deposit(100.0);
 
@@ -79,9 +102,14 @@ public class BankTest {
         Account checkingAccount = new Account(Account.SAVINGS);
         bank.addCustomer(new Customer("Bill").openAccount(checkingAccount));
 
+        //Test for 30 day interest
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_MONTH, -30);
+        checkingAccount.setDateInterestAccruedLast(calendar.getTime());
+
         checkingAccount.deposit(1500.0);
 
-        assertEquals(2.0, bank.totalInterestPaid(), DOUBLE_DELTA);
+        assertEquals(0.1643835616438356, bank.totalInterestPaid(), DOUBLE_DELTA);
     }
 
     @Test
@@ -90,9 +118,14 @@ public class BankTest {
         Account checkingAccount = new Account(Account.MAXI_SAVINGS);
         bank.addCustomer(new Customer("Bill").openAccount(checkingAccount));
 
+        //Test for 60 day interest
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_MONTH, -60);
+        checkingAccount.setDateInterestAccruedLast(calendar.getTime());
+
         checkingAccount.deposit(3000.0);
 
-        assertEquals(170.0, bank.totalInterestPaid(), DOUBLE_DELTA);
+        assertEquals(24.65753424657534, bank.totalInterestPaid(), DOUBLE_DELTA);
     }
 
 }
