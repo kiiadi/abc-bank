@@ -13,12 +13,12 @@ public class Transaction {
         this.transactionDate = DateProvider.getInstance().now();
     }
     
-    //added to access private variable transactionDate
+    //Getter function to access private variable transactionDate
     public Date getTranscationDate(){
     	return transactionDate;
     }
     
-    //added to access private variable amount
+    //Getter function to access private variable amount
     public double getAmount(){
     	return amount;
     }

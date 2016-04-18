@@ -1,5 +1,6 @@
 package com.abc;
 
+
 public class AccountNumber {
 	 	
 		private static int AccountNumber =1 ;

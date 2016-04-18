@@ -6,19 +6,6 @@ import java.util.Date;
 
 public class Account {
 	
-	public static class AccountNumber {
-	 	
-		private static int AccountNumber =1 ;
-		
-		public static int getPreviousAcctNumber(){
-	    	return AccountNumber;
-	    }
-	    
-	    public static void setNewAccountNumber(int acctNo){
-	    	AccountNumber= acctNo;
-	    }
-	}
-
     public static final int CHECKING = 0;
     public static final int SAVINGS = 1;
     public static final int MAXI_SAVINGS = 2;
@@ -49,8 +36,7 @@ public class Account {
         }
     }
     
-    /*Test added to ensure withdrawal is not greater than existing balance*/
-  
+    //Test added to ensure withdrawal is not greater than existing balance
     public void withdraw(double amount) {
     	
     	if (amount <= 0) {
@@ -62,7 +48,7 @@ public class Account {
     	}
     }
     
-   
+    //returns the numbers of days passes since the account was opened
     private long getDaysInterestAccrued(){
     	
     	long d1= this.dateInterestAccruedLast.getTime();
@@ -70,6 +56,8 @@ public class Account {
     	
     	return Math.abs((d2-d1)/(24*60*60*1000));
     }
+    
+    //updated the method to reflect new features
     
     public double interestEarned() {
         double amount = sumTransactions();
@@ -102,7 +90,7 @@ public class Account {
     	this.dateInterestAccruedLast= dateInterestaccruedLast;
     }
     
-    // boolean function which return true of false with regard to if a withdrawal has happened in the last 10 days
+    // Return true of false with regard to if a withdrawal has happened in the last 10 days
     private boolean checkWithdrawalsForTenDays() {
     	
     	for(Transaction t:this.transactions){

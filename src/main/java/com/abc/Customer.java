@@ -1,6 +1,6 @@
 package com.abc;
 
-import java.util.Vector;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Math.abs;
@@ -9,10 +9,10 @@ public class Customer {
     private String name;
     private List<Account> accounts;
     
-    /*Used a vector to keep account withdrawals and deposit functions thread safe*/
+   
     public Customer(String name) {
         this.name = name;
-        this.accounts = new Vector<Account>();
+        this.accounts = new ArrayList<Account>();
     }
 
     public String getName() {
@@ -47,6 +47,7 @@ public class Customer {
         return statement.toString();
     }
     
+    // new function that facilitates transfer between accounts
     public String transferBetweenAccounts(Account from, Account to, Double amount){
     	
     	StringBuilder s= new StringBuilder();
