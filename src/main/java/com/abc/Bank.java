@@ -13,14 +13,17 @@ public class Bank {
     public void addCustomer(Customer customer) {
         customers.add(customer);
     }
-
+    
+   
+    
+    //change String to StringBuilder
     public String customerSummary() {
-        String summary = "Customer Summary";
+        StringBuilder summary = new StringBuilder("Customer Summary");
         for (Customer c : customers)
-            summary += "\n - " + c.getName() + " (" + format(c.getNumberOfAccounts(), "account") + ")";
-        return summary;
+            summary.append( "\n - " + c.getName() + " (" + format(c.getNumberOfAccounts(), "account") + ")");
+        return summary.toString();
     }
-
+    
     //Make sure correct plural of word is created based on the number passed in:
     //If number passed in is 1 just return the word otherwise add an 's' at the end
     private String format(int number, String word) {
