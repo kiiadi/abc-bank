@@ -14,7 +14,6 @@ public class TransactionTest {
         assertTrue(t instanceof Transaction);
     }
     
-    //test to check getTranscation and getAmount are working 
     @Test
     public void testGetterMethods(){
     	 Account checkingAccount = new Account(Account.CHECKING);

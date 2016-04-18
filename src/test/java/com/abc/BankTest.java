@@ -17,17 +17,18 @@ public class BankTest {
         assertEquals("Customer Summary\n - John (1 account)", bank.customerSummary());
     }
     
-    /*
+    
     @Test
     public void getFirstCustomer(){
     	Bank bank = new Bank(); 
-    	Customer john = new Customer("John");
-    	Customer bill = new Customer("Bill");
-    	bank.addCustomer(john);
-    	bank.addCustomer(bill);
-    	assertEquals("John", bank.getFirstCustomer());
+    	Customer anand = new Customer("Anand");
+    	Customer sahu = new Customer("Sahu");
+    	bank.addCustomer(anand);
+    	bank.addCustomer(sahu);
+    	
+    	assertEquals("Anand", bank.getFirstCustomer());
     }
-    */
+    
     
     @Test
     public void checkingAccount() {
