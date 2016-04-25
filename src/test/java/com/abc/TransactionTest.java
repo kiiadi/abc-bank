@@ -26,7 +26,7 @@ public class TransactionTest {
     	 assertEquals(100, first.getAmount(),0.0);
     	 Calendar cal = Calendar.getInstance();
     	 cal.setTime(first.getTranscationDate());
-    	 assertEquals(3, cal.get(Calendar.DAY_OF_WEEK));
+    	 assertEquals(2016, cal.get(Calendar.YEAR));
     	 
     }
 }
