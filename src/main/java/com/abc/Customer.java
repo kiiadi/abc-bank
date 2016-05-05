@@ -3,8 +3,6 @@ package com.abc;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.lang.Math.abs;
-
 public class Customer {
     private String name;
     private List<Account> accounts;
@@ -18,7 +16,15 @@ public class Customer {
         return name;
     }
 
-    public Customer openAccount(Account account) {
+    public List<Account> getAccounts() {
+        return accounts;
+    }
+
+    public Customer openAccount(int accountType) {
+        Account account = AccountFactory.getAccount(accountType);
+        if (accounts.contains(account)) {
+            throw new IllegalArgumentException("Account already exists");
+        }
         accounts.add(account);
         return this;
     }
@@ -27,52 +33,52 @@ public class Customer {
         return accounts.size();
     }
 
-    public double totalInterestEarned() {
+    public Account getAccountByType(int accountType) {
+        for (Account acct : accounts) {
+            if (acct.getAccountType() == accountType) {
+                return acct;
+            }
+        }
+        throw new IllegalArgumentException("Account does not exist");
+    }
+
+
+    public void deposit(double amount, int accountType) {
+        Account account = getAccountByType(accountType);
+        if (amount <= 0) {
+            throw new IllegalArgumentException("Deposit failed. Amount must be greater than 0");
+        }
+        account.getTransactions().add(new Transaction(amount));
+    }
+
+    public void withdraw(double amount, int accountType) {
+        Account account = getAccountByType(accountType);
+        double acctBalance = account.getAccountBalance();
+        if (amount <= 0) {
+            throw new IllegalArgumentException("Withdrawal failed. Amount must be greater than 0");
+        }
+        if (amount > acctBalance) {
+            throw new IllegalArgumentException("Withdrawal failed. Cannot withdraw more than the account balance");
+        }
+        account.getTransactions().add(new Transaction(-amount));
+    }
+
+    public double calculateTotalInterestEarned() {
         double total = 0;
         for (Account a : accounts)
-            total += a.interestEarned();
+            total += a.calculateInterest();
         return total;
     }
 
-    public String getStatement() {
-        String statement = null;
-        statement = "Statement for " + name + "\n";
-        double total = 0.0;
-        for (Account a : accounts) {
-            statement += "\n" + statementForAccount(a) + "\n";
-            total += a.sumTransactions();
+    public void transfer(double amount, int fromAccountType, int toAccountType) {
+        Account fromAccount = getAccountByType(fromAccountType);
+
+        if (amount > fromAccount.getAccountBalance()) {
+            throw new IllegalArgumentException("Cannot transfer between accounts. Transfer amount cannot be greater than balance");
         }
-        statement += "\nTotal In All Accounts " + toDollars(total);
-        return statement;
+        this.withdraw(amount, fromAccountType);
+        this.deposit(amount, toAccountType);
     }
 
-    private String statementForAccount(Account a) {
-        String s = "";
 
-       //Translate to pretty account type
-        switch(a.getAccountType()){
-            case Account.CHECKING:
-                s += "Checking Account\n";
-                break;
-            case Account.SAVINGS:
-                s += "Savings Account\n";
-                break;
-            case Account.MAXI_SAVINGS:
-                s += "Maxi Savings Account\n";
-                break;
-        }
-
-        //Now total up all the transactions
-        double total = 0.0;
-        for (Transaction t : a.transactions) {
-            s += "  " + (t.amount < 0 ? "withdrawal" : "deposit") + " " + toDollars(t.amount) + "\n";
-            total += t.amount;
-        }
-        s += "Total " + toDollars(total);
-        return s;
-    }
-
-    private String toDollars(double d){
-        return String.format("$%,.2f", abs(d));
-    }
 }

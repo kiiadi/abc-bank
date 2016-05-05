@@ -3,7 +3,7 @@ package com.abc;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Account {
+public abstract class Account {
 
     public static final int CHECKING = 0;
     public static final int SAVINGS = 1;
@@ -17,53 +17,28 @@ public class Account {
         this.transactions = new ArrayList<Transaction>();
     }
 
-    public void deposit(double amount) {
-        if (amount <= 0) {
-            throw new IllegalArgumentException("amount must be greater than zero");
-        } else {
-            transactions.add(new Transaction(amount));
-        }
+    public List<Transaction> getTransactions() {
+        return transactions;
     }
 
-public void withdraw(double amount) {
-    if (amount <= 0) {
-        throw new IllegalArgumentException("amount must be greater than zero");
-    } else {
-        transactions.add(new Transaction(-amount));
-    }
-}
+    public abstract double calculateInterest();
 
-    public double interestEarned() {
-        double amount = sumTransactions();
-        switch(accountType){
-            case SAVINGS:
-                if (amount <= 1000)
-                    return amount * 0.001;
-                else
-                    return 1 + (amount-1000) * 0.002;
-//            case SUPER_SAVINGS:
-//                if (amount <= 4000)
-//                    return 20;
-            case MAXI_SAVINGS:
-                if (amount <= 1000)
-                    return amount * 0.02;
-                if (amount <= 2000)
-                    return 20 + (amount-1000) * 0.05;
-                return 70 + (amount-2000) * 0.1;
-            default:
-                return amount * 0.001;
-        }
-    }
-
-    public double sumTransactions() {
-       return checkIfTransactionsExist(true);
-    }
-
-    private double checkIfTransactionsExist(boolean checkAll) {
+    public double getAccountBalance() {
         double amount = 0.0;
         for (Transaction t: transactions)
             amount += t.amount;
         return amount;
+    }
+
+    public Transaction getLastWithdrawalTransaction() {
+        int index = transactions.size() - 1;
+        while (index >= 0) {
+            if (transactions.get(index).getAmount() < 0) {
+                return transactions.get(index);
+            }
+            index--;
+        }
+        return null;
     }
 
     public int getAccountType() {
