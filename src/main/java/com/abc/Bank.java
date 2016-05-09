@@ -4,43 +4,43 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Bank {
+    /**
+     * The bank entity that holds a list of customers
+     */
     private List<Customer> customers;
 
+    /**
+     * The default constructor to initialize an empty list to hold the customers
+     */
     public Bank() {
         customers = new ArrayList<Customer>();
     }
 
+    /**
+     * Adds the customer object to the list of customers
+     * @param customer the customer object to be added into the bank
+     */
     public void addCustomer(Customer customer) {
         customers.add(customer);
     }
 
-    public String customerSummary() {
-        String summary = "Customer Summary";
-        for (Customer c : customers)
-            summary += "\n - " + c.getName() + " (" + format(c.getNumberOfAccounts(), "account") + ")";
-        return summary;
+    /**
+     * Getter method to list all the customers in the bank
+     * @return list of customers
+     */
+    public List<Customer> getCustomers() {
+        return customers;
     }
 
-    //Make sure correct plural of word is created based on the number passed in:
-    //If number passed in is 1 just return the word otherwise add an 's' at the end
-    private String format(int number, String word) {
-        return number + " " + (number == 1 ? word : word + "s");
-    }
-
-    public double totalInterestPaid() {
+    /**
+     * Calculates the total interest paid for all the customers in the bank.
+     * Delegates to the respective customers' accounts to calculate their respective interests
+     * @return the total interest paid by the bank
+     */
+    public double calculateTotalInterestPaid() {
         double total = 0;
         for(Customer c: customers)
-            total += c.totalInterestEarned();
+            total += c.calculateTotalInterestEarned();
         return total;
-    }
-
-    public String getFirstCustomer() {
-        try {
-            customers = null;
-            return customers.get(0).getName();
-        } catch (Exception e){
-            e.printStackTrace();
-            return "Error";
-        }
     }
 }
