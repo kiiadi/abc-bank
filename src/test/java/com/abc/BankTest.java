@@ -3,6 +3,9 @@ package com.abc;
 import org.junit.Test;
 import sun.util.resources.cldr.so.CurrencyNames_so;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import static org.junit.Assert.assertEquals;
 
 public class BankTest {
@@ -23,6 +26,7 @@ public class BankTest {
         Customer bill = new Customer("Bill").openAccount(Account.CHECKING);
         bank.addCustomer(bill);
         bill.deposit(100.0, Account.CHECKING);
+        bill.getAccountByType(Account.CHECKING).setAccountOpenDate(getAccountOpenDate());
         assertEquals(0.1, bank.calculateTotalInterestPaid(), DOUBLE_DELTA);
     }
 
@@ -32,6 +36,7 @@ public class BankTest {
         Customer bill = new Customer("Bill").openAccount(Account.SAVINGS);
         bank.addCustomer(bill);
         bill.deposit(1500.0, Account.SAVINGS);
+        bill.getAccountByType(Account.SAVINGS).setAccountOpenDate(getAccountOpenDate());
         assertEquals(2.0, bank.calculateTotalInterestPaid(), DOUBLE_DELTA);
     }
 
@@ -41,6 +46,7 @@ public class BankTest {
         Customer bill = new Customer("Bill").openAccount(Account.MAXI_SAVINGS);
         bank.addCustomer(bill);
         bill.deposit(3000.0, Account.MAXI_SAVINGS);
+        bill.getAccountByType(Account.MAXI_SAVINGS).setAccountOpenDate(getAccountOpenDate());
         assertEquals(150.0, bank.calculateTotalInterestPaid(), DOUBLE_DELTA);
     }
 
@@ -69,6 +75,14 @@ public class BankTest {
         bank.addCustomer(merry);
         merry.deposit(3000.0, Account.MAXI_SAVINGS);
         merry.withdraw(1000.0, Account.MAXI_SAVINGS);
+        merry.getAccountByType(Account.MAXI_SAVINGS).setAccountOpenDate(getAccountOpenDate());
         assertEquals(2.0, bank.calculateTotalInterestPaid(), DOUBLE_DELTA);
+    }
+
+    private Date getAccountOpenDate() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DATE, -365);
+        Date accountOpenDate = calendar.getTime();
+        return accountOpenDate;
     }
 }

@@ -2,6 +2,12 @@ package com.abc;
 
 
 public class AccountFactory {
+    /**
+     * Getter method that returns an instance of the account object based on the account type specified
+     * @param accountType the integer value of the type of account
+     * @return the account object
+     * @throws IllegalArgumentException if an invalid account type is specified
+     */
 
     public static Account getAccount(int accountType) {
         switch(accountType) {

@@ -1,9 +1,11 @@
 package com.abc;
 
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
+import java.util.Calendar;
+import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 
@@ -98,6 +100,8 @@ public class CustomerTest {
         Customer pippin = new Customer("Pippin");
         pippin.openAccount(Account.CHECKING);
         pippin.openAccount(Account.SAVINGS);
+        pippin.getAccountByType(Account.CHECKING).setAccountOpenDate(getAccountOpenDate());
+        pippin.getAccountByType(Account.SAVINGS).setAccountOpenDate(getAccountOpenDate());
         pippin.deposit(1000.0, Account.CHECKING);
         pippin.deposit(2000.0, Account.SAVINGS);
         assertEquals(4.0, pippin.calculateTotalInterestEarned(), DOUBLE_DELTA);
@@ -125,5 +129,21 @@ public class CustomerTest {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Cannot transfer between accounts. Transfer amount cannot be greater than balance");
         strider.transfer(4000.0, Account.CHECKING, Account.SAVINGS);
+    }
+
+    @Test
+    public void testInvalidAccount() {
+        Customer tom = new Customer("Tom");
+        tom.openAccount(Account.SAVINGS);
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("Account does not exist");
+        tom.getAccountByType(Account.CHECKING);
+    }
+
+    private Date getAccountOpenDate() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DATE, -365);
+        Date accountOpenDate = calendar.getTime();
+        return accountOpenDate;
     }
 }
