@@ -33,6 +33,11 @@ public class Customer {
             total += a.interestEarned();
         return total;
     }
+    
+    public void transfer (double amount, Account fromAcct, Account toAcct) {
+       	fromAcct.withdraw(amount);
+    	toAcct.deposit(amount);
+    }
 
     public String getStatement() {
         String statement = null;

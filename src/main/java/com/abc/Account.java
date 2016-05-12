@@ -11,10 +11,12 @@ public class Account {
 
     private final int accountType;
     public List<Transaction> transactions;
+    public double balance = 0;
 
     public Account(int accountType) {
         this.accountType = accountType;
         this.transactions = new ArrayList<Transaction>();
+        this.balance = 0;
     }
 
     public void deposit(double amount) {
@@ -23,14 +25,18 @@ public class Account {
         } else {
             transactions.add(new Transaction(amount));
         }
+        balance = balance + amount;
     }
 
 public void withdraw(double amount) {
     if (amount <= 0) {
         throw new IllegalArgumentException("amount must be greater than zero");
+    } else if (amount > balance) {
+    	throw new IllegalArgumentException("not enough balance to withdraw amount");
     } else {
         transactions.add(new Transaction(-amount));
     }
+    balance = balance - amount;
 }
 
     public double interestEarned() {
