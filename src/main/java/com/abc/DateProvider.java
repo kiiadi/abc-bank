@@ -2,7 +2,13 @@ package com.abc;
 
 import java.util.Calendar;
 import java.util.Date;
+/**
+ * Deprecated, use com.abc.util.Utils instead
+ * @author santosh
+ *
+ */
 
+@Deprecated 
 public class DateProvider {
     private static DateProvider instance = null;
 
