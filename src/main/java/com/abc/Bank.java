@@ -21,8 +21,7 @@ public class Bank {
         return summary;
     }
 
-    //Make sure correct plural of word is created based on the number passed in:
-    //If number passed in is 1 just return the word otherwise add an 's' at the end
+  
     private String format(int number, String word) {
         return number + " " + (number == 1 ? word : word + "s");
     }
@@ -43,4 +42,116 @@ public class Bank {
             return "Error";
         }
     }
+    
+    public BaseAccount findAccountByCustomer(Customer cust,int accnum){
+    	BaseAccount account = null;
+    	if(cust != null){
+    		 for(BaseAccount a:  cust.getAccounts())
+    		 {
+    		       if( a.getAccountNum() == accnum){
+    		    	   account = a;
+    		       }
+    	}
+    	}
+    	return account;
+    	
+    }
+       
+    
+    
+    public TransactionStatus makeDeposit(Customer cust, int accNum, double amount) {
+        //Check if account exists
+    	BaseAccount ba = this.findAccountByCustomer(cust,accNum);
+    	
+        if (ba != null) {
+        	ba.deposit(amount, TransactionType.DEPOSIT);
+        	return new TransactionStatus(false, Messages.CONFIRMATION_COMPLETE.toString());
+        } else {
+            //Return not found error
+            return new TransactionStatus(false, Messages.ERROR_ACCOUNT_NOT_FOUND.toString());
+        }
+    }
+
+   
+    public TransactionStatus makeWithdrawal(Customer cust, int accNum, double amount) {
+    	
+    	BaseAccount ba = this.findAccountByCustomer(cust,accNum);
+        if( amount < 0 ) {
+        	
+            return new TransactionStatus(false, Messages.ERROR_WITHDRAWAL_AMOUNT_NEGATIVE.toString());
+        }
+        //Calculate what the new balance would be
+        double newBalance = ba.getBalance()- amount;
+        
+        if (ba != null) {
+
+            if (amount <= ba.getRemainingWithdrawalLimit()) {
+            
+                if (amount <= ba.getBalance()) {
+
+                   ba.withdraw(-amount, TransactionType.WITHDRAW);
+
+                } else {
+       
+                    return new TransactionStatus(false, Messages.ERROR_INSUFFICIENT_FUNDS.toString());
+                }
+
+            } else {
+     
+                return new TransactionStatus(false, Messages.ERROR_ABOVE_WITHDRAWAL_LIMIT.toString() + " Available amount: £" + ba.getRemainingWithdrawalLimit());
+            }
+        } else {
+            return new TransactionStatus(false, Messages.ERROR_ACCOUNT_NOT_FOUND.toString());
+        }
+
+       
+        return new TransactionStatus(true, Messages.CONFIRMATION_WITHDRAWAL.toString());
+    }
+
+  
+    public TransactionStatus makeTransfer(Customer cust,int sourceAccNum, int destinationAccNum, double amount) {
+       
+      
+        TransactionStatus withdrawOperation = makeWithdrawal(cust,sourceAccNum, amount);
+      
+
+        if (withdrawOperation.isCompleted()) {
+        	BaseAccount destAcct = this.findAccountByCustomer(cust,destinationAccNum);
+            if (destAcct != null) {
+                makeDeposit(cust,destAcct.getAccountNum(), amount);
+            } else {
+            	BaseAccount srcAcct = this.findAccountByCustomer(cust,sourceAccNum);
+            	makeDeposit(cust,srcAcct.getAccountNum(), amount);
+                
+                //Return error stating destination could not be found.
+                return new TransactionStatus(false, Messages.ERROR_DEST_ACC_NOT_FOUND.toString());
+            }
+
+        } else {
+            //Return why the withdrawal failed
+            return withdrawOperation;
+        }
+        //Confirm success
+        return new TransactionStatus(true, Messages.CONFIRMATION_TRANSFER.toString());
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+  
 }
