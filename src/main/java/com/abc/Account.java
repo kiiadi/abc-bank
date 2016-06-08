@@ -1,13 +1,19 @@
 package com.abc;
 
-import java.util.ArrayList;
-import java.util.List;
+public interface Account {
+	
+    public void deposit(double amount, TransactionType type);
+    public void withdraw(double amount, TransactionType type);
+	  //  double getBalance();
+	  //  void transfer
+	//double getBalance();
 
-public class Account {
-
-    public static final int CHECKING = 0;
-    public static final int SAVINGS = 1;
-    public static final int MAXI_SAVINGS = 2;
+	    }
+	
+	
+	
+/*
+    
 
     private final int accountType;
     public List<Transaction> transactions;
@@ -21,7 +27,7 @@ public class Account {
         if (amount <= 0) {
             throw new IllegalArgumentException("amount must be greater than zero");
         } else {
-            transactions.add(new Transaction(amount));
+           // transactions.add(new Transaction(amount));
         }
     }
 
@@ -29,9 +35,19 @@ public void withdraw(double amount) {
     if (amount <= 0) {
         throw new IllegalArgumentException("amount must be greater than zero");
     } else {
+       // transactions.add(new Transaction(-amount));
+    }
+}
+
+
+public void withdraw(double amount, Account acct) {
+    if (amount <= 0) {
+        throw new IllegalArgumentException("amount must be greater than zero");
+    } else {
         transactions.add(new Transaction(-amount));
     }
 }
+
 
     public double interestEarned() {
         double amount = sumTransactions();
@@ -68,6 +84,6 @@ public void withdraw(double amount) {
 
     public int getAccountType() {
         return accountType;
-    }
+    }*/
 
-}
+
