@@ -1,0 +1,278 @@
+@Override
+	public String toString() {
+		if(endTime == -1) {
+			endTime = System.currentTimeMillis();
+		}
+		addPayloadParam("executionTime", endTime-startTime);
+		String payloadParams = getPayloadString();
+		payloadParams = convertParamsToJSON(payloadParams);
+		StringBuilder buf = new StringBuilder();
+		buf.append("id=").append(id);
+		buf.append(PAYLOAD_DELIMITER).append("mid=").append(Long.toString(System.nanoTime()));
+		buf.append(PAYLOAD_DELIMITER).append("traceId=").append(getTraceId());
+		buf.append(PAYLOAD_DELIMITER).append("status=").append(status);
+		buf.append(PAYLOAD_DELIMITER).append("timeStamp=").append(getTimeStampString());
+		buf.append(PAYLOAD_DELIMITER).append("application=").append(sourceApplication);
+		buf.append(PAYLOAD_DELIMITER).append("address=").append(sourceAddress);
+		buf.append(PAYLOAD_DELIMITER).append("source=").append(source);
+		buf.append(PAYLOAD_DELIMITER).append("destination=").append(destination);
+		buf.append(PAYLOAD_DELIMITER).append("type=").append(eventType);
+		buf.append(PAYLOAD_DELIMITER).append("payload=\"").append(payloadParams).append("\"");
+		return buf.toString();
+
+	}
+
+	private String convertParamsToJSON(String payloadParams) {
+		if (!payloadParamMap.isEmpty()) {
+			ObjectMapper mapper = new ObjectMapper();
+			StringWriter writer = new StringWriter();
+			try {
+				mapper.writeValue(writer, payloadParamMap);
+				payloadParams = writer.toString();
+			} catch (Exception e) {
+			} finally {
+				try {
+					if (writer != null) {
+						writer.flush();
+						writer.close();
+					}
+				} catch (Exception e2) {
+				}
+			}
+		}
+		return payloadParams;
+	}
+public class KafkaLogger implements EventLogger {
+
+	private boolean securityAuditEnabled = false;
+	private boolean jobAuditEnabled = false;
+	
+	private String loggerSessionId = null;
+	
+	private CddsKafkaEventPublisher eventPublisher = null;
+	private String kafkaTopic = null;
+	
+	private String message;
+	private long startTime;
+	
+	private static final String PAYLOAD_DELIMITER = "|";
+		
+	private static Logger logger = LoggerFactory.getLogger(KafkaLogger.class);
+	private KafkaEventLoggerFormatter defaultFormatter = null;
+	
+	public KafkaLogger() {
+		defaultFormatter = new KafkaEventLoggerFormatter();
+	}
+
+	@Override
+	public boolean isSecurityAuditEnabled() {		
+		return securityAuditEnabled;
+	}
+
+	@Override
+	public void securityAudit(String msg, Object... obj) {
+		if(!isSecurityAuditEnabled()) return;
+		
+		defaultFormatter.setMessage(message);
+		defaultFormatter.setStartTime(startTime);
+		String logMessage = defaultFormatter.format(msg, obj);
+		
+		try {
+			eventPublisher.open();
+			eventPublisher.publish(kafkaTopic, logMessage);
+		} catch (Exception e) {
+			logger.error("Failed to publish event", e);
+		} finally {
+			eventPublisher.close();
+		}
+	}
+
+	@Override
+	public void securityAudit(String msg, Throwable t) {
+
+		if(!isSecurityAuditEnabled()) return;
+		
+		defaultFormatter.setMessage(message);
+		defaultFormatter.setStartTime(startTime);
+		String logMessage = defaultFormatter.format(msg, t);
+		
+		try {
+			eventPublisher.open();
+			eventPublisher.publish(kafkaTopic, logMessage);
+		} catch (Exception e) {
+			logger.error("Failed to publish event", e);
+		} finally {
+			eventPublisher.close();
+		}
+	}
+
+	@Override
+	public void securityAudit(EventFormatter formartter, String msg,
+			Object... obj) {
+		
+		if(!isSecurityAuditEnabled()) return;
+		
+		try {
+			eventPublisher.open();
+			if(message.startsWith(PAYLOAD_DELIMITER)) {
+				message = message.substring(1);
+			}
+			String logMessage = message + PAYLOAD_DELIMITER + formartter.format(msg, obj)  + PAYLOAD_DELIMITER + msg;
+			eventPublisher.publish(kafkaTopic, logMessage);
+		} catch (Exception e) {
+			logger.error("Failed to publish event", e);
+		} finally {
+			eventPublisher.close();
+		}
+	}
+
+	@Override
+	public void securityAudit(EventFormatter formartter, String msg, Throwable t) {
+		
+		if(!isSecurityAuditEnabled()) return;
+		
+		try {
+			eventPublisher.open();
+			if(message.startsWith(PAYLOAD_DELIMITER)) {
+				message = message.substring(1);
+			}
+			String logMessage = message + PAYLOAD_DELIMITER + formartter.format(msg, t)  + PAYLOAD_DELIMITER + msg;
+			eventPublisher.publish(kafkaTopic, logMessage);			
+		} catch (Exception e) {
+			logger.error("Failed to publish event", e);
+		} finally {
+			eventPublisher.close();
+		}
+	}
+
+	@Override
+	public boolean isJobAuditEnabled() {		
+		return jobAuditEnabled;
+	}
+
+	@Override
+	public void jobAudit(String msg, Object... obj) {
+
+		if(!isJobAuditEnabled()) return;
+		
+		defaultFormatter.setMessage(message);
+		defaultFormatter.setStartTime(startTime);
+		String logMessage = defaultFormatter.format(msg, obj);
+		
+		try {
+			eventPublisher.open();
+			eventPublisher.publish(kafkaTopic, logMessage);
+		} catch (Exception e) {
+			logger.error("Failed to publish event", e);
+		} finally {
+			eventPublisher.close();
+		}
+
+	}
+
+	@Override
+	public void jobAudit(String msg, Throwable t) {
+		if(!isJobAuditEnabled()) return;
+
+		defaultFormatter.setMessage(message);
+		defaultFormatter.setStartTime(startTime);
+		String logMessage = defaultFormatter.format(msg, t);
+		
+		try {
+			eventPublisher.open();
+			eventPublisher.publish(kafkaTopic, logMessage);
+		} catch (Exception e) {
+			logger.error("Failed to publish event", e);
+		} finally {
+			eventPublisher.close();
+		}
+
+	}
+
+	@Override
+	public void jobAudit(EventFormatter formartter, String msg, Object... obj) {
+		if(!isJobAuditEnabled()) return;
+		
+		try {
+			eventPublisher.open();
+			if(message.startsWith(PAYLOAD_DELIMITER)) {
+				message = message.substring(1);
+			}
+			String logMessage = message + PAYLOAD_DELIMITER + formartter.format(msg, obj)  + PAYLOAD_DELIMITER + msg;
+			eventPublisher.publish(kafkaTopic, logMessage);			
+		} catch (Exception e) {
+			logger.error("Failed to publish event", e);
+		} finally {
+			eventPublisher.close();
+		}
+	}
+
+	@Override
+	public void jobAudit(EventFormatter formartter, String msg, Throwable t) {
+		if(!isJobAuditEnabled()) return;
+		
+		try {
+			eventPublisher.open();
+			if(message.startsWith(PAYLOAD_DELIMITER)) {
+				message = message.substring(1);
+			}
+			String logMessage = message + PAYLOAD_DELIMITER + formartter.format(msg, t)  + PAYLOAD_DELIMITER + msg;
+			eventPublisher.publish(kafkaTopic, logMessage);
+		} catch (Exception e) {
+			logger.error("Failed to publish event", e);
+		} finally {
+			eventPublisher.close();
+		}
+	}
+
+	public String getLoggerSessionId() {
+		return loggerSessionId;
+	}
+
+	public void setLoggerSessionId(String loggerSessionId) {
+		this.loggerSessionId = loggerSessionId;
+	}
+
+	public void setSecurityAuditEnabled(boolean securityAuditEnabled) {
+		this.securityAuditEnabled = securityAuditEnabled;
+	}
+
+	public void setJobAuditEnabled(boolean jobAuditEnabled) {
+		this.jobAuditEnabled = jobAuditEnabled;
+	}
+
+	public CddsKafkaEventPublisher getEventPublisher() {
+		return eventPublisher;
+	}
+
+	public void setEventPublisher(CddsKafkaEventPublisher eventPublisher) {
+		this.eventPublisher = eventPublisher;
+	}
+
+	public String getKafkaTopic() {
+		return kafkaTopic;
+	}
+
+	public void setKafkaTopic(String kafkaTopic) {
+		this.kafkaTopic = kafkaTopic;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	public long getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(long startTime) {
+		this.startTime = startTime;
+	}
+	
+	
+	MessageBuilderBean is published with mandatory values and non-mandatory values
+	Json message
