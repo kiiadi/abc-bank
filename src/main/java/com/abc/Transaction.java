@@ -1,16 +1,19 @@
 package com.abc;
 
-import java.util.Calendar;
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class Transaction {
-    public final double amount;
+    final BigDecimal amount;
 
-    private Date transactionDate;
+    final Date transactionDate;
 
-    public Transaction(double amount) {
+    final boolean withdrawFlag;
+
+    public Transaction(BigDecimal amount, boolean withdrawFlag) {
         this.amount = amount;
         this.transactionDate = DateProvider.getInstance().now();
+        this.withdrawFlag = withdrawFlag;
     }
 
 }
