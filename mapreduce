@@ -1,0 +1,225 @@
+public class IndexMapper  extends TableMapper<Text, Text> {
+	private static final Logger logger = LoggerFactory.getLogger(IndexMapper.class);
+	private static final String DEFAULT_INPUT_VALUE_SPLIT = "|";
+	private static final String DEFAULT_FAMILY_VALUE_NAME_SPLIT = ":";
+	private static final String DEFAULT_OUT_KEY_SPLIT = "#";
+	private static final String DEFAULT_INDEX_VALUE_SEPERATOR = ",";
+	private static final String DEFAULT_SIZE_MATCH_APPENDER = "0";
+	private static final String DEFAULT_ROW_ID = "ROWID";
+	
+	private String[] splitColumns=null;
+	private String[] indexFeilds=null;
+	private Configuration conf= null;
+	private IdxPIEncryptor piEncryptor = null;
+
+	@Override
+	public void map(ImmutableBytesWritable rowKey, Result columns, Context context) throws IOException {
+		TableSplit currentSplit = (TableSplit)context.getInputSplit();
+		String tableName = new String(currentSplit.getTableName(), StandardCharsets.UTF_8);
+		try {
+			String keyNameValues=conf.get(tableName);
+			String[] nameValues=keyNameValues.split(Pattern.quote(DEFAULT_INPUT_VALUE_SPLIT));
+			StringBuffer keyValBuf= new StringBuffer();
+			for (int i = 0; i < nameValues.length; i++) {
+				String[] fieldname=nameValues[i].split(Pattern.quote(DEFAULT_FAMILY_VALUE_NAME_SPLIT));
+				String value = Bytes.toString(columns.getValue(Bytes.toBytes(fieldname[0]),Bytes.toBytes(fieldname[1])));
+				int keySize=fieldname.length>2?Integer.parseInt(fieldname[2]):0;
+				
+				value=piEncryptor.decrypt(value).toUpperCase();	
+				if(splitColumns!=null && splitColumns.length > 0 && Arrays.asList(splitColumns).contains((String.valueOf(i+1)))){
+					String[] splitrowValues=value.split(Pattern.quote(DEFAULT_INDEX_VALUE_SEPERATOR));
+					keyValBuf.append(piEncryptor.encrypt(arrangeLength(splitrowValues[0].trim(), keySize)));
+					keyValBuf.append(DEFAULT_INPUT_VALUE_SPLIT);
+					keyValBuf.append(piEncryptor.encrypt(arrangeLength(splitrowValues[1].trim(), keySize)));
+				}else{
+					keyValBuf.append(piEncryptor.encrypt(arrangeLength(value.trim(), keySize)));
+				}
+				if(i<nameValues.length-1){
+					keyValBuf.append(DEFAULT_INPUT_VALUE_SPLIT);
+				}
+			}
+			
+			StringBuilder valueBuf= new StringBuilder();
+			for (int i = 0; i < indexFeilds.length; i++) {
+				String indexField[]=indexFeilds[i].split(Pattern.quote(DEFAULT_FAMILY_VALUE_NAME_SPLIT));
+				if(indexField[1].equalsIgnoreCase(DEFAULT_ROW_ID)){
+					valueBuf.append(Bytes.toString(columns.getRow()));
+				}else{
+					byte [] columnValue = columns.getValue(Bytes.toBytes(indexField[0]),Bytes.toBytes(indexField[1]));
+					valueBuf.append(Bytes.toString(columnValue).trim());
+				}
+				if(i<indexFeilds.length-1){
+					valueBuf.append(DEFAULT_OUT_KEY_SPLIT);
+				}
+			}
+			if(!StringUtils.isBlank(keyValBuf.toString()) && !StringUtils.isBlank(valueBuf.toString())){
+				context.write(new Text(keyValBuf.toString()), new Text(valueBuf.toString()));
+			}
+		} catch (Exception ex) {
+			logger.error("Failed to read key fields :",ex);
+			ex.printStackTrace();
+			throw new IOException(ex);
+		}
+	}
+	
+	private String arrangeLength(String value,int keySize){
+		String returnVal=value.trim();
+		if(keySize==0){
+			return returnVal;
+		}else if(keySize>0){
+			returnVal =StringUtils.leftPad(returnVal, keySize,DEFAULT_SIZE_MATCH_APPENDER);
+		}else{
+			if(returnVal.length()<=Math.abs(keySize)){
+				return returnVal;
+			}else{
+				returnVal = returnVal.substring(0, Math.abs(keySize));
+			}
+		}
+		return returnVal;
+	}
+	
+	@Override
+	protected void setup(Context context) throws IOException,InterruptedException {
+		conf= context.getConfiguration();
+		String splitIndexs=conf.get(HbaseIndexingConstant.TARGET_SPLIT_FIELDS);
+		if(!StringUtils.isBlank(splitIndexs)){
+			splitColumns=splitIndexs.trim().split(Pattern.quote(DEFAULT_INPUT_VALUE_SPLIT));
+		}
+		indexFeilds=conf.get(HbaseIndexingConstant.SOURCE_TABLE_INDEX_FIELD).split(DEFAULT_INDEX_VALUE_SEPERATOR);
+		String fpeCryptokey=conf.get(SecurityConstants.CDS_FPE_ENCRYPTION_KEY);
+		piEncryptor=new IdxPIEncryptor(fpeCryptokey);
+
+	}
+	
+	=======================================================
+	public class IndexReducer extends TableReducer<Text, Text, ImmutableBytesWritable> {
+	private static final Logger logger = LoggerFactory.getLogger(IndexReducer.class);
+	private static final String DEFAULT_INDEX_VALUE_SPLIT = ",";
+	private static final String DEFAULT_FIELD_NAME_SPLIT = ":";
+	private static String[] indexFeild=null;
+
+	@Override
+	public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
+		try{
+			Put put = new Put(Bytes.toBytes(key.toString()));
+			Iterator<Text> valueItr = values.iterator();
+			StringBuffer valueBuffer = new StringBuffer();
+			while (valueItr.hasNext()) {
+				String newIndexValue=values.iterator().next().toString().trim();
+				valueBuffer.append(newIndexValue);
+				if(valueItr.hasNext()){
+					valueBuffer.append(DEFAULT_INDEX_VALUE_SPLIT);
+				}
+			}
+			put.add(Bytes.toBytes(indexFeild[0]),Bytes.toBytes(indexFeild[1]),Bytes.toBytes(valueBuffer.toString()));
+			context.write(null, put);
+		}catch(Exception ex){
+			logger.error("Failed to write to HBASE,  key ["+key.toString()+"]",ex);
+			System.err.println("Failed to write to HBASE,  key ["+key.toString()+"]");
+			ex.printStackTrace();
+			//throw new IOException(ex);
+		}
+	}
+	
+	@Override
+	protected void setup(Context context) throws IOException,InterruptedException {
+		String targetIndexField=context.getConfiguration().get(HbaseIndexingConstant.TARGET_TABLE_INDEX_FIELD);
+		indexFeild=targetIndexField.split(DEFAULT_FIELD_NAME_SPLIT);
+		if(indexFeild.length<2){
+			throw new IOException("Invalid target field format, <namespace>:<fieldname> ");
+		}
+	}
+	=====================================================================
+	  public static void doBulkLoad(String pathToHFile, String tableName) {
+        try {
+        	logger.info("do Bulk Load 1 pathToHFile1 - {} tableName - {} ", pathToHFile, tableName);
+            Configuration configuration = new Configuration();
+            configuration.set("mapreduce.child.java.opts", "-Xmx1g");
+            HBaseConfiguration.addHbaseResources(configuration);
+            LoadIncrementalHFiles loadFfiles = new LoadIncrementalHFiles(configuration);
+            HTable hTable = new HTable(configuration, tableName);
+            loadFfiles.doBulkLoad(new Path(pathToHFile), hTable);
+            logger.info("Bulk Load Completed..");		
+        } catch(Exception exception) {			
+            exception.printStackTrace();			
+        }		
+    }	
+	HfileBulkLoadDriver
+	 @Override
+    public int run(String[] args) throws Exception {
+        int result=0;
+        CLIArguments cliArgs = new CLIArguments(args);
+        String filePrefix = cliArgs.getOption(ARG_FILEPREFIX);
+        String inputPath = cliArgs.getOption(ARG_INPUTPATH);
+        String outputPath = cliArgs.getOption(ARG_OUTPUTPATH);		
+        
+        properties = PropertiesLoader.loadAvailableProperties(PROP);
+        Configuration configuration = getConf();		
+        
+        String tableName = properties.getProperty(String.format("%s.%s", filePrefix, TABLE_NAME));
+        
+        configuration.set("data.seperator", properties.getProperty(String.format("%s.%s", filePrefix, DATA_SEPERATOR)));		
+        configuration.set("hbase.table.name", tableName);
+        configuration.set("table.header", properties.getProperty(String.format("%s.%s", filePrefix, TABLE_HEADER)));
+        configuration.set("COLUMN_FAMILY_1",  properties.getProperty(String.format("%s.%s", filePrefix,COLUMN_FAMILY_1)));		
+        //configuration.set("COLUMN_FAMILY_2",COLUMN_FAMILY_2);		
+        Job job = new Job(configuration);		
+        job.setJarByClass(HBaseBulkLoadDriver.class);		
+        job.setJobName("Bulk1 Loading HBase Table::"+properties.getProperty(TABLE_NAME));		
+        job.setInputFormatClass(TextInputFormat.class);		
+        job.setMapOutputKeyClass(ImmutableBytesWritable.class);		
+        job.setMapperClass(HBaseBulkLoadMapper.class);		
+        FileInputFormat.addInputPaths(job, inputPath);
+        //FileInputFormat.setInputPaths(job, inputPath);
+        FileSystem.getLocal(getConf()).delete(new Path(outputPath), true);		
+        FileOutputFormat.setOutputPath(job, new Path(outputPath));		
+        job.setMapOutputValueClass(Put.class);		
+        logger.info("Bulk Loading HBase Table::"+ tableName);
+        HFileOutputFormat.configureIncrementalLoad(job, new HTable(configuration, tableName));		
+        job.waitForCompletion(true);		
+        if (job.isSuccessful()) {
+            HBaseBulkLoad.doBulkLoad(outputPath, tableName);
+        } else {
+            result = -1;
+        }
+        return result;
+    }}
+	@Override
+	protected void setup(Context context) throws IOException,InterruptedException {
+    	logger.info("...setting up..mapper...");
+    	//System.out.println("...setting up..mapper...");
+        Configuration configuration = context.getConfiguration();		
+        hbaseTable = configuration.get("hbase.table.name");		
+        dataSeperator = configuration.get("data.seperator");		
+        tableHeader = configuration.get("table.header");
+        columnFamily1 = configuration.get("COLUMN_FAMILY_1");		
+        //columnFamily2 = configuration.get("COLUMN_FAMILY_2");
+        logger.info("setup...hbaseTable...{}...dataSeparator...{}...tableHeader..{}....columnFamily...{}", hbaseTable, dataSeperator, tableHeader, columnFamily1);
+        hbaseTableName = new ImmutableBytesWritable(Bytes.toBytes(hbaseTable));		
+    }
+
+    @Override
+    public void map(LongWritable key, Text value, Context context)  throws IOException {
+    	logger.info("map...hbaseTable...{}...dataSeparator...{}...tableHeader..{}....columnFamily...{}", hbaseTable, dataSeperator, tableHeader, columnFamily1);
+    	logger.info("value..." + value.toString());
+    	//System.out.println(String.format("map...hbaseTable...%s...dataSeparator...%s...tableHeader..%s....columnFamily...%s", hbaseTable, dataSeperator, tableHeader, columnFamily1));
+        try {		
+        	String[] header = tableHeader.toString().split("[\\^]");
+            String[] values = value.toString().split("\\|");
+            										
+            logger.info("header values...{} ", Arrays.toString(header) );
+            logger.info("data values...{} ", Arrays.toString(values) );
+            String rowKey = UUID.randomUUID().toString();			
+            logger.info("Row Key .." + rowKey);
+            Put put = new Put(Bytes.toBytes(rowKey));
+            for(int i = 0; i < header.length; i++) {
+            	logger.info("header..." + header[i] + "...value..." + values[i]);
+            	put.add(Bytes.toBytes(columnFamily1), Bytes.toBytes(header[i]), Bytes.toBytes(values[i]));
+            }
+            
+            //put.add(Bytes.toBytes(columnFamily1), Bytes.toBytes("last_name"), Bytes.toBytes(values[2]));			
+            context.write(hbaseTableName, put);			
+        } catch(Exception exception) {			
+            exception.printStackTrace();			
+        }
+    }
