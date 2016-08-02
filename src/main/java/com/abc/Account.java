@@ -1,7 +1,9 @@
 package com.abc;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class Account {
 
@@ -17,21 +19,21 @@ public class Account {
         this.transactions = new ArrayList<Transaction>();
     }
 
-    public void deposit(double amount) {
+    public void deposit(double amount) throws AbcBankException {
         if (amount <= 0) {
-            throw new IllegalArgumentException("amount must be greater than zero");
+            throw new AbcBankException(BankConstant.AMOUNT_EXCEPTION.type(),"ILLEGAL_ARGUMENT_EXCEPTION");
         } else {
             transactions.add(new Transaction(amount));
         }
     }
 
-public void withdraw(double amount) {
-    if (amount <= 0) {
-        throw new IllegalArgumentException("amount must be greater than zero");
-    } else {
-        transactions.add(new Transaction(-amount));
+    public void withdraw(double amount) throws AbcBankException {
+        if (amount <= 0) {
+            throw new AbcBankException(BankConstant.AMOUNT_EXCEPTION.type(),"ILLEGAL_ARGUMENT_EXCEPTION");
+        } else {
+            transactions.add(new Transaction(-amount));
+        }
     }
-}
 
     public double interestEarned() {
         double amount = sumTransactions();
@@ -41,25 +43,34 @@ public void withdraw(double amount) {
                     return amount * 0.001;
                 else
                     return 1 + (amount-1000) * 0.002;
-//            case SUPER_SAVINGS:
-//                if (amount <= 4000)
-//                    return 20;
             case MAXI_SAVINGS:
-                if (amount <= 1000)
-                    return amount * 0.02;
-                if (amount <= 2000)
-                    return 20 + (amount-1000) * 0.05;
-                return 70 + (amount-2000) * 0.1;
+                Date currentDate = new Date();
+                boolean withdrawalsInPastTenDays = false;
+                for(Transaction transaction : transactions){
+                    Date transactionDate = transaction.getTransactionDate();
+                    String transactionType = transaction.amount < 0 ? BankConstant.WITHDRAWAL.type() : BankConstant.DEPOSIT.type();
+                    long days = getDifferenceDays(currentDate,transactionDate);
+                    if(days<=10 && BankConstant.WITHDRAWAL.type().equals(transactionType)){
+                        withdrawalsInPastTenDays = true;
+                        break;
+                    }
+                }
+                if(withdrawalsInPastTenDays){
+                    return amount * 0.001;
+                }else{
+                    return amount * 0.05;
+                }
             default:
                 return amount * 0.001;
         }
     }
 
-    public double sumTransactions() {
-       return checkIfTransactionsExist(true);
+    public long getDifferenceDays(Date d1, Date d2) {
+        long diff = d2.getTime() - d1.getTime();
+        return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
     }
 
-    private double checkIfTransactionsExist(boolean checkAll) {
+    public double sumTransactions() {
         double amount = 0.0;
         for (Transaction t: transactions)
             amount += t.amount;
