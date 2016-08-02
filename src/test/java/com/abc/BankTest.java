@@ -18,7 +18,7 @@ public class BankTest {
     }
 
     @Test
-    public void checkingAccount() {
+    public void checkingAccount() throws AbcBankException {
         Bank bank = new Bank();
         Account checkingAccount = new Account(Account.CHECKING);
         Customer bill = new Customer("Bill").openAccount(checkingAccount);
@@ -30,7 +30,7 @@ public class BankTest {
     }
 
     @Test
-    public void savings_account() {
+    public void savings_account() throws AbcBankException {
         Bank bank = new Bank();
         Account checkingAccount = new Account(Account.SAVINGS);
         bank.addCustomer(new Customer("Bill").openAccount(checkingAccount));
@@ -41,14 +41,17 @@ public class BankTest {
     }
 
     @Test
-    public void maxi_savings_account() {
+    public void maxi_savings_account() throws AbcBankException {
         Bank bank = new Bank();
-        Account checkingAccount = new Account(Account.MAXI_SAVINGS);
-        bank.addCustomer(new Customer("Bill").openAccount(checkingAccount));
+        Account maxiSavingsAccount = new Account(Account.MAXI_SAVINGS);
+        bank.addCustomer(new Customer("Bill").openAccount(maxiSavingsAccount));
 
-        checkingAccount.deposit(3000.0);
+        maxiSavingsAccount.deposit(3000.0);
+        assertEquals(150.0, bank.totalInterestPaid(), DOUBLE_DELTA);
 
-        assertEquals(170.0, bank.totalInterestPaid(), DOUBLE_DELTA);
+        maxiSavingsAccount.withdraw(100.0);
+        assertEquals(2.9, bank.totalInterestPaid(), DOUBLE_DELTA);
+
     }
 
 }
