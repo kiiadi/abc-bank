@@ -1,4 +1,4 @@
-package com.abc;
+//package com.abc;
 
 import org.junit.Test;
 
@@ -34,9 +34,8 @@ public class BankTest {
         Bank bank = new Bank();
         Account checkingAccount = new Account(Account.SAVINGS);
         bank.addCustomer(new Customer("Bill").openAccount(checkingAccount));
-
         checkingAccount.deposit(1500.0);
-
+        System.out.println(bank.getFirstCustomer());
         assertEquals(2.0, bank.totalInterestPaid(), DOUBLE_DELTA);
     }
 
