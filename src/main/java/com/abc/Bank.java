@@ -1,7 +1,9 @@
-package com.abc;
+//package com.abc;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.junit.Assert;
 
 public class Bank {
     private List<Customer> customers;
@@ -11,6 +13,7 @@ public class Bank {
     }
 
     public void addCustomer(Customer customer) {
+    	System.out.println("Add customer: " + customer.getName() + " "+customer.getNumberOfAccounts());
         customers.add(customer);
     }
 
@@ -18,6 +21,8 @@ public class Bank {
         String summary = "Customer Summary";
         for (Customer c : customers)
             summary += "\n - " + c.getName() + " (" + format(c.getNumberOfAccounts(), "account") + ")";
+        System.out.println("** "+ summary);
+
         return summary;
     }
 
@@ -31,12 +36,14 @@ public class Bank {
         double total = 0;
         for(Customer c: customers)
             total += c.totalInterestEarned();
+        System.out.println("** "+ "Total Interest Paid "+ total);
         return total;
     }
 
     public String getFirstCustomer() {
         try {
-            customers = null;
+            //customers = null;
+        	Assert.assertNotNull(customers);
             return customers.get(0).getName();
         } catch (Exception e){
             e.printStackTrace();

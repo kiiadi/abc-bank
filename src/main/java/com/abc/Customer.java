@@ -1,4 +1,4 @@
-package com.abc;
+//package com.abc;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,8 +19,23 @@ public class Customer {
     }
 
     public Customer openAccount(Account account) {
+    	String type = "";
+    	if(account.getAccountType() == Account.CHECKING){
+    		type = "checking";
+    	}else if(account.getAccountType() == Account.SAVINGS){
+    		type = "savings";
+    	}else
+    		type = "maxisavings";
+
+    	//System.out.println("Open account " + type);
         accounts.add(account);
         return this;
+    }
+    
+    public String transfer(Account from, Account to, double amt){
+    	from.withdraw(amt);
+    	to.deposit(amt);
+    	return getStatement();
     }
 
     public int getNumberOfAccounts() {
@@ -36,19 +51,23 @@ public class Customer {
 
     public String getStatement() {
         String statement = null;
+
         statement = "Statement for " + name + "\n";
+        //statement += "Number of accts " + getNumberOfAccounts() + "\n";
+
         double total = 0.0;
         for (Account a : accounts) {
             statement += "\n" + statementForAccount(a) + "\n";
             total += a.sumTransactions();
         }
         statement += "\nTotal In All Accounts " + toDollars(total);
+        System.out.println(statement);
         return statement;
     }
 
     private String statementForAccount(Account a) {
         String s = "";
-
+        //s = "Statement for " + name + "\n";
        //Translate to pretty account type
         switch(a.getAccountType()){
             case Account.CHECKING:
@@ -65,14 +84,18 @@ public class Customer {
         //Now total up all the transactions
         double total = 0.0;
         for (Transaction t : a.transactions) {
-            s += "  " + (t.amount < 0 ? "withdrawal" : "deposit") + " " + toDollars(t.amount) + "\n";
+            s += "  " + (t.amount < 0 ? "withdrawal" : "deposit") + " " + toDollars(t.amount);
             total += t.amount;
+            s += " date: " + t.getDate()  + "\n";
         }
         s += "Total " + toDollars(total);
+        System.out.println(s);
+
         return s;
     }
 
     private String toDollars(double d){
         return String.format("$%,.2f", abs(d));
     }
+    
 }
