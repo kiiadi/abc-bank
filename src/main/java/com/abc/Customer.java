@@ -83,8 +83,12 @@ public class Customer {
     	if(amount<0) throw new IllegalArgumentException("Amount is invalid");
     	if(from.sumTransactions()<amount) throw new IllegalArgumentException("Amount is more than existing balance");
 
-    	from.withdraw(amount);
+    	synchronized(this){
+
+	from.withdraw(amount);
     	to.deposit(amount);
+		
+	}
     	return true;
     }
 }
