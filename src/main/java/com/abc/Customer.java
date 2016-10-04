@@ -34,7 +34,7 @@ public class Customer {
         return total;
     }
 
-    public String getStatement() {
+	public String getStatement() {
         String statement = null;
         statement = "Statement for " + name + "\n";
         double total = 0.0;
@@ -74,5 +74,21 @@ public class Customer {
 
     private String toDollars(double d){
         return String.format("$%,.2f", abs(d));
+    }
+    
+    public boolean transferBetweenAccounts(Account from, Account to, double amount) {
+    	
+    	if(from==null || to==null)throw new NullPointerException("Null Accounts");
+    	if(from.getAccountType()==to.getAccountType()) throw new IllegalArgumentException("Both accounts are same");
+    	if(amount<0) throw new IllegalArgumentException("Amount is invalid");
+    	if(from.sumTransactions()<amount) throw new IllegalArgumentException("Amount is more than existing balance");
+
+    	synchronized(this){
+
+	from.withdraw(amount);
+    	to.deposit(amount);
+		
+	}
+    	return true;
     }
 }
