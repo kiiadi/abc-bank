@@ -1,9 +1,10 @@
 package com.abc;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static java.lang.Math.abs;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Customer {
     private String name;
@@ -11,7 +12,7 @@ public class Customer {
 
     public Customer(String name) {
         this.name = name;
-        this.accounts = new ArrayList<Account>();
+        this.accounts = Collections.synchronizedList(new ArrayList<Account>());
     }
 
     public String getName() {
@@ -22,57 +23,38 @@ public class Customer {
         accounts.add(account);
         return this;
     }
+    
+    public void transfer(double amount, Account from, Account to) {
+    	if(accounts.contains(from) && accounts.contains(to) && from != to) {
+    		synchronized(this) {
+	    		from.withdraw(amount);
+	    		to.deposit(amount);
+    		}
+    	} else {
+    		throw new IllegalArgumentException("Both accounts must belong to the same customer, and cannot be same.");
+    	}
+    }
 
     public int getNumberOfAccounts() {
         return accounts.size();
     }
 
-    public double totalInterestEarned() {
+    public synchronized double totalInterestEarned() {
         double total = 0;
         for (Account a : accounts)
             total += a.interestEarned();
         return total;
     }
 
-    public String getStatement() {
+    public synchronized String getStatement() {
         String statement = null;
         statement = "Statement for " + name + "\n";
         double total = 0.0;
         for (Account a : accounts) {
-            statement += "\n" + statementForAccount(a) + "\n";
+            statement += "\n" + a.statementForAccount() + "\n";
             total += a.sumTransactions();
         }
-        statement += "\nTotal In All Accounts " + toDollars(total);
+        statement += "\nTotal In All Accounts " + String.format("$%,.2f", abs(total));
         return statement;
-    }
-
-    private String statementForAccount(Account a) {
-        String s = "";
-
-       //Translate to pretty account type
-        switch(a.getAccountType()){
-            case Account.CHECKING:
-                s += "Checking Account\n";
-                break;
-            case Account.SAVINGS:
-                s += "Savings Account\n";
-                break;
-            case Account.MAXI_SAVINGS:
-                s += "Maxi Savings Account\n";
-                break;
-        }
-
-        //Now total up all the transactions
-        double total = 0.0;
-        for (Transaction t : a.transactions) {
-            s += "  " + (t.amount < 0 ? "withdrawal" : "deposit") + " " + toDollars(t.amount) + "\n";
-            total += t.amount;
-        }
-        s += "Total " + toDollars(total);
-        return s;
-    }
-
-    private String toDollars(double d){
-        return String.format("$%,.2f", abs(d));
     }
 }
