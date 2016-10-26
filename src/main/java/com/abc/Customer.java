@@ -3,6 +3,7 @@ package com.abc;
 import static java.lang.Math.abs;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Customer {
@@ -11,7 +12,7 @@ public class Customer {
 
     public Customer(String name) {
         this.name = name;
-        this.accounts = new ArrayList<Account>();
+        this.accounts = Collections.synchronizedList(new ArrayList<Account>());
     }
 
     public String getName() {
@@ -25,8 +26,10 @@ public class Customer {
     
     public void transfer(double amount, Account from, Account to) {
     	if(accounts.contains(from) && accounts.contains(to) && from != to) {
-    		from.withdraw(amount);
-    		to.deposit(amount);
+    		synchronized(this) {
+	    		from.withdraw(amount);
+	    		to.deposit(amount);
+    		}
     	} else {
     		throw new IllegalArgumentException("Both accounts must belong to the same customer, and cannot be same.");
     	}
@@ -36,14 +39,14 @@ public class Customer {
         return accounts.size();
     }
 
-    public double totalInterestEarned() {
+    public synchronized double totalInterestEarned() {
         double total = 0;
         for (Account a : accounts)
             total += a.interestEarned();
         return total;
     }
 
-    public String getStatement() {
+    public synchronized String getStatement() {
         String statement = null;
         statement = "Statement for " + name + "\n";
         double total = 0.0;

@@ -5,6 +5,7 @@ import static java.lang.Math.abs;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -12,7 +13,7 @@ public abstract class Account {
 	protected static final double DEFAULT_RATE = 0.001;
 	protected static final int DAYS_IN_YEAR = 365;
 	
-	private List<Transaction> transactions = new ArrayList<Transaction>();
+	private List<Transaction> transactions = Collections.synchronizedList( new ArrayList<Transaction>() );
 
 	public void deposit(double amount) {
 		if (amount <= 0) {
@@ -25,14 +26,17 @@ public abstract class Account {
 	public void withdraw(double amount) {
 		if (amount <= 0) {
 			throw new IllegalArgumentException("amount must be greater than zero");
-		} else if (amount > sumTransactions()) {
-			throw new IllegalArgumentException("insufficient funds");
-		} else {
-			transactions.add(new Transaction(-amount));
+		} 
+		synchronized(this) {
+			if (amount > sumTransactions()) {
+				throw new IllegalArgumentException("insufficient funds");
+			} else {
+				transactions.add(new Transaction(-amount));
+			}
 		}
 	}
 	
-	public double interestEarned() {
+	public synchronized double interestEarned() {
 		double principal = 0.0;
 		double interest = 0.0;
 		Instant latestWidtdrawalOn = Instant.MIN;
@@ -71,7 +75,7 @@ public abstract class Account {
 	
 	public abstract double interestEarnedIn(long days, double onAmount);
 	
-    public String statementForAccount() {
+    public synchronized String statementForAccount() {
         String s = statementHeading() + "\n";
 
         //Now total up all the transactions
@@ -88,7 +92,7 @@ public abstract class Account {
         return String.format("$%,.2f", abs(d));
     }
 
-    public double sumTransactions() {
+    public synchronized double sumTransactions() {
 		double amount = 0.0;
 		for (Transaction t : transactions)
 			amount += t.getAmount();
