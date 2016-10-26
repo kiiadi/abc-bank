@@ -1,7 +1,6 @@
 package com.abc;
 
 import static java.util.Calendar.DAY_OF_YEAR;
-import static java.util.Calendar.HOUR;
 import static org.junit.Assert.assertEquals;
 
 import java.lang.reflect.Field;
@@ -18,7 +17,6 @@ public class AccountTest {
 		public Date now() {
 			Calendar cal = Calendar.getInstance();
 			cal.set(DAY_OF_YEAR, 1);
-			cal.set(HOUR, 23);
 			return cal.getTime();
 		}
 	}
