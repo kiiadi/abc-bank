@@ -1,6 +1,6 @@
 package com.abc;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Account {
@@ -9,13 +9,43 @@ public class Account {
     public static final int SAVINGS = 1;
     public static final int MAXI_SAVINGS = 2;
 
+
+    static class Pair {
+        double amount, rate;
+
+        Pair(double a, double r) {
+            amount = a;
+            rate = r;
+        }
+    }
+
+    private final Pair[] interestTable;
     private final int accountType;
+
     public List<Transaction> transactions;
 
-    public Account(int accountType) {
+    private Account(int accountType, Pair... pairs) {
         this.accountType = accountType;
-        this.transactions = new ArrayList<Transaction>();
+        this.transactions = new LinkedList<>();
+        this.interestTable = pairs;
     }
+
+    /*
+     An alternative could be an Accounts hierarchy, but the solution based on single constructor and unlimited configurations is more flexible.
+     Keeping factory methods in one place makes them easy to read and compare.
+      */
+    public static Account newChecking() {
+        return new Account(CHECKING, new Pair(0, 0.001));
+    }
+
+    public static Account newSavings() {
+        return new Account(SAVINGS, new Pair(0, 0.001), new Pair(1000, 0.002));
+    }
+
+    public static Account newMaxiSavings() {
+        return new Account(MAXI_SAVINGS, new Pair(0, 0.02), new Pair(1000, 0.05), new Pair(2000, 0.10));
+    }
+
 
     public void deposit(double amount) {
         if (amount <= 0) {
@@ -34,22 +64,16 @@ public class Account {
     }
 
     public double interestEarned() {
-        double amount = sumTransactions();
-        switch (accountType) {
-            case SAVINGS:
-                if (amount <= 1000)
-                    return amount * 0.001;
-                else
-                    return 1 + (amount - 1000) * 0.002;
-            case MAXI_SAVINGS:
-                if (amount <= 1000)
-                    return amount * 0.02;
-                if (amount <= 2000)
-                    return 20 + (amount - 1000) * 0.05;
-                return 70 + (amount - 2000) * 0.1;
-            default:
-                return amount * 0.001;
+        double balance = sumTransactions();
+        double interest = 0;
+        for (int i = interestTable.length - 1; i > 0; i--) {
+            if (balance > interestTable[i].amount) {
+                interest += (balance - interestTable[i].amount) * interestTable[i].rate;
+                balance = interestTable[i].amount;
+            }
         }
+        interest += balance * interestTable[0].rate;
+        return interest;
     }
 
     public double sumTransactions() {
