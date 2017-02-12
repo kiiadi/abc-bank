@@ -2,6 +2,9 @@ package com.abc;
 
 import org.junit.Test;
 
+import static com.abc.AccountType.CHECKING;
+import static com.abc.AccountType.MAXI_SAVINGS;
+import static com.abc.AccountType.SAVINGS;
 import static org.junit.Assert.assertEquals;
 
 public class AccountTest {
@@ -53,9 +56,9 @@ public class AccountTest {
         Account checking = Account.newChecking();
 
         checking.deposit(1000);
-        assertEquals(checking.sumTransactions(), 1000, DOUBLE_DELTA);
+        assertEquals(1000, checking.sumTransactions(), DOUBLE_DELTA);
         checking.withdraw(600);
-        assertEquals(checking.sumTransactions(), 400, DOUBLE_DELTA);
+        assertEquals(400, checking.sumTransactions(), DOUBLE_DELTA);
     }
 
     @Test
@@ -63,9 +66,9 @@ public class AccountTest {
         Account saving = Account.newSavings();
 
         saving.deposit(1000);
-        assertEquals(saving.sumTransactions(), 1000, DOUBLE_DELTA);
+        assertEquals(1000, saving.sumTransactions(), DOUBLE_DELTA);
         saving.withdraw(600);
-        assertEquals(saving.sumTransactions(), 400, DOUBLE_DELTA);
+        assertEquals(400, saving.sumTransactions(), DOUBLE_DELTA);
     }
 
     @Test
@@ -73,9 +76,19 @@ public class AccountTest {
         Account maxiSaving = Account.newMaxiSavings();
 
         maxiSaving.deposit(1000);
-        assertEquals(maxiSaving.sumTransactions(), 1000, DOUBLE_DELTA);
+        assertEquals(1000, maxiSaving.sumTransactions(), DOUBLE_DELTA);
         maxiSaving.withdraw(600);
-        assertEquals(maxiSaving.sumTransactions(), 400, DOUBLE_DELTA);
+        assertEquals(400, maxiSaving.sumTransactions(), DOUBLE_DELTA);
+    }
+
+    @Test
+    public void accountType() {
+        Account checking = Account.newChecking();
+        assertEquals(CHECKING,checking.getAccountType());
+        Account saving = Account.newSavings();
+        assertEquals(SAVINGS,saving.getAccountType());
+        Account maxiSaving = Account.newMaxiSavings();
+        assertEquals(MAXI_SAVINGS,maxiSaving.getAccountType());
     }
 
 

@@ -3,12 +3,9 @@ package com.abc;
 import java.util.LinkedList;
 import java.util.List;
 
+import static com.abc.AccountType.*;
+
 public class Account {
-
-    public static final int CHECKING = 0;
-    public static final int SAVINGS = 1;
-    public static final int MAXI_SAVINGS = 2;
-
 
     static class Pair {
         double amount, rate;
@@ -20,11 +17,11 @@ public class Account {
     }
 
     private final Pair[] interestTable;
-    private final int accountType;
+    private final AccountType accountType;
 
     public List<Transaction> transactions;
 
-    private Account(int accountType, Pair... pairs) {
+    private Account(AccountType accountType, Pair... pairs) {
         this.accountType = accountType;
         this.transactions = new LinkedList<>();
         this.interestTable = pairs;
@@ -80,7 +77,7 @@ public class Account {
         return transactions.stream().mapToDouble(x -> x.amount).sum();
     }
 
-    public int getAccountType() {
+    public AccountType getAccountType() {
         return accountType;
     }
 
