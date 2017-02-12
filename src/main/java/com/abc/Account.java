@@ -83,12 +83,12 @@ public class Account {
     }
 
     String statementForAccount() {
-        StringBuilder s = new StringBuilder(getAccountType().getReadableForm()).append('\n');
+        StringBuilder s = new StringBuilder(getAccountType().getReadableForm()).append(System.lineSeparator());
 
         //Now total up all the transactions
         double total = 0.0;
         for (Transaction t : transactions) {
-            s.append("  ").append((t.amount < 0 ? "withdrawal" : "deposit") + " " + String.format("$%,.2f", abs(t.amount))).append("\n");
+            s.append("  ").append((t.amount < 0 ? "withdrawal" : "deposit") + " " + String.format("$%,.2f", abs(t.amount))).append(System.lineSeparator());
             total += t.amount;
         }
         s.append("Total ").append(String.format("$%,.2f", total));
