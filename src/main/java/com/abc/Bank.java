@@ -1,11 +1,10 @@
 package com.abc;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 public class Bank {
-    private List<Customer> customers;
+    private final List<Customer> customers;
 
     public Bank() {
         customers = new LinkedList<>();

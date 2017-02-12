@@ -1,7 +1,5 @@
 package com.abc;
 
-import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -51,21 +49,20 @@ public class CustomerTest extends  BaseTestFixture {
         assertEquals(2, oscar.getNumberOfAccounts());
     }
 
-    @Ignore
-    public void testThreeAcounts() {
+    @Test
+    public void testThreeAccounts() {
         Customer oscar = new Customer("Oscar");
         oscar.openAccount(Account.newSavings());
         oscar.openAccount(Account.newChecking());
+        oscar.openAccount(Account.newMaxiSavings5Flat()) ;
         assertEquals(3, oscar.getNumberOfAccounts());
     }
 
     @Test
     public void testTransfer(){
         Customer oscar = new Customer("Oscar");
-        Account c1 = Account.newChecking() ;
-        Account c2 = Account.newChecking() ;
-        oscar.openAccount(c1);
-        oscar.openAccount(c2);
+        Account c1 = oscar.openAccount(Account.newChecking());
+        Account c2 = oscar.openAccount(Account.newChecking());
         c1.deposit(1111);
         c1.deposit(222);
         c1.withdraw(333);

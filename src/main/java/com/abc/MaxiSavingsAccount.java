@@ -1,6 +1,5 @@
 package com.abc;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Optional;
 
@@ -8,8 +7,8 @@ public class MaxiSavingsAccount extends Account {
 
     private Pair[] alternativeInterestTable;
 
-    MaxiSavingsAccount(AccountType accountType, Pair... pairs) {
-        super(accountType, pairs);
+    MaxiSavingsAccount(Pair... pairs) {
+        super(AccountType.MAXI_SAVINGS, pairs);
     }
 
     public double interestEarned() {

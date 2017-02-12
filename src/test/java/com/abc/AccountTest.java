@@ -2,10 +2,10 @@ package com.abc;
 
 import org.junit.Test;
 
-import static com.abc.AccountType.CHECKING;
-import static com.abc.AccountType.MAXI_SAVINGS;
-import static com.abc.AccountType.SAVINGS;
+import static com.abc.AccountType.*;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
+
 
 public class AccountTest extends BaseTestFixture {
 
@@ -81,15 +81,16 @@ public class AccountTest extends BaseTestFixture {
     @Test
     public void accountType() {
         Account checking = Account.newChecking();
-        assertEquals(CHECKING,checking.getAccountType());
+        assertEquals(CHECKING, checking.getAccountType());
         Account saving = Account.newSavings();
-        assertEquals(SAVINGS,saving.getAccountType());
+        assertEquals(SAVINGS, saving.getAccountType());
         Account maxiSaving = Account.newMaxiSavings();
-        assertEquals(MAXI_SAVINGS,maxiSaving.getAccountType());
+        assertEquals(MAXI_SAVINGS, maxiSaving.getAccountType());
     }
 
-    public void maxiSaving_5percentFlat(){
-        Account maxiSaving = Account.newMaxiSavings5Flat() ;
+    @Test
+    public void maxiSaving_5percentFlat() {
+        Account maxiSaving = Account.newMaxiSavings5Flat();
 
         maxiSaving.deposit(1000);
         assertEquals(1000, maxiSaving.sumTransactions(), DOUBLE_DELTA);
@@ -103,5 +104,21 @@ public class AccountTest extends BaseTestFixture {
         assertEquals(10000, maxiSaving.sumTransactions(), DOUBLE_DELTA);
         assertEquals(10, maxiSaving.interestEarned(), DOUBLE_DELTA);
     }
+
+    @Test
+    public void exceptions() {
+        Account checking = Account.newChecking();
+
+        assertThatThrownBy(() -> checking.deposit(-1000))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("amount must be greater than zero")
+                .hasNoCause();
+
+        assertThatThrownBy(() -> checking.withdraw(-10))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("amount must be greater than zero")
+                .hasNoCause();
+    }
+
 
 }

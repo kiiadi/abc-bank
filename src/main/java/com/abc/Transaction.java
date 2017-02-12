@@ -6,7 +6,7 @@ public class Transaction {
 
     private final double amount;
 
-    private Date transactionDate;
+    private final Date transactionDate;
 
     public Transaction(double amount) {
         this.amount = amount;

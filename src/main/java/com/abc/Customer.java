@@ -3,11 +3,9 @@ package com.abc;
 import java.util.LinkedList;
 import java.util.List;
 
-import static java.lang.Math.abs;
-
 public class Customer {
-    private String name;
-    private List<Account> accounts;
+    private final String name;
+    private final List<Account> accounts;
 
     public Customer(String name) {
         this.name = name;
@@ -18,8 +16,9 @@ public class Customer {
         return name;
     }
 
-    public void openAccount(Account account) {
+    public Account openAccount(Account account) {
         accounts.add(account);
+        return account ;
     }
 
     public int getNumberOfAccounts() {
@@ -27,7 +26,7 @@ public class Customer {
     }
 
     public double totalInterestEarned() {
-        return accounts.stream().mapToDouble(a -> a.interestEarned()).sum();
+        return accounts.stream().mapToDouble(Account::interestEarned).sum();
     }
 
     public String getStatement() {
