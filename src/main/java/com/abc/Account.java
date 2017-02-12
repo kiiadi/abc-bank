@@ -8,6 +8,13 @@ import static java.lang.Math.abs;
 
 public class Account {
 
+    public Transaction lastTransaction() {
+        return transactions.getLast() ;
+    }
+    public void rollback(Transaction t1) {
+        if(lastTransaction()!=t1 && transactions.size()>0) transactions.removeLast() ;
+    }
+
     static class Pair {
         double amount, rate;
 
@@ -19,8 +26,7 @@ public class Account {
 
     private final Pair[] interestTable;
     private final AccountType accountType;
-
-    private List<Transaction> transactions;
+    private LinkedList<Transaction> transactions;
 
     private Account(AccountType accountType, Pair... pairs) {
         this.accountType = accountType;

@@ -3,6 +3,8 @@ package com.abc;
 import java.util.LinkedList;
 import java.util.List;
 
+import static java.lang.Math.abs;
+
 public class Customer {
     private String name;
     private List<Account> accounts;
@@ -38,4 +40,18 @@ public class Customer {
         statement.append(System.lineSeparator()).append("Total In All Accounts ").append(String.format("$%,.2f", total));
         return statement.toString();
     }
+
+    public void transfer(Account a1, Account a2, double amount) {
+        Transaction t1 = a1.lastTransaction();
+        Transaction t2 = a2.lastTransaction();
+        try {
+            a1.withdraw(amount);
+            a2.deposit(amount);
+        } catch (Exception ex) {
+            a1.rollback(t1);
+            a2.rollback(t2);
+            throw ex;
+        }
+    }
 }
+
