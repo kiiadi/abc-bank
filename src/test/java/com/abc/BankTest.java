@@ -4,8 +4,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class BankTest {
-    private static final double DOUBLE_DELTA = 1e-15;
+public class BankTest  extends BaseTestFixture {
 
     @Test
     public void customerSummary() {
@@ -14,7 +13,7 @@ public class BankTest {
         john.openAccount(Account.newChecking());
         bank.addCustomer(john);
 
-        assertEquals("Customer Summary\n - John (1 account)", bank.customerSummary());
+        assertEquals("Customer Summary"+System.lineSeparator()+" - John (1 account)", bank.customerSummary());
     }
 
     @Test

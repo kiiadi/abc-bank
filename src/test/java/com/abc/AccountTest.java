@@ -7,10 +7,7 @@ import static com.abc.AccountType.MAXI_SAVINGS;
 import static com.abc.AccountType.SAVINGS;
 import static org.junit.Assert.assertEquals;
 
-public class AccountTest {
-
-    private static final double DOUBLE_DELTA = 1e-15;
-
+public class AccountTest extends BaseTestFixture {
 
     @Test
     public void checking_interestEarned() {
