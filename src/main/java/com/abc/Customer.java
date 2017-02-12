@@ -1,10 +1,7 @@
 package com.abc;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-
-import static java.lang.Math.abs;
 
 public class Customer {
     private String name;
@@ -28,10 +25,7 @@ public class Customer {
     }
 
     public double totalInterestEarned() {
-        double total = 0;
-        for (Account a : accounts)
-            total += a.interestEarned();
-        return total;
+        return accounts.stream().mapToDouble(a -> a.interestEarned()).sum();
     }
 
     public String getStatement() {
