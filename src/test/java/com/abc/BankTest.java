@@ -21,7 +21,8 @@ public class BankTest {
     public void checkingAccount() {
         Bank bank = new Bank();
         Account checkingAccount = Account.newChecking();
-        Customer bill = new Customer("Bill").openAccount(checkingAccount);
+        Customer bill = new Customer("Bill");
+        bill.openAccount(checkingAccount);
         bank.addCustomer(bill);
 
         checkingAccount.deposit(100.0);
@@ -33,7 +34,9 @@ public class BankTest {
     public void savings_account() {
         Bank bank = new Bank();
         Account checkingAccount = Account.newSavings();
-        bank.addCustomer(new Customer("Bill").openAccount(checkingAccount));
+        Customer bill = new Customer("Bill");
+        bank.addCustomer(bill);
+        bill.openAccount(checkingAccount);
 
         checkingAccount.deposit(1500.0);
 
@@ -44,7 +47,9 @@ public class BankTest {
     public void maxi_savings_account() {
         Bank bank = new Bank();
         Account checkingAccount = Account.newMaxiSavings();
-        bank.addCustomer(new Customer("Bill").openAccount(checkingAccount));
+        Customer bill = new Customer("Bill");
+        bank.addCustomer(bill);
+        bill.openAccount(checkingAccount);
 
         checkingAccount.deposit(3000.0);
 
