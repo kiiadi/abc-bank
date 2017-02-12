@@ -14,13 +14,13 @@ public class MaxiSavingsAccount extends Account {
 
     public double interestEarned() {
         //find latest withdrawal
-        Optional<Date> lastWithdrawal = transactions.stream().filter(t -> t.amount<0).map(Transaction::getTransactionDate).max(Date::compareTo) ;
+        Optional<Date> lastWithdrawal = transactions.stream().filter(t -> t.getAmount()<0).map(Transaction::getTransactionDate).max(Date::compareTo) ;
         if(!lastWithdrawal.isPresent()) return super.interestEarned() ;
         Date today = new Date() ;
         if((today.getTime() - lastWithdrawal.get().getTime())/1000/3600/24 > 10) {
             return super.interestEarned();
         } else {
-            return interestEarned(alternativeInterestTable) ;
+            return interestEarned(alternativeInterestTable, sumTransactions()) ;
         }
     }
 

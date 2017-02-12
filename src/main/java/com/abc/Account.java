@@ -1,11 +1,14 @@
 package com.abc;
 
+import java.util.Date;
 import java.util.LinkedList;
 
 import static com.abc.AccountType.*;
 import static java.lang.Math.abs;
 
 public class Account {
+
+    private static final int DAYS_IN_YEAR = 365 ;
 
     Transaction lastTransaction() {
         return transactions.getLast() ;
@@ -74,11 +77,36 @@ public class Account {
     }
 
     public double interestEarned() {
-        return interestEarned(interestTable) ;
+        return interestEarned(interestTable, sumTransactions()) ;
+    }
+    /*
+    Method to calculate 3rd option
+    "Interest rates should accrue daily (incl. weekends), rates above are per-annum"
+    counts days as 24 hours between timestamps. Making boundary to midnight of each day is possible if needed.
+    Also use 355 days year, update to count leap year is possible if needed.
+    No tests provided as Transaction is responsible to put timestamp.
+     */
+    double interestEarnedDaily(Pair[] intt){
+        Date start = transactions.getFirst().getTransactionDate() ;
+        double interest = 0 ;
+        double dailyIntRate = 0 ;
+        long durationInDays = 0 ;
+        for(Transaction t : transactions){
+            durationInDays = daysDiff(t.getTransactionDate(),start) ;
+            interest += durationInDays * dailyIntRate ;
+            start = t.getTransactionDate() ;
+            dailyIntRate = interestEarned(intt,t.getAmount())/DAYS_IN_YEAR ;
+        }
+        durationInDays = daysDiff(new Date(),start) ;
+        interest += durationInDays * dailyIntRate ;
+        return interest ;
     }
 
-    protected double interestEarned(Pair[] interestTable) {
-        double balance = sumTransactions();
+    private long daysDiff(Date transactionDate, Date start) {
+        return (transactionDate.getTime()-start.getTime())/1000/3600/24 ;
+    }
+
+    protected double interestEarned(Pair[] interestTable, double balance) {
         double interest = 0;
         for (int i = interestTable.length - 1; i > 0; i--) {
             if (balance > interestTable[i].amount) {
@@ -91,7 +119,7 @@ public class Account {
     }
 
     public double sumTransactions() {
-        return transactions.stream().mapToDouble(x -> x.amount).sum();
+        return transactions.stream().mapToDouble(x -> x.getAmount()).sum();
     }
 
     public AccountType getAccountType() {
@@ -104,8 +132,8 @@ public class Account {
         //Now total up all the transactions
         double total = 0.0;
         for (Transaction t : transactions) {
-            s.append("  ").append(t.amount < 0 ? "withdrawal" : "deposit").append(String.format(" $%,.2f", abs(t.amount))).append(System.lineSeparator());
-            total += t.amount;
+            s.append("  ").append(t.getAmount() < 0 ? "withdrawal" : "deposit").append(String.format(" $%,.2f", abs(t.getAmount()))).append(System.lineSeparator());
+            total += t.getAmount();
         }
         s.append("Total ").append(String.format("$%,.2f", total));
         return s.toString();
