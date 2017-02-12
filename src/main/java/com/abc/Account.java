@@ -1,17 +1,16 @@
 package com.abc;
 
 import java.util.LinkedList;
-import java.util.List;
 
 import static com.abc.AccountType.*;
 import static java.lang.Math.abs;
 
 public class Account {
 
-    public Transaction lastTransaction() {
+    Transaction lastTransaction() {
         return transactions.getLast() ;
     }
-    public void rollback(Transaction t1) {
+    void rollback(Transaction t1) {
         if(lastTransaction()!=t1 && transactions.size()>0) transactions.removeLast() ;
     }
 
@@ -26,9 +25,9 @@ public class Account {
 
     private final Pair[] interestTable;
     private final AccountType accountType;
-    private LinkedList<Transaction> transactions;
+    protected LinkedList<Transaction> transactions;
 
-    private Account(AccountType accountType, Pair... pairs) {
+    protected Account(AccountType accountType, Pair... pairs) {
         this.accountType = accountType;
         this.transactions = new LinkedList<>();     // we don't need access transaction by index and we don't want delays on ArrayList rebuild, hence LinkedList
         this.interestTable = pairs;
@@ -47,7 +46,14 @@ public class Account {
     }
 
     public static Account newMaxiSavings() {
-        return new Account(MAXI_SAVINGS, new Pair(0, 0.02), new Pair(1000, 0.05), new Pair(2000, 0.10));
+        return new Account(MAXI_SAVINGS, new Pair(0, 0.02), new Pair(1000, 0.05), new Pair(2000, 0.10));  // initial implementation
+    }
+
+    // created separate factory method to demonstrate both versions of MAXI_SAVINGS work. Also adding new designated tests for thsi case
+    public static Account newMaxiSavings5Flat() {
+        MaxiSavingsAccount account = new MaxiSavingsAccount(MAXI_SAVINGS, new Pair(0, 0.05));
+        account.setAlternativeInterestTable(new Pair(0,0.001));
+        return account ;
     }
 
 
@@ -67,8 +73,11 @@ public class Account {
         }
     }
 
-
     public double interestEarned() {
+        return interestEarned(interestTable) ;
+    }
+
+    protected double interestEarned(Pair[] interestTable) {
         double balance = sumTransactions();
         double interest = 0;
         for (int i = interestTable.length - 1; i > 0; i--) {
@@ -95,7 +104,7 @@ public class Account {
         //Now total up all the transactions
         double total = 0.0;
         for (Transaction t : transactions) {
-            s.append("  ").append((t.amount < 0 ? "withdrawal" : "deposit") + " " + String.format("$%,.2f", abs(t.amount))).append(System.lineSeparator());
+            s.append("  ").append(t.amount < 0 ? "withdrawal" : "deposit").append(String.format(" $%,.2f", abs(t.amount))).append(System.lineSeparator());
             total += t.amount;
         }
         s.append("Total ").append(String.format("$%,.2f", total));

@@ -88,5 +88,20 @@ public class AccountTest extends BaseTestFixture {
         assertEquals(MAXI_SAVINGS,maxiSaving.getAccountType());
     }
 
+    public void maxiSaving_5percentFlat(){
+        Account maxiSaving = Account.newMaxiSavings5Flat() ;
+
+        maxiSaving.deposit(1000);
+        assertEquals(1000, maxiSaving.sumTransactions(), DOUBLE_DELTA);
+        assertEquals(50, maxiSaving.interestEarned(), DOUBLE_DELTA);
+
+        maxiSaving.deposit(10000);
+        assertEquals(11000, maxiSaving.sumTransactions(), DOUBLE_DELTA);
+        assertEquals(550, maxiSaving.interestEarned(), DOUBLE_DELTA);
+
+        maxiSaving.withdraw(1000);
+        assertEquals(10000, maxiSaving.sumTransactions(), DOUBLE_DELTA);
+        assertEquals(10, maxiSaving.interestEarned(), DOUBLE_DELTA);
+    }
 
 }
