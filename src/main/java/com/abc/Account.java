@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static com.abc.AccountType.*;
+import static java.lang.Math.abs;
 
 public class Account {
 
@@ -19,11 +20,11 @@ public class Account {
     private final Pair[] interestTable;
     private final AccountType accountType;
 
-    public List<Transaction> transactions;
+    private List<Transaction> transactions;
 
     private Account(AccountType accountType, Pair... pairs) {
         this.accountType = accountType;
-        this.transactions = new LinkedList<>();
+        this.transactions = new LinkedList<>();     // we don't need access transaction by index and we don't want delays on ArrayList rebuild, hence LinkedList
         this.interestTable = pairs;
     }
 
@@ -79,6 +80,19 @@ public class Account {
 
     public AccountType getAccountType() {
         return accountType;
+    }
+
+    String statementForAccount() {
+        StringBuilder s = new StringBuilder(getAccountType().getReadableForm()).append('\n');
+
+        //Now total up all the transactions
+        double total = 0.0;
+        for (Transaction t : transactions) {
+            s.append("  ").append((t.amount < 0 ? "withdrawal" : "deposit") + " " + String.format("$%,.2f", abs(t.amount))).append("\n");
+            total += t.amount;
+        }
+        s.append("Total ").append(String.format("$%,.2f", total));
+        return s.toString();
     }
 
 }

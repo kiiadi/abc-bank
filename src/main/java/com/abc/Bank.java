@@ -1,13 +1,14 @@
 package com.abc;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Bank {
     private List<Customer> customers;
 
     public Bank() {
-        customers = new ArrayList<Customer>();
+        customers = new LinkedList<>();
     }
 
     public void addCustomer(Customer customer) {
@@ -34,13 +35,4 @@ public class Bank {
         return total;
     }
 
-    public String getFirstCustomer() {
-        try {
-            customers = null;
-            return customers.get(0).getName();
-        } catch (Exception e){
-            e.printStackTrace();
-            return "Error";
-        }
-    }
 }

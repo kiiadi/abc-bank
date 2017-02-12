@@ -1,6 +1,7 @@
 package com.abc;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import static java.lang.Math.abs;
@@ -11,7 +12,7 @@ public class Customer {
 
     public Customer(String name) {
         this.name = name;
-        this.accounts = new ArrayList<Account>();
+        this.accounts = new LinkedList<>();
     }
 
     public String getName() {
@@ -35,31 +36,13 @@ public class Customer {
     }
 
     public String getStatement() {
-        String statement = null;
-        statement = "Statement for " + name + "\n";
+        StringBuilder statement = new StringBuilder("Statement for ").append(name).append("\n");
         double total = 0.0;
         for (Account a : accounts) {
-            statement += "\n" + statementForAccount(a) + "\n";
+            statement.append("\n").append(a.statementForAccount()).append("\n");
             total += a.sumTransactions();
         }
-        statement += "\nTotal In All Accounts " + toDollars(total);
-        return statement;
-    }
-
-    private String statementForAccount(Account a) {
-        String s = a.getAccountType().getReadableForm() + '\n';
-
-        //Now total up all the transactions
-        double total = 0.0;
-        for (Transaction t : a.transactions) {
-            s += "  " + (t.amount < 0 ? "withdrawal" : "deposit") + " " + toDollars(t.amount) + "\n";
-            total += t.amount;
-        }
-        s += "Total " + toDollars(total);
-        return s;
-    }
-
-    private String toDollars(double d){
-        return String.format("$%,.2f", abs(d));
+        statement.append("\n").append("Total In All Accounts ").append(String.format("$%,.2f", total));
+        return statement.toString();
     }
 }
