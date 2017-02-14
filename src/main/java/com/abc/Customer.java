@@ -5,7 +5,14 @@ import java.util.List;
 
 import static java.lang.Math.abs;
 
+/**
+ * 
+ * @author Alex Gordon
+ * Customer class
+ *
+ */
 public class Customer {
+	
     private String name;
     private List<Account> accounts;
 
@@ -15,64 +22,108 @@ public class Customer {
     }
 
     public String getName() {
-        return name;
-    }
+		return name;
+	}
 
-    public Customer openAccount(Account account) {
-        accounts.add(account);
-        return this;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public List<Account> getAccounts() {
+		return accounts;
+	}
+
+	public void setAccounts(List<Account> accounts) {
+		this.accounts = accounts;
+	}
+
+	public Customer openAccount(Account account) {
+		if (this.accounts.contains(account)) {
+			throw new IllegalArgumentException(Constants.DUPLICATE_ACCOUNT_ERROR);
+		} else {
+			this.accounts.add(account);
+			return this;
+		}
+	}
 
     public int getNumberOfAccounts() {
         return accounts.size();
     }
 
-    public double totalInterestEarned() {
-        double total = 0;
+    public double totalInterestEarnedToday() {
+        double total = 0.0;
         for (Account a : accounts)
-            total += a.interestEarned();
+            total += a.interestEarnedToday();
         return total;
     }
 
     public String getStatement() {
         String statement = null;
-        statement = "Statement for " + name + "\n";
-        double total = 0.0;
+        statement = "Statement for " + this.name + "\n";
+        double totalBalance = 0.0;
         for (Account a : accounts) {
-            statement += "\n" + statementForAccount(a) + "\n";
-            total += a.sumTransactions();
+            statement += a.statement() + "\n";
+            totalBalance += a.getBalance();
         }
-        statement += "\nTotal In All Accounts " + toDollars(total);
+        statement += "Total Balance In All Accounts: " + Constants.toDollars(totalBalance);
         return statement;
     }
-
-    private String statementForAccount(Account a) {
-        String s = "";
-
-       //Translate to pretty account type
-        switch(a.getAccountType()){
-            case Account.CHECKING:
-                s += "Checking Account\n";
-                break;
-            case Account.SAVINGS:
-                s += "Savings Account\n";
-                break;
-            case Account.MAXI_SAVINGS:
-                s += "Maxi Savings Account\n";
-                break;
-        }
-
-        //Now total up all the transactions
-        double total = 0.0;
-        for (Transaction t : a.transactions) {
-            s += "  " + (t.amount < 0 ? "withdrawal" : "deposit") + " " + toDollars(t.amount) + "\n";
-            total += t.amount;
-        }
-        s += "Total " + toDollars(total);
-        return s;
+    
+    public String summary() {
+    	return "Customer Name: " + this.name + ", Number Of Accounts: " + this.getNumberOfAccounts();
+    }
+    
+    public void transfer(Account fromAccount, Account toAccount, double amount) {
+    	if (fromAccount == null) {
+			throw new IllegalArgumentException(Constants.FROM_ACCOUNT_ERROR);
+    	}
+    	if (toAccount == null) {
+			throw new IllegalArgumentException(Constants.TO_ACCOUNT_ERROR);
+    	}
+    	if (!this.accounts.contains(fromAccount)) {
+			throw new IllegalArgumentException(Constants.FROM_ACCOUNT_ERROR);
+    	}
+    	if (!this.accounts.contains(toAccount)) {
+			throw new IllegalArgumentException(Constants.TO_ACCOUNT_ERROR);
+    	}
+    	if (fromAccount.equals(toAccount)) {
+			throw new IllegalArgumentException(Constants.FROM_TO_ACCOUNT_ERROR);
+    	}
+    	if (amount < 0.0) {
+			throw new IllegalArgumentException(Constants.NEGATIVE_AMOUNT_ERROR);
+    	}
+    	fromAccount.withdraw(amount);
+    	toAccount.deposit(amount);
     }
 
-    private String toDollars(double d){
-        return String.format("$%,.2f", abs(d));
-    }
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		Customer other = (Customer) obj;
+		if (name == null) {
+			if (other.name != null) {
+				return false;
+			}
+		} else if (!name.equals(other.name)) {
+			return false;
+		}
+		return true;
+	}
+
 }

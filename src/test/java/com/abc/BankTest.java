@@ -1,54 +1,81 @@
 package com.abc;
 
-import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
 
+import org.junit.Before;
+import org.junit.Test;
+
+import com.abc.Account.ACCOUNT_TYPE;
+
+/**
+ * 
+ * @author Alex Gordon
+ * Test class for Bank.
+ *
+ */
 public class BankTest {
-    private static final double DOUBLE_DELTA = 1e-15;
-
-    @Test
-    public void customerSummary() {
-        Bank bank = new Bank();
-        Customer john = new Customer("John");
-        john.openAccount(new Account(Account.CHECKING));
-        bank.addCustomer(john);
-
-        assertEquals("Customer Summary\n - John (1 account)", bank.customerSummary());
+    private Bank bank;
+ 
+    @Before
+    public void init() {
+    	// One bank
+    	// Four customers: John, Bill, Gary and Mary
+    	// Accounts:
+    	// John - checking, saving and maxi-saving.
+    	// Bill - checking and saving
+    	// Gary - saving and maxi-saving.
+    	// Mary - maxi-saving.
+    	this.bank = new Bank();
+    	Customer john = new Customer("John");
+    	Customer bill = new Customer("Bill");
+    	Customer gary = new Customer("Gary");
+    	Customer mary = new Customer("Mary");
+    	bank.addCustomer(john);
+    	bank.addCustomer(bill);
+    	bank.addCustomer(gary);
+    	bank.addCustomer(mary);
+    	john.openAccount(new Account(john.getName(), ACCOUNT_TYPE.CHECKING));
+    	john.openAccount(new Account(john.getName(),ACCOUNT_TYPE.SAVINGS));
+    	john.openAccount(new Account(john.getName(),ACCOUNT_TYPE.MAXI_SAVINGS));
+    	bill.openAccount(new Account(bill.getName(),ACCOUNT_TYPE.CHECKING));
+    	bill.openAccount(new Account(bill.getName(),ACCOUNT_TYPE.SAVINGS));
+    	gary.openAccount(new Account(gary.getName(),ACCOUNT_TYPE.SAVINGS));
+    	gary.openAccount(new Account(gary.getName(),ACCOUNT_TYPE.MAXI_SAVINGS));
+    	mary.openAccount(new Account(mary.getName(),ACCOUNT_TYPE.MAXI_SAVINGS));
+    	
+    	// TODO more data as needed
+    	
     }
 
     @Test
-    public void checkingAccount() {
-        Bank bank = new Bank();
-        Account checkingAccount = new Account(Account.CHECKING);
-        Customer bill = new Customer("Bill").openAccount(checkingAccount);
-        bank.addCustomer(bill);
+    public void testCustomerSummaryReportOK() {
+    	String expected;
+    	String actual;
+    	expected = "Customer Summary Report\n" +
+    	 " - Customer Name: John, Number Of Accounts: 3\n" +
+    	 " - Customer Name: Bill, Number Of Accounts: 2\n" +
+    	 " - Customer Name: Gary, Number Of Accounts: 2\n" +
+    	 " - Customer Name: Mary, Number Of Accounts: 1";
+    	actual = bank.customerSummaryReport();
+        assertEquals(expected, actual);
+    }
 
-        checkingAccount.deposit(100.0);
-
-        assertEquals(0.1, bank.totalInterestPaid(), DOUBLE_DELTA);
+    @Test(expected=IllegalArgumentException.class)
+    public void testAddCustomerException() {
+    	Customer robert1 = new Customer("Robert");
+    	bank.addCustomer(robert1);
+    	Customer robert2 = new Customer("Robert");
+    	bank.addCustomer(robert2);
     }
 
     @Test
-    public void savings_account() {
-        Bank bank = new Bank();
-        Account checkingAccount = new Account(Account.SAVINGS);
-        bank.addCustomer(new Customer("Bill").openAccount(checkingAccount));
-
-        checkingAccount.deposit(1500.0);
-
-        assertEquals(2.0, bank.totalInterestPaid(), DOUBLE_DELTA);
-    }
-
-    @Test
-    public void maxi_savings_account() {
-        Bank bank = new Bank();
-        Account checkingAccount = new Account(Account.MAXI_SAVINGS);
-        bank.addCustomer(new Customer("Bill").openAccount(checkingAccount));
-
-        checkingAccount.deposit(3000.0);
-
-        assertEquals(170.0, bank.totalInterestPaid(), DOUBLE_DELTA);
+    public void testtotalInterestPaidTodayReportOK() {
+    	String expected;
+    	String actual;
+    	expected = "Total Interest Paid Today\n" +
+         " - $0.00";
+    	actual = bank.totalInterestPaidTodayReport();
+        assertEquals(expected, actual);
     }
 
 }
