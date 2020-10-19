@@ -1,7 +1,7 @@
 Programming Test
 ========
 
-to   be used as part of a software development interview.
+to used as part of a software development interview.
   
 instructions
 --------
