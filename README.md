@@ -1,7 +1,7 @@
 Programming Test
 ========
 
-This is a dummy application to be used as part of a software development interview.
+is a dummy application to be used as part of a software development interview.
 
 instructions
 --------
